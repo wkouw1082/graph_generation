@@ -36,6 +36,21 @@ def convert2onehot(vec, dim):
     import torch
     return torch.Tensor(np.identity(dim)[vec])
 
+def padding(vecs, flow_len, value=0):
+    """
+    flowの長さを最大flow長に合わせるためにzeropadding
+    :param vecs: flow数分のリスト. リストの各要素はflow長*特徴量長の二次元numpy配列
+    :param flow_len: flow長. int
+    :param value: paddingするvectorの要素値 int
+    :return: データ数*最大flow長*特徴量長の3次元配列
+    """
+    for i in range(len(vecs)):
+        flow = vecs[i]
+        diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1]))
+        diff_vec *= value
+        vecs[i] = np.concatenate((flow, diff_vec), 0)
+    return np.array(vecs)
+
 # ---汎用的---
 def make_dir(required_dirs):
     dirs = glob.glob("*")
