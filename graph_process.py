@@ -4,7 +4,7 @@ import networkx.algorithms.approximation.treewidth as nx_tree
 import random
 import matplotlib.pyplot as plt
 import joblib
-import hoge
+import utils
 from scipy.optimize import curve_fit
 import config
 import sys
@@ -245,3 +245,53 @@ def draw_graph(adj_mat, pic_dir="./pic.png", node_color=None, label=None):
     nx.draw_networkx(G, node_color=node_color, labels=label)
     plt.savefig(pic_dir)
 
+class ConvertToDfsCode():
+    def __init__(self,graph):
+        self.G = graph
+        self.node_tree = [node for node in graph.nodes()]
+        self.edge_tree = [edge for edge in graph.edges()]
+        self.dfs_code = list()
+        self.visited_edges = list()
+        self.node_time_stamp = [None for i in range(graph.number_of_nodes())]
+
+    def get_max_degree_index(self):
+        max_degree = 0
+        max_degree_index = 0
+        for i in range(self.G.number_of_nodes()):
+            if(self.G.degree(i) >= max_degree):
+                max_degree = self.G.degree(i)
+                max_degree_index = i
+
+        return max_degree_index
+
+    def dfs(self,current_node,time_stamp=0):
+        neightbor_node_list = self.G.neighbors(current_node)
+        if(len(self.visited_edges) == len(self.edge_tree)):
+            return
+
+        for i in neightbor_node_list:
+            # visited_edgesにすでに訪れたエッジの組み合わせがあったらスルー
+            if((current_node, i) in self.visited_edges or (i, current_node)in self.visited_edges):
+                continue
+            else:
+                # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
+                if(self.node_time_stamp[current_node] == None):
+                    self.node_time_stamp[current_node] = time_stamp
+                    time_stamp += 1
+                # 次のノードにタイムスタンプが登録されていなければタイムスタンプを登録
+                if(self.node_time_stamp[i] == None):
+                    self.node_time_stamp[i] = time_stamp
+                    time_stamp += 1
+                # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のタプルを作成
+                self.dfs_code.append((self.node_time_stamp[current_node],self.node_time_stamp[i],self.G.degree(current_node),self.G.degree(i),0))
+                self.visited_edges.append((current_node,i))
+                self.dfs(i,time_stamp)
+
+    def get_dfs_code(self):
+        self.dfs(self.get_max_degree_index())
+        return self.dfs_code
+
+if __name__ == "__main__":
+    G = nx.random_tree(20,1)
+    code = ConvertToDfsCode(G)
+    print(code.get_dfs_code())

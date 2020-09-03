@@ -31,14 +31,15 @@ def dfs(current_node=first_node,time_stamp=0):
         if((current_node, i) in visited_edges or (i, current_node)in visited_edges):
             continue
         else:
+            # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
             if(node_time_stamp[current_node] == None):
                 node_time_stamp[current_node] = time_stamp
                 time_stamp += 1
-
+            # 次のノードにタイムスタンプが登録されていなければタイムスタンプを登録
             if(node_time_stamp[i] == None):
                 node_time_stamp[i] = time_stamp
                 time_stamp += 1
-            # timeu, timev, nodeu, nodev ,edge\
+            # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のタプルを作成
             dfs_code.append((node_time_stamp[current_node],node_time_stamp[i],G.degree(current_node),G.degree(i),0))
             visited_edges.append((current_node,i))
             dfs(i,time_stamp)
