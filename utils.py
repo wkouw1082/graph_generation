@@ -8,7 +8,6 @@ from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--preprocess", action="store_true")
@@ -26,6 +25,16 @@ def try_gpu(obj):
     if torch.cuda.is_available():
         return obj.cuda(device=0)
     return obj
+
+def convert2onehot(vec, dim):
+    """
+    特徴量のnumpy配列をonehotベクトルに変換
+    :param vec: 特徴量のnumpy行列, int型 (サンプル数分の1次元行列)．
+    :param dim: onehot vectorの次元
+    :return: onehot vectorのtensor行列
+    """
+    import torch
+    return torch.Tensor(np.identity(dim)[vec])
 
 # ---汎用的---
 def make_dir(required_dirs):
