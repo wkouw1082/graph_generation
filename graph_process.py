@@ -1,3 +1,4 @@
+from time import time_ns
 import numpy as np
 import networkx as nx
 import networkx.algorithms.approximation.treewidth as nx_tree
@@ -282,16 +283,23 @@ class ConvertToDfsCode():
                 if(self.node_time_stamp[i] == None):
                     self.node_time_stamp[i] = time_stamp
                     time_stamp += 1
-                # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のタプルを作成
-                self.dfs_code.append((self.node_time_stamp[current_node],self.node_time_stamp[i],self.G.degree(current_node),self.G.degree(i),0))
+                # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のリストを作成
+                self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[i],self.G.degree(current_node),self.G.degree(i),0])
                 self.visited_edges.append((current_node,i))
                 self.dfs(i,time_stamp)
 
     def get_dfs_code(self):
         self.dfs(self.get_max_degree_index())
-        return self.dfs_code
+        return np.array(self.dfs_code)
+
+    def get_sequence_dfs_code(self):
+        self.dfs(self.get_max_degree_index())
+        dfs_array = np.array(self.dfs_code)
+        
+        return dfs_array.T
 
 if __name__ == "__main__":
     G = nx.random_tree(20,1)
     code = ConvertToDfsCode(G)
-    print(code.get_dfs_code())
+    nplist = code.get_sequence_dfs_code()
+    print(utils.convert2onehot(nplist[0],len(np.unique(nplist[0]))+1))
