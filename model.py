@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 import utils
+from config import *
 
 class Encoder(nn.Module):
     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):
@@ -57,7 +58,7 @@ class Decoder(nn.Module):
         le = self.softmax(self.f_le(x))
         return tu, tv, lu, lv, le
 
-    def generate(self, rep, max_size):
+    def generate(self, rep, max_size=100):
         """
         生成時のforward. 生成したdfsコードを用いて、新たなコードを生成していく
         Args:
@@ -65,7 +66,8 @@ class Decoder(nn.Module):
             max_size: 生成を続ける最大サイズ(生成を続けるエッジの最大数)
         Returns:
         """
-        rep = self.emb(self.f_rep(rep))
+        rep = self.f_rep(rep)
+        rep = self.emb(rep)
         x = rep
         batch_size = x.shape[0]
         h = torch.zeros(1, batch_size, x.shape[2])
@@ -77,8 +79,12 @@ class Decoder(nn.Module):
         lvs = torch.LongTensor()
         les = torch.LongTensor()
 
-        for _ in range(max_size):
-            x, (h, c) = self.lstm(x, (h, c))
+        for i in range(max_size):
+            if i == 0:
+                x, (h, c) = self.lstm(x)
+            else:
+                x = self.emb(x)
+                x, (h, c) = self.lstm(x, (h, c))
             tu = torch.argmax(self.softmax(self.f_tu(x)), dim=2)
             tv = torch.argmax(self.softmax(self.f_tv(x)), dim=2)
             lu = torch.argmax(self.softmax(self.f_lu(x)), dim=2)
@@ -104,17 +110,42 @@ class Decoder(nn.Module):
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
         return tus, tvs, lus, lvs, les
 
+class VAE(nn.Module):
+    def __init__(self, dfs_size, time_size, node_size, edge_size):
+        super(VAE, self).__init__()
+        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
+        self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
+
+    def noise_generator(self, batch_num = batch_size):
+        return torch.randn(batch_num, rep_size)
+
+    def forward(self, x, y):
+        mu, sigma = self.encoder(x)
+        z = transformation(mu, sigma)
+        tu, tv, lu, lv, le = self.decoder(z, y)
+        return tu, tv, lu, lv, le
+
+    def generate(self, max_size=100):
+        z = self.noise_generator().unsqueeze(1)
+        tu, tv, lu, lv, le =\
+            self.decoder.generate(z, 100)
+        return tu, tv, lu, lv, le
+
 def transformation(mu, sigma):
     return mu + torch.exp(0.5*sigma) * utils.try_gpu(torch.randn(sigma.shape))
 
 if __name__=="__main__":
     import numpy as np
-    x = torch.randn(20,200,20)
-    y = torch.randn(20,200,20)
+    x = torch.randn(batch_size,200,10)
+    y = torch.randn(batch_size,200,10)
+    vae = VAE(10,2,2,2)
+    vae(x,y)
+    vae.generate()
+    """
     encoder = Encoder(20, 10, 10, 10)
     mu, sigma = encoder(x)
     z = transformation(mu, sigma)
     decoder = Decoder(10, 20, 10, 10, 2, 2, 2)
     tu, tv, lu, lv, le = decoder(z, y)
     tu, tv, lu, lv, le = decoder.generate(z, 10)
-
+    """
