@@ -7,6 +7,7 @@ import self_loss
 from sklearn.model_selection import train_test_split
 import joblib
 import numpy as np
+import shutil
 
 import torch
 from torch import nn
@@ -18,20 +19,20 @@ args = utils.get_args()
 is_preprocess = args.preprocess
 
 # recreate directory
-"""
 if utils.is_dir_existed("train_result"):
     print("delete file...")
     print("- train_result")
     shutil.rmtree("./train_result")
-"""
+
+required_dirs = ["param", "train_result", "dataset"]
+utils.make_dir(required_dirs)
+print("start preprocess...")
 
 # preprocess
 if is_preprocess:
-    required_dirs = ["param", "train_result", "dataset", "dataset/train", "dataset/test"]
+    shutil.rmtree("dataset")
+    required_dirs = ["dataset", "dataset/train", "dataset/test"]
     utils.make_dir(required_dirs)
-    print("start preprocess...")
-    #pp.preprocess(train_generate_detail, "dataset/train")
-    #pp.preprocess(test_generate_detail, "dataset/test")
     pp.preprocess(train_generate_detail, test_generate_detail)
 
 # data load
@@ -43,8 +44,14 @@ test_label = joblib.load("dataset/test/label")
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
 
+print("--------------")
+print("time size: %d"%(time_size))
+print("node size: %d"%(node_size))
+print("edge size: %d"%(edge_size))
+print("--------------")
+
 vae = model.VAE(dfs_size, time_size, node_size, edge_size)
-opt = optim.Adam(vae.parameters(), lr=lr)
+opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=1e-2)
 
 train_data_num = train_dataset.shape[0]
 train_label_args = torch.LongTensor(list(range(train_data_num)))
@@ -65,7 +72,7 @@ test_loss = {key:[] for key in keys+["encoder"]}
 test_acc = {key:[] for key in keys}
 train_min_loss = 1e10
 
-criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
+criterion = nn.CrossEntropyLoss(ignore_index=ignore_label)
 encoder_criterion = self_loss.Encoder_Loss()
 
 for epoch in range(1, epochs):
@@ -192,3 +199,4 @@ for epoch in range(1, epochs):
     if loss_sum<train_min_loss:
         train_min_loss = loss_sum
         torch.save(vae.state_dict(), "param/weight")
+    print("\n")
