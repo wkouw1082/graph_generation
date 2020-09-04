@@ -16,3 +16,5 @@ test_generate_detail = {"BA": [100, data_dim, [None]],\
                         "NN": [100, data_dim, [0.6]]}
 trait_dim = 2   # conditionalのベクトルの次元
 rep_size = 10
+
+ignore_label = 1000

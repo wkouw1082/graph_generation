@@ -4,6 +4,7 @@
 /eval_result/*
 /param/*
 /venv/*
+/dataset/*
 ._*.*
 log
 evallog

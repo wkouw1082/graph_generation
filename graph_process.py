@@ -14,7 +14,7 @@ import time
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
 class complex_networks():
-    def create_dataset(self, detail, directory):
+    def create_dataset(self, detail):
         datasets = []
         for i, (key, value) in enumerate(detail.items()):
             generate_num = value[0]
@@ -28,7 +28,6 @@ class complex_networks():
                     datas = self.generate_fixed_BA(generate_num, data_dim)
                 elif key == "NN":
                     datas = self.nearest_neighbor_model(generate_num, data_dim, param)
-                joblib.dump(datas, directory+"%d"%(i), compress=3)
                 datasets.extend(datas)
         return datasets
 

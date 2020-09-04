@@ -1,0 +1,116 @@
+import utils
+import joblib
+import torch
+from config import *
+import numpy as np
+import graph_process
+
+def preprocess(train_network_detail,test_network_detail,train_directory='./dataset/train/',test_directory='./dataset/test/'):
+    print('start--preprocess')
+    
+    train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
+    test_dfs,test_time_set,test_node_set,test_max_length = to_dfs(test_network_detail)
+
+    time_stamp_set = train_time_set | test_time_set
+    node_label_set = train_node_set | test_node_set
+    max_sequence_length = max(train_max_length,test_max_length)
+
+
+    time_dict = {time:index for index, time in enumerate(time_stamp_set)}   
+    node_dict = {node:index for index, node in enumerate(node_label_set)}
+
+    del time_stamp_set, node_label_set
+    
+    get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
+    get_onehot_and_list(test_dfs,time_dict,node_dict,max_sequence_length,test_directory)
+
+def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,directory):
+
+    time_end_num = len(time_dict.keys())
+    node_end_num = len(node_dict.keys())
+    dfs_code_onehot_list = []
+    t_u_list = []
+    t_v_list = []
+    n_u_list = []
+    n_v_list = []
+    e_list = []
+    for data in dfs_code:
+        data = data.T
+        # IDに振りなおす
+        t_u = [time_dict[t] for t in data[0]]
+        t_u.append(time_end_num)
+        t_u = np.array(t_u)
+        t_u_list.append(t_u)
+        t_v = [time_dict[t] for t in data[1]]
+        t_v.append(time_end_num)
+        t_v = np.array(t_v)
+        t_v_list.append(t_v)
+        n_u = [node_dict[n] for n in data[2]]
+        n_u.append(node_end_num)
+        n_u = np.array(n_u)
+        n_u_list.append(n_u)
+        n_v = [node_dict[n] for n in data[3]]
+        n_v.append(node_end_num)
+        n_v = np.array(n_v)
+        n_v_list.append(n_v)
+        e = data[4]
+        e = np.append(e,1)
+        e_list.append(e)
+
+        onehot_t_u = utils.convert2onehot(t_u,time_end_num+1)
+        onehot_t_v = utils.convert2onehot(t_v,time_end_num+1)
+        onehot_n_u = utils.convert2onehot(n_u,node_end_num+1)
+        onehot_n_v = utils.convert2onehot(n_v,node_end_num+1)
+        onehot_e = utils.convert2onehot(e,1+1)
+
+        dfs_code_onehot_list.append(\
+            np.concatenate([onehot_t_u,onehot_t_v,onehot_n_u,onehot_n_v,onehot_e],1))
+    
+    dfs_code_onehot_list = torch.Tensor(utils.padding(dfs_code_onehot_list,max_sequence_length,0))
+    t_u_list = torch.LongTensor(utils.padding(t_u_list,max_sequence_length,ignore_label))
+    t_v_list = torch.LongTensor(utils.padding(t_v_list,max_sequence_length,ignore_label))
+    n_u_list = torch.LongTensor(utils.padding(n_u_list,max_sequence_length,ignore_label))
+    n_v_list = torch.LongTensor(utils.padding(n_v_list,max_sequence_length,ignore_label))
+    e_list = torch.LongTensor(utils.padding(e_list,max_sequence_length,ignore_label))
+
+    joblib.dump([dfs_code_onehot_list],directory+'onehot')
+    joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
+
+
+def  to_dfs(detail):
+    complex_network = graph_process.complex_networks()
+    datasets = complex_network.create_dataset(detail)
+
+    dfs_code = list()
+    time_stamp_set = set()
+    nodes_label_set = set()
+    edges_label_set = set()
+    max_sequence_length = 0
+
+    for graph in datasets:
+        covert_graph = graph_process.ConvertToDfsCode(graph)
+        tmp = covert_graph.get_dfs_code()
+        # 一旦tmpにdfscodeを出してからdfscodeにappend
+        dfs_code.append(tmp)
+        if max_sequence_length < len(tmp)+1:
+            max_sequence_length = len(tmp)+1
+
+        time_u = set(tmp[:, 0])
+        time_v = set(tmp[:, 1])
+        time = time_u | time_v
+        time_stamp_set = time_stamp_set| time
+
+        node_u = set(tmp[:,2])
+        node_v = set(tmp[:,3])
+        node = node_u | node_v
+        nodes_label_set = nodes_label_set | node
+
+    return dfs_code, time_stamp_set, nodes_label_set,\
+        max_sequence_length
+
+train_generate_detail = {"BA": [2, 25, [None]],\
+                        "NN": [1, 25, [0.6]]}
+
+test_generate_detail = {"BA": [2, 25, [None]],\
+                        "NN": [1, 25, [0.6]]}
+preprocess(train_generate_detail,test_generate_detail)
