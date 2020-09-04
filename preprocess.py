@@ -15,6 +15,8 @@ def preprocess(train_network_detail,test_network_detail,train_directory='./datas
     node_label_set = train_node_set | test_node_set
     max_sequence_length = max(train_max_length,test_max_length)
 
+    joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
+
 
     time_dict = {time:index for index, time in enumerate(time_stamp_set)}   
     node_dict = {node:index for index, node in enumerate(node_label_set)}
@@ -107,10 +109,3 @@ def  to_dfs(detail):
 
     return dfs_code, time_stamp_set, nodes_label_set,\
         max_sequence_length
-
-train_generate_detail = {"BA": [2, 25, [None]],\
-                        "NN": [1, 25, [0.6]]}
-
-test_generate_detail = {"BA": [2, 25, [None]],\
-                        "NN": [1, 25, [0.6]]}
-preprocess(train_generate_detail,test_generate_detail)

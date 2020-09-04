@@ -10,6 +10,7 @@ import numpy as np
 
 import torch
 from torch import nn
+from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 
@@ -17,24 +18,30 @@ args = utils.get_args()
 is_preprocess = args.preprocess
 
 # recreate directory
+"""
 if utils.is_dir_existed("train_result"):
     print("delete file...")
     print("- train_result")
     shutil.rmtree("./train_result")
-required_dirs = ["param", "train_result", "dataset", "dataset/train", "dataset/test"]
-utils.make_dir(required_dirs)
+"""
 
 # preprocess
 if is_preprocess:
+    required_dirs = ["param", "train_result", "dataset", "dataset/train", "dataset/test"]
+    utils.make_dir(required_dirs)
     print("start preprocess...")
-    pp.preprocess(train_generate_detail, "dataset/train")
-    pp.preprocess(test_generate_detail, "dataset/test")
+    #pp.preprocess(train_generate_detail, "dataset/train")
+    #pp.preprocess(test_generate_detail, "dataset/test")
+    pp.preprocess(train_generate_detail, test_generate_detail)
 
 # data load
-train_dataset = joblib.load("dataset/train/dfs")
+train_dataset = joblib.load("dataset/train/onehot")[0]
 train_label = joblib.load("dataset/train/label")
-test_dataset = joblib.load("dataset/test/dfs")
+test_dataset = joblib.load("dataset/test/onehot")[0]
 test_label = joblib.load("dataset/test/label")
+
+time_size, node_size, edge_size = joblib.load("dataset/param")
+dfs_size = 2*time_size+2*node_size+edge_size
 
 vae = model.VAE(dfs_size, time_size, node_size, edge_size)
 opt = optim.Adam(vae.parameters(), lr=lr)
@@ -45,10 +52,10 @@ test_data_num = test_dataset.shape[0]
 test_label_args = torch.LongTensor(list(range(test_data_num)))
 
 train_dl = DataLoader(
-        TensorDataset(train_label_args, train_datas),\
+        TensorDataset(train_label_args, train_dataset),\
         shuffle=True, batch_size=batch_size)
 test_dl = DataLoader(
-        TensorDataset(test_label_args, test_datas),\
+        TensorDataset(test_label_args, test_dataset),\
         shuffle=True, batch_size=batch_size)
 
 keys = ["tu", "tv", "lu", "lv", "le"]
@@ -77,7 +84,7 @@ for epoch in range(1, epochs):
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
         encoder_loss = encoder_criterion(mu, sigma)
-        current_train_loss["encoder"].append(encoder_loss)
+        current_train_loss["encoder"].append(encoder_loss.item())
         loss = encoder_loss
         for j, pred in enumerate(result):
             current_key = keys[j]
@@ -135,7 +142,7 @@ for epoch in range(1, epochs):
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
         encoder_loss = encoder_criterion(mu, sigma)
-        current_test_loss["encoder"].append(encoder_loss)
+        current_test_loss["encoder"].append(encoder_loss.item())
         loss = encoder_loss
         for j, pred in enumerate(result):
             current_key = keys[j]

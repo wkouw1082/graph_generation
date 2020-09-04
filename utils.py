@@ -7,6 +7,7 @@ import collections
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -68,7 +69,7 @@ def calc_calssification_acc(pred_label, correct_label, ignore_label=None):
     score[pred_label==correct_label] = 1
     data_len = pred_label.shape[0]
     if not ignore_label is None:
-        ignore_args = np.where(correct_label)[0]
+        ignore_args = np.where(correct_label==ignore_label)[0]
         data_len-=len(ignore_args)
         score[ignore_args] = 0
     score = torch.sum(score)/data_len

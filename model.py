@@ -119,10 +119,10 @@ class VAE(nn.Module):
     def noise_generator(self, batch_num = batch_size):
         return torch.randn(batch_num, rep_size)
 
-    def forward(self, x, y):
+    def forward(self, x):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma)
-        tu, tv, lu, lv, le = self.decoder(z, y)
+        tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
     def generate(self, max_size=100):
