@@ -51,6 +51,26 @@ def padding(vecs, flow_len, value=0):
         vecs[i] = np.concatenate((flow, diff_vec), 0)
     return np.array(vecs)
 
+def calc_calssification_acc(pred_label, correct_label, ignore_label=None):
+    """
+    分類精度をcalcする関数
+    Args:
+        pred_label: n次元の予測ラベル. torch.Tensor
+        correct_label: n次元の教師ラベル torch.Tensor
+        ignore_label: int. accを計算する上で無視するlabelが存在すれば設定
+    Returns:
+        score: accuracy
+    """
+    score = torch.zeros(pred_label.shape[0])
+    score[pred_label==correct_label] = 1
+    data_len = pred_label.shape[0]
+    if not ignore_label is None:
+        ignore_args = np.where(correct_label)[0]
+        data_len-=len(ignore_args)
+        score[ignore_args] = 0
+    score = torch.sum(score)/data_len
+    return score
+
 # ---汎用的---
 def make_dir(required_dirs):
     dirs = glob.glob("*")
@@ -86,6 +106,24 @@ def recreate_dir(directory):
         for dir in directory:
             shutil.rmtree(dir)
         make_dir(directory)
+
+def time_draw(x, ys, directory, xlabel="", ylabel=""):
+    """
+    複数の時系列をまとめて可視化
+    :param x: x軸のデータ
+    :param ys: y軸のデータら. dictionaryでkeyを時系列のlabel, valueをデータとする
+    :param directory: 出力するdirectory
+    :param xlabel: x軸のラベル
+    :param ylabel: y軸のラベル
+    """
+    plt.figure()
+    for label, y in ys.items():
+        plt.plot(y, label=label)
+    plt.legend()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.savefig(directory)
+    plt.close()
 
 # ---研究用---
 # vecは入れ子になっている前提
