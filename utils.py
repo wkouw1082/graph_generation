@@ -46,7 +46,10 @@ def padding(vecs, flow_len, value=0):
     """
     for i in range(len(vecs)):
         flow = vecs[i]
-        diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1]))
+        if len(flow.shape)==2:
+            diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1]))
+        else:
+            diff_vec = np.ones((flow_len-flow.shape[0]))
         diff_vec *= value
         vecs[i] = np.concatenate((flow, diff_vec), 0)
     return np.array(vecs)
