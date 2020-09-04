@@ -123,7 +123,7 @@ class VAE(nn.Module):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma)
         tu, tv, lu, lv, le = self.decoder(z, y)
-        return tu, tv, lu, lv, le
+        return mu, sigma, tu, tv, lu, lv, le
 
     def generate(self, max_size=100):
         z = self.noise_generator().unsqueeze(1)

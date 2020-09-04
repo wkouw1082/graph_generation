@@ -2,6 +2,7 @@ import utils
 import preprocess as pp
 from config import *
 import model
+import self_loss
 
 from sklearn.model_selection import train_test_split
 import joblib
@@ -51,20 +52,21 @@ test_dl = DataLoader(
         shuffle=True, batch_size=batch_size)
 
 keys = ["tu", "tv", "lu", "lv", "le"]
-train_loss = {key:[] for key in keys}
+train_loss = {key:[] for key in keys+["encoder"]}
 train_acc = {key:[] for key in keys}
-test_loss = {key:[] for key in keys}
+test_loss = {key:[] for key in keys+["encoder"]}
 test_acc = {key:[] for key in keys}
 train_min_loss = 1e10
 
 criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
+encoder_criterion = self_loss.Encoder_Loss()
 
 for epoch in range(1, epochs):
     print("Epoch: [%d/%d]:"%(epoch, epochs))
 
     # train
     print("train:")
-    current_train_loss = {key:[] for key in keys}
+    current_train_loss = {key:[] for key in keys+["encoder"]}
     current_train_acc = {key:[] for key in keys}
     loss_sum = 0
     for i, (args, datas) in enumerate(train_dl):
@@ -72,9 +74,11 @@ for epoch in range(1, epochs):
             print("step: [%d/%d]"%(i, train_data_num))
         vae.train()
         opt.zero_grad()
-        #tu, tv, lu, lv, le = vae(datas)
-        result = vae(datas)
-        loss = 0
+        # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
+        mu, sigma, *result = vae(datas)
+        encoder_loss = encoder_criterion(mu, sigma)
+        current_train_loss["encoder"].append(encoder_loss)
+        loss = encoder_loss
         for j, pred in enumerate(result):
             current_key = keys[j]
             # loss calc
@@ -109,6 +113,11 @@ for epoch in range(1, epochs):
         print(" %s:"%(key))
         print("     loss:%lf"%(loss))
         print("     acc:%lf"%(acc))
+    ekey = "encoder"
+    loss = np.average(current_train_loss[ekey])
+    train_loss[ekey].append(loss)
+    print(" %s:"%(ekey))
+    print("     loss:%lf"%(loss))
     print("----------------------------")
 
     # memory free
@@ -116,15 +125,18 @@ for epoch in range(1, epochs):
 
     # test
     print("test:")
-    current_test_loss = {key:[] for key in keys}
+    current_test_loss = {key:[] for key in keys+["encoder"]}
     current_test_acc = {key:[] for key in keys}
     for i, (args, datas) in enumerate(test_dl):
         if i%1000==0:
             print("step: [%d/%d]"%(i, test_data_num))
         vae.eval()
         opt.zero_grad()
-        #tu, tv, lu, lv, le = vae(datas)
-        result = vae(datas)
+        # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
+        mu, sigma, *result = vae(datas)
+        encoder_loss = encoder_criterion(mu, sigma)
+        current_test_loss["encoder"].append(encoder_loss)
+        loss = encoder_loss
         for j, pred in enumerate(result):
             current_key = keys[j]
             # loss calc
@@ -155,6 +167,12 @@ for epoch in range(1, epochs):
         print(" %s:"%(key))
         print("     loss:%lf"%(loss))
         print("     acc:%lf"%(acc))
+
+    ekey = "encoder"
+    loss = np.average(current_test_loss[ekey])
+    test_loss[ekey].append(loss)
+    print(" %s:"%(ekey))
+    print("     loss:%lf"%(loss))
     print("----------------------------")
 
     # output loss/acc transition
