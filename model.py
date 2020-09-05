@@ -29,6 +29,7 @@ class Decoder(nn.Module):
         self.f_lv = nn.Linear(hidden_size, node_label_size)
         self.f_le = nn.Linear(hidden_size, edge_label_size)
         self.softmax = nn.Softmax(dim=2)
+        self.dropout = nn.Dropout(0.5)
 
         self.time_size = time_size
         self.node_label_size = node_label_size
@@ -51,6 +52,7 @@ class Decoder(nn.Module):
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
         x = self.emb(x)
         x, (h, c) = self.lstm(x)
+        x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))
         lu = self.softmax(self.f_lu(x))
@@ -111,8 +113,12 @@ class Decoder(nn.Module):
         return tus, tvs, lus, lvs, les
 
 class VAE(nn.Module):
-    def __init__(self, dfs_size, time_size, node_size, edge_size):
+    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
         super(VAE, self).__init__()
+        emb_size = model_param["emb_size"]
+        en_hidden_size = model_param["en_hidden_size"]
+        de_hidden_size = model_param["de_hidden_size"]
+        rep_size = model_param["rep_size"]
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
         self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
 

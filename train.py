@@ -50,8 +50,8 @@ print("node size: %d"%(node_size))
 print("edge size: %d"%(edge_size))
 print("--------------")
 
-vae = model.VAE(dfs_size, time_size, node_size, edge_size)
-opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=1e-2)
+vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
 train_data_num = train_dataset.shape[0]
 train_label_args = torch.LongTensor(list(range(train_data_num)))
@@ -83,8 +83,8 @@ for epoch in range(1, epochs):
     current_train_loss = {key:[] for key in keys+["encoder"]}
     current_train_acc = {key:[] for key in keys}
     loss_sum = 0
-    for i, (args, datas) in enumerate(train_dl):
-        if i%1000==0:
+    for i, (args, datas) in enumerate(train_dl, 1):
+        if i%100==0:
             print("step: [%d/%d]"%(i, train_data_num))
         vae.train()
         opt.zero_grad()
@@ -115,6 +115,8 @@ for epoch in range(1, epochs):
         loss.backward()
         loss_sum+=loss.item()
         opt.step()
+
+        torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
 
     # loss, acc save
     print("----------------------------")
@@ -192,6 +194,8 @@ for epoch in range(1, epochs):
     # output loss/acc transition
     utils.time_draw(range(epoch), train_loss, "train_result/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), train_acc, "train_result/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+    for key in keys:
+        utils.time_draw(range(epoch), {key: train_loss[key]}, "train_result/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), test_loss, "train_result/test_loss_transition.png", xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), test_acc, "train_result/test_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
