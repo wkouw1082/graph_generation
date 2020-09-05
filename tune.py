@@ -9,10 +9,7 @@ import torch
 import self_loss
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
-
-epochs = 50
-opt_epoch = 100
-ignore_label = 1000
+from config import *
 
 args = utils.get_args()
 is_preprocess = args.preprocess

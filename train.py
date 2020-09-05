@@ -72,7 +72,7 @@ test_loss = {key:[] for key in keys+["encoder"]}
 test_acc = {key:[] for key in keys}
 train_min_loss = 1e10
 
-criterion = nn.CrossEntropyLoss(ignore_index=ignore_label)
+criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
 encoder_criterion = self_loss.Encoder_Loss()
 
 for epoch in range(1, epochs):
@@ -99,7 +99,6 @@ for epoch in range(1, epochs):
             correct = train_label[j]
             correct = correct[args]
             tmp_loss = criterion(pred.transpose(2, 1), correct)
-            loss+=tmp_loss
 
             # save
             current_train_loss[current_key].append(tmp_loss.item())
