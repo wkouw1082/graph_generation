@@ -1,18 +1,24 @@
 import optuna
 import yaml
-import utils
+import shutil
 import joblib
-import model
+
+import torch
 from torch import nn
 from torch import optim
-import torch
-import self_loss
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 
-epochs = 50
+import preprocess as pp
+import model
+import utils
+import self_loss
+from config import *
+
 opt_epoch = 100
-ignore_label = 1000
+
+required_dirs = ["param", "dataset"]
+utils.make_dir(required_dirs)
 
 args = utils.get_args()
 is_preprocess = args.preprocess
@@ -38,7 +44,7 @@ print("node size: %d"%(node_size))
 print("edge size: %d"%(edge_size))
 print("--------------")
 
-criterion = nn.CrossEntropyLoss(ignore_index=ignore_label)
+criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
 encoder_criterion = self_loss.Encoder_Loss()
 
 def tuning_trial(trial):
@@ -54,6 +60,7 @@ def tuning_trial(trial):
     }
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+    vae = utils.try_gpu(vae)
     opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
     train_data_num = train_dataset.shape[0]
@@ -76,6 +83,7 @@ def tuning_trial(trial):
                 print("step: [%d/%d]"%(i, train_data_num))
             vae.train()
             opt.zero_grad()
+            datas = utils.try_gpu(datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             mu, sigma, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)
@@ -85,6 +93,7 @@ def tuning_trial(trial):
                 # loss calc
                 correct = train_label[j]
                 correct = correct[args]
+                correct = utils.try_gpu(correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss
             loss.backward()

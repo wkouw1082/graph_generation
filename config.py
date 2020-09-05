@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 1500
+epochs = 500
 batch_size = 32
 lr = 1e-2
 
