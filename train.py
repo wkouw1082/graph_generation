@@ -51,6 +51,7 @@ print("edge size: %d"%(edge_size))
 print("--------------")
 
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+vae = utils.try_gpu(vae)
 opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
 train_data_num = train_dataset.shape[0]
@@ -88,6 +89,8 @@ for epoch in range(1, epochs):
             print("step: [%d/%d]"%(i, train_data_num))
         vae.train()
         opt.zero_grad()
+        datas = utils.try_gpu(datas)
+
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
         encoder_loss = encoder_criterion(mu, sigma)
@@ -98,6 +101,7 @@ for epoch in range(1, epochs):
             # loss calc
             correct = train_label[j]
             correct = correct[args]
+            correct = utils.try_gpu(correct)
             tmp_loss = criterion(pred.transpose(2, 1), correct)
 
             # save
@@ -147,6 +151,7 @@ for epoch in range(1, epochs):
             print("step: [%d/%d]"%(i, test_data_num))
         vae.eval()
         opt.zero_grad()
+        datas = utils.try_gpu(datas)
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
         encoder_loss = encoder_criterion(mu, sigma)
@@ -157,6 +162,7 @@ for epoch in range(1, epochs):
             # loss calc
             correct = test_label[j]
             correct = correct[args]
+            correct = utils.try_gpu(correct)
             tmp_loss = criterion(pred.transpose(2, 1), correct)
 
             # save

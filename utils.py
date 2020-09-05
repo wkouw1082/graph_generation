@@ -69,6 +69,7 @@ def calc_calssification_acc(pred_label, correct_label, ignore_label=None):
     score[pred_label==correct_label] = 1
     data_len = pred_label.shape[0]
     if not ignore_label is None:
+        correct_label = correct_label.cpu()
         ignore_args = np.where(correct_label==ignore_label)[0]
         data_len-=len(ignore_args)
         score[ignore_args] = 0
