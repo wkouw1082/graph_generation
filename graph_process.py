@@ -1,6 +1,7 @@
 from time import time_ns
 import numpy as np
 import networkx as nx
+from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
 import random
 import matplotlib.pyplot as plt
@@ -252,6 +253,64 @@ class ConvertToDfsCode():
         self.edge_tree = [edge for edge in graph.edges()]
         self.dfs_code = list()
         self.visited_edges = list()
+        self.node_time_stamp = [-1 for i in range(graph.number_of_nodes())]
+
+    def get_max_degree_index(self):
+        max_degree = 0
+        max_degree_index = 0
+        for i in range(self.G.number_of_nodes()):
+            if(self.G.degree(i) >= max_degree):
+                max_degree = self.G.degree(i)
+                max_degree_index = i
+
+        return max_degree_index
+
+    def dfs(self,current_node,time_stamp=0):
+        neightbor_node_dict = OrderedDict({neightbor:self.node_time_stamp[neightbor] for neightbor in self.G.neighbors(current_node)})
+        sorted_neightbor_node = OrderedDict(sorted(neightbor_node_dict.items(), key=lambda x: x[1], reverse=True))
+
+        if(len(self.visited_edges) == len(self.edge_tree)):
+            return
+
+        for next_node in sorted_neightbor_node.keys():
+            # visited_edgesにすでに訪れたエッジの組み合わせがあったらスルー
+            if((current_node, next_node) in self.visited_edges or (next_node, current_node)in self.visited_edges):
+                continue
+            else:
+                if(self.node_time_stamp[next_node] != -1):
+                    # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
+                    if(self.node_time_stamp[current_node] == -1):
+                        self.node_time_stamp[current_node] = time_stamp
+                        time_stamp += 1
+
+                    self.visited_edges.append((current_node,next_node))
+                    self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
+                else:
+                    # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
+                    if(self.node_time_stamp[current_node] == -1):
+                        self.node_time_stamp[current_node] = time_stamp
+                        time_stamp += 1
+                    # 次のノードにタイムスタンプが登録されていなければタイムスタンプを登録
+                    if(self.node_time_stamp[next_node] == -1):
+                        self.node_time_stamp[next_node] = time_stamp
+                        time_stamp += 1
+                    # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のリストを作成
+                    self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
+                    self.visited_edges.append((current_node,next_node))
+                    self.dfs(next_node,time_stamp)
+
+    def get_dfs_code(self):
+        self.dfs(self.get_max_degree_index())
+        print(len(self.dfs_code))
+        return np.array(self.dfs_code)
+
+class SimpleDfsCode():
+    def __init__(self,graph):
+        self.G = graph
+        self.node_tree = [node for node in graph.nodes()]
+        self.edge_tree = [edge for edge in graph.edges()]
+        self.dfs_code = list()
+        self.visited_edges = list()
         self.node_time_stamp = [None for i in range(graph.number_of_nodes())]
 
     def get_max_degree_index(self):
@@ -297,8 +356,8 @@ class ConvertToDfsCode():
         
         return dfs_array.T
 
+
 if __name__ == "__main__":
-    G = nx.random_tree(20,1)
+    G = nx.barabasi_albert_graph(20,3,1)
     code = ConvertToDfsCode(G)
-    nplist = code.get_sequence_dfs_code()
-    print(utils.convert2onehot(nplist[0],len(np.unique(nplist[0]))+1))
+    print(code.get_dfs_code())
