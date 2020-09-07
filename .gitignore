@@ -2,6 +2,7 @@
 /__pycache__/*
 /train_result/*
 /eval_result/*
+/analysis_result/*
 /param/*
 /venv/*
 /dataset/*
