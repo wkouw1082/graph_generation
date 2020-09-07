@@ -4,15 +4,11 @@ import torch
 import matplotlib.pyplot as plt
 
 import utils
+import model
+from config import *
 
 args = utils.get_args()
 is_preprocess = args.preprocess
-
-# recreate directory
-if utils.is_dir_existed("train_result"):
-    print("delete file...")
-    print("- train_result")
-    shutil.rmtree("./train_result")
 
 required_dirs = ["dataset", "analysis_result"]
 utils.make_dir(required_dirs)
@@ -56,4 +52,32 @@ for key, size in zip(keys, sizes):
     plt.ylabel("seq")
     plt.savefig("analysis_result/%s.png"%(key))
     plt.close()
+
+# resultの可視化
+time_size, node_size, edge_size = joblib.load("dataset/param")
+vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+vae = utils.try_gpu(vae)
+
+vae.load_state_dict(torch.load("./param/weight"))
+pred = vae(train_dataset)
+
+mu, sigma, *result = vae(train_dataset)
+for j, pred in enumerate(result):
+    correct = train_label[j]
+    correct = correct.transpose(1,0)
+    pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+    pred = pred.transpose(1, 0)
+
+    acc_transition = []
+    for k in range(pred.shape[0]):
+        tmp = utils.calc_calssification_acc(pred[k], correct[k], ignore_label=1000)
+        acc_transition.append(tmp)
+
+    plt.figure()
+    plt.plot(acc_transition)
+    plt.xlabel("seq")
+    plt.ylabel("acc")
+    plt.savefig("analysis_result/pred_acc_%s.png"%(keys[j]))
+    plt.close()
+
 
