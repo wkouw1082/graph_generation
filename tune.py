@@ -15,8 +15,6 @@ import utils
 import self_loss
 from config import *
 
-opt_epoch = 100
-
 required_dirs = ["param", "dataset"]
 utils.make_dir(required_dirs)
 

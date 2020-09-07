@@ -103,6 +103,7 @@ for epoch in range(1, epochs):
             correct = correct[args]
             correct = utils.try_gpu(correct)
             tmp_loss = criterion(pred.transpose(2, 1), correct)
+            loss+=tmp_loss
 
             # save
             current_train_loss[current_key].append(tmp_loss.item())

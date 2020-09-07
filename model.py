@@ -52,7 +52,7 @@ class Decoder(nn.Module):
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
         x = self.emb(x)
         x, (h, c) = self.lstm(x)
-        x = self.dropout(x)
+        #x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))
         lu = self.softmax(self.f_lu(x))
