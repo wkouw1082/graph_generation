@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import utils
 import model
 from config import *
+import preprocess as pp
 
 args = utils.get_args()
 is_preprocess = args.preprocess

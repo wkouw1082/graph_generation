@@ -1,6 +1,8 @@
 import utils
 import joblib
 import torch
+import networkx as nx 
+import matplotlib.pyplot as plt
 from config import *
 import numpy as np
 import graph_process
@@ -14,7 +16,7 @@ def preprocess(train_network_detail,test_network_detail,train_directory='./datas
     time_stamp_set = train_time_set | test_time_set
     node_label_set = train_node_set | test_node_set
     max_sequence_length = max(train_max_length,test_max_length)
-
+    
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
 
 

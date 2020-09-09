@@ -7,11 +7,12 @@ from collections import deque
 # 再起の上限回数を10^9
 sys.setrecursionlimit(10**9)
 
-G = nx.barabasi_albert_graph(20,3,1)
+G = nx.barabasi_albert_graph(30,3,1)
 node_tree = [node for node in G.nodes()]
 node_time_stamp = [-1 for i in range(G.number_of_nodes())]
 print(node_time_stamp)
 edge_tree = [edge for edge in G.edges()]
+time_stamp=0
 print(len(edge_tree))
 # print(len(edge_tree))
 visited_edges = list()
@@ -23,7 +24,7 @@ for i in range(G.number_of_nodes()):
         max_node = G.degree(i)
         first_node = i
 
-def dfs(current_node=first_node,time_stamp=0,backward=False):
+def dfs(current_node=first_node,backward=False):
     print("current node = "+ str(current_node))
     # もしbackward edgeなら探索せずに帰る
     # if(backward == True):
@@ -68,7 +69,7 @@ def dfs(current_node=first_node,time_stamp=0,backward=False):
                 visited_edges.append((current_node,next_node))
                 print(visited_edges)
                 print("forward")
-                dfs(next_node,time_stamp,backward=False)
+                dfs(next_node,backward=False)
     
     if(len(visited_edges) == len(edge_tree)):
         print(len(visited_edges))
@@ -77,5 +78,6 @@ def dfs(current_node=first_node,time_stamp=0,backward=False):
         return
 
 dfs()
-nx.draw_networkx(G)
-plt.show()
+print
+# nx.draw_networkx(G)
+# plt.show()
