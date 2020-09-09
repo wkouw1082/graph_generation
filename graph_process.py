@@ -1,6 +1,7 @@
 from time import time_ns
 import numpy as np
 import networkx as nx
+import torch
 from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
 import random
@@ -253,6 +254,7 @@ class ConvertToDfsCode():
         self.edge_tree = [edge for edge in graph.edges()]
         self.dfs_code = list()
         self.visited_edges = list()
+        self.time_stamp = 0
         self.node_time_stamp = [-1 for i in range(graph.number_of_nodes())]
 
     def get_max_degree_index(self):
@@ -265,7 +267,7 @@ class ConvertToDfsCode():
 
         return max_degree_index
 
-    def dfs(self,current_node,time_stamp=0):
+    def dfs(self,current_node):
         neightbor_node_dict = OrderedDict({neightbor:self.node_time_stamp[neightbor] for neightbor in self.G.neighbors(current_node)})
         sorted_neightbor_node = OrderedDict(sorted(neightbor_node_dict.items(), key=lambda x: x[1], reverse=True))
 
@@ -280,28 +282,27 @@ class ConvertToDfsCode():
                 if(self.node_time_stamp[next_node] != -1):
                     # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
                     if(self.node_time_stamp[current_node] == -1):
-                        self.node_time_stamp[current_node] = time_stamp
-                        time_stamp += 1
+                        self.node_time_stamp[current_node] = self.time_stamp
+                        self.time_stamp += 1
 
                     self.visited_edges.append((current_node,next_node))
                     self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
                 else:
                     # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
                     if(self.node_time_stamp[current_node] == -1):
-                        self.node_time_stamp[current_node] = time_stamp
-                        time_stamp += 1
+                        self.node_time_stamp[current_node] = self.time_stamp
+                        self.time_stamp += 1
                     # 次のノードにタイムスタンプが登録されていなければタイムスタンプを登録
                     if(self.node_time_stamp[next_node] == -1):
-                        self.node_time_stamp[next_node] = time_stamp
-                        time_stamp += 1
+                        self.node_time_stamp[next_node] = self.time_stamp
+                        self.time_stamp += 1
                     # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のリストを作成
                     self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
                     self.visited_edges.append((current_node,next_node))
-                    self.dfs(next_node,time_stamp)
+                    self.dfs(next_node)
 
     def get_dfs_code(self):
         self.dfs(self.get_max_degree_index())
-        print(len(self.dfs_code))
         return np.array(self.dfs_code)
 
 class SimpleDfsCode():
@@ -356,8 +357,48 @@ class SimpleDfsCode():
         
         return dfs_array.T
 
+def dfs_code_to_graph_obj(dfs_code,end_value_list):
+    """DFScodeをnetworkxのグラフオブジェクトに変換する関数
+
+    Args:
+        dfs_code ([np.array]): [(sequence,5)のnp.array]
+        end_value_list ([list]): [終了コード[5]]
+
+    Returns:
+        [networkx_graph]: [networkxのグラフオブジェクトを返す]
+    """    
+    G = nx.Graph()
+    for current_code in dfs_code:
+        for i in range(len(current_code)):
+            if current_code[i] == end_value_list[i]-1:
+                return G
+        tu,tv,_,_,_ = current_code
+        G.add_edge(tu,tv)
+    
+    return G
 
 if __name__ == "__main__":
-    G = nx.barabasi_albert_graph(20,3,1)
+    G = nx.barabasi_albert_graph(25,3,1)
+    nx.draw_networkx(G)
+    plt.show()
     code = ConvertToDfsCode(G)
-    print(code.get_dfs_code())
+    dfs_code = code.get_dfs_code()
+    print(dfs_code)
+    dfs_code = np.append(dfs_code,np.array([25,25,25,25,25]).reshape((1,5)),axis=0)
+    print(dfs_code)
+    # print(tu)
+    # print(tv)
+    # tu = tu.T
+    # tv = tv.T
+    # lu = lu.T
+    # lv = lv.T
+    # le = le.T
+    # dfs_code = torch.cat([tu,tv,lu,lv,le],dim=1)
+    # time_size, node_size, edge_size = joblib.load("dataset/param")
+    # print(tu)
+    # print(tv)
+    G2 = dfs_code_to_graph_obj(dfs_code,[26,26,26,26,26])
+    nx.draw_networkx(G2)
+    plt.show()
+    print(nx.is_isomorphic(G,G2))
+
