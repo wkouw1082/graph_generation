@@ -117,3 +117,7 @@ for key1, key2 in combinations:
     plt.savefig("eval_result/%s_%s.png"%(key1, key2))
     plt.close()
 
+# t-SNE
+train_dataset = joblib.load("dataset/train/onehot")[0]
+z = vae.encode(train_dataset).detach().numpy()
+utils.tsne({"train": z}, "eval_result/tsne.png")

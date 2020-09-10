@@ -138,6 +138,11 @@ class VAE(nn.Module):
             self.decoder.generate(z, max_size)
         return tu, tv, lu, lv, le
 
+    def encode(self, x):
+        mu, sigma = self.encoder(x)
+        z = transformation(mu, sigma)
+        return z
+
 def transformation(mu, sigma):
     return mu + torch.exp(0.5*sigma) * utils.try_gpu(torch.randn(sigma.shape))
 
