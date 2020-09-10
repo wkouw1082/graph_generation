@@ -2,6 +2,7 @@ import shutil
 import joblib
 import torch
 import matplotlib.pyplot as plt
+import numpy as np
 
 import utils
 import model
@@ -59,7 +60,7 @@ time_size, node_size, edge_size = joblib.load("dataset/param")
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
 vae = utils.try_gpu(vae)
 
-vae.load_state_dict(torch.load("./param/weight"))
+vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
 pred = vae(train_dataset)
 
 mu, sigma, *result = vae(train_dataset)
@@ -82,3 +83,17 @@ for j, pred in enumerate(result):
     plt.close()
 
 
+result = vae.generate(500)
+for j, pred in enumerate(result):
+    pred = pred.detach().numpy()
+    pred = [utils.convert2onehot(data, sizes[j]).detach().numpy() for data in pred]
+    pred = np.array(pred)
+    data = np.sum(pred, 0)
+
+    plt.figure()
+    plt.imshow(data)
+    plt.colorbar()
+    plt.xlabel("dim")
+    plt.ylabel("seq")
+    plt.savefig("analysis_result/generated_%s.png"%(keys[j]))
+    plt.close()
