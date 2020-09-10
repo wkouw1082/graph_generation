@@ -6,7 +6,9 @@ from collections import OrderedDict
 import collections
 from sklearn.manifold import TSNE
 import matplotlib.pyplot as plt
+import seaborn as sns
 import numpy as np
+import pandas as pd
 import torch
 
 def get_args():
@@ -130,6 +132,10 @@ def time_draw(x, ys, directory, xlabel="", ylabel=""):
     plt.savefig(directory)
     plt.close()
 
+def combination(list_, num):
+    import itertools
+    return list(itertools.combinations(list_, num))
+
 # ---研究用---
 # vecは入れ子になっている前提
 def tsne(multi_vecs, dir):
@@ -156,5 +162,27 @@ def tsne(multi_vecs, dir):
     ax.set_xlabel('dim1')
     ax.set_ylabel('dim2')
     plt.savefig(dir)
+
+def box_plot(predict, correct, trait_name, directory):
+    fig = plt.figure()
+    sns.set_context("paper", 1.2)
+    ax = fig.add_subplot(1, 1, 1)
+    correct = pd.DataFrame(correct)
+    correct_melt = pd.melt(correct)
+    correct_melt["species"] = "train"
+    predict = pd.DataFrame(predict)
+    predict_melt = pd.melt(predict)
+    predict_melt["species"] = "generated"
+    df = pd.concat([correct_melt, predict_melt], axis=0)
+
+    sns.boxplot(x='variable', y='value', data=df, hue='species', showfliers=False, palette='Set3', ax=ax)
+    sns.stripplot(x='variable', y='value', data=df, hue='species', dodge=True, jitter=True, color='black', ax=ax)
+
+    handles, labels = ax.get_legend_handles_labels()
+
+    ax.legend(handles[0:2], labels[0:2])
+    ax.set_xlabel('network')
+    ax.set_ylabel('%s'%(trait_name))
+    plt.savefig(directory)
 
 

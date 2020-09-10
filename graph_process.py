@@ -142,6 +142,7 @@ class graph_statistic():
 
     # 隣接行列を入力として, 次数分布を作成
     def degree_dist(self, graph):
+        graph = graph_obj2mat(graph)
         degree_list = np.sum(graph, axis=0)
         degree_dist_dict = {}
 
@@ -162,13 +163,13 @@ class graph_statistic():
         return param[0]
 
     def cluster_coeff(self, graph):
-        graph = np.array(graph)
-        graph = mat2graph_obj(graph)
+        #graph = np.array(graph)
+        #graph = mat2graph_obj(graph)
         return nx.average_clustering(graph)
 
     def ave_dist(self, graph):
-        graph = np.array(graph)
-        graph = mat2graph_obj(graph)
+        #graph = np.array(graph)
+        #graph = mat2graph_obj(graph)
         return nx.average_shortest_path_length(graph)
 
 # 隣接行列を隣接リストに変換
@@ -231,8 +232,8 @@ def graph_obj2mat(G):
 
 # 連結グラフかどうかの判定
 def is_connect(graph):
-    graph = np.array(graph)
-    graph = mat2graph_obj(graph)
+    #graph = np.array(graph)
+    #graph = mat2graph_obj(graph)
     return nx.is_connected(graph)
 
 # グラフの描画

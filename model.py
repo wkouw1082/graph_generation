@@ -106,9 +106,9 @@ class Decoder(nn.Module):
 
             tu = utils.convert2onehot(tu, self.time_size)
             tv = utils.convert2onehot(tv, self.time_size)
-            lu = utils.convert2onehot(lu, self.time_size)
-            lv = utils.convert2onehot(lv, self.time_size)
-            le = utils.convert2onehot(le, self.time_size)
+            lu = utils.convert2onehot(lu, self.node_label_size)
+            lv = utils.convert2onehot(lv, self.node_label_size)
+            le = utils.convert2onehot(le, self.edge_label_size)
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
         return tus, tvs, lus, lvs, les
 
@@ -119,10 +119,11 @@ class VAE(nn.Module):
         en_hidden_size = model_param["en_hidden_size"]
         de_hidden_size = model_param["de_hidden_size"]
         rep_size = model_param["rep_size"]
+        self.rep_size = rep_size
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
         self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
 
-    def noise_generator(self, batch_num = batch_size):
+    def noise_generator(self, rep_size, batch_num = batch_size):
         return torch.randn(batch_num, rep_size)
 
     def forward(self, x):
@@ -131,10 +132,10 @@ class VAE(nn.Module):
         tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
-    def generate(self, max_size=100):
-        z = self.noise_generator().unsqueeze(1)
+    def generate(self, data_num, max_size=100):
+        z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
         tu, tv, lu, lv, le =\
-            self.decoder.generate(z, 100)
+            self.decoder.generate(z, max_size)
         return tu, tv, lu, lv, le
 
 def transformation(mu, sigma):
