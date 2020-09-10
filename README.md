@@ -8,6 +8,15 @@
 python train.py [--preprocess]
 ```
 
+## eval
+
+- 訓練後にネットワークを行い評価
+- ``eval_result``に結果をはく
+
+```
+python eval.py
+```
+
 ## tuning
 
 - tuning時に実行.
