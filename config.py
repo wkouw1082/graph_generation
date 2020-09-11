@@ -23,7 +23,7 @@ test_generate_detail = {"fixed_BA": [100, data_dim, [None]],\
                         "NN": [100, data_dim, [0.6]]}
 """
 train_generate_detail = {"BA": [500, data_dim, [None]]}
-test_generate_detail = {"BA": [100, data_dim, [None]]}
+valid_generate_detail = {"BA": [100, data_dim, [None]]}
 
 ignore_label = 1000
 

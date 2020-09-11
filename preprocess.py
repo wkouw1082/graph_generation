@@ -7,15 +7,15 @@ from config import *
 import numpy as np
 import graph_process
 
-def preprocess(train_network_detail,test_network_detail,train_directory='./dataset/train/',test_directory='./dataset/test/'):
+def preprocess(train_network_detail,valid_network_detail,train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
     print('start--preprocess')
     
     train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
-    test_dfs,test_time_set,test_node_set,test_max_length = to_dfs(test_network_detail)
+    valid_dfs,valid_time_set,valid_node_set,valid_max_length = to_dfs(valid_network_detail)
 
-    time_stamp_set = train_time_set | test_time_set
-    node_label_set = train_node_set | test_node_set
-    max_sequence_length = max(train_max_length,test_max_length)
+    time_stamp_set = train_time_set | valid_time_set
+    node_label_set = train_node_set | valid_node_set
+    max_sequence_length = max(train_max_length,valid_max_length)
     
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
 
@@ -26,7 +26,7 @@ def preprocess(train_network_detail,test_network_detail,train_directory='./datas
     del time_stamp_set, node_label_set
     
     get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
-    get_onehot_and_list(test_dfs,time_dict,node_dict,max_sequence_length,test_directory)
+    get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory)
 
 def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,directory):
 

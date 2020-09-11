@@ -23,15 +23,15 @@ is_preprocess = args.preprocess
 # preprocess
 if is_preprocess:
     shutil.rmtree("dataset")
-    required_dirs = ["dataset", "dataset/train", "dataset/test"]
+    required_dirs = ["dataset", "dataset/train", "dataset/valid"]
     utils.make_dir(required_dirs)
-    pp.preprocess(train_generate_detail, test_generate_detail)
+    pp.preprocess(train_generate_detail, valid_generate_detail)
 
 # data load
 train_dataset = joblib.load("dataset/train/onehot")[0]
 train_label = joblib.load("dataset/train/label")
-test_dataset = joblib.load("dataset/test/onehot")[0]
-test_label = joblib.load("dataset/test/label")
+valid_dataset = joblib.load("dataset/valid/onehot")[0]
+valid_label = joblib.load("dataset/valid/label")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
@@ -69,6 +69,8 @@ def tuning_trial(trial):
             shuffle=True, batch_size=batch_size)
     train_min_loss = 1e10
 
+    valid_min_loss = 1e10
+
     keys = ["tu", "tv", "lu", "lv", "le"]
 
     for epoch in range(1, epochs):
@@ -99,10 +101,29 @@ def tuning_trial(trial):
             opt.step()
 
             torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
-        if train_min_loss>loss_sum:
-            train_min_loss = loss_sum
+
+        #if train_min_loss>loss_sum:
+        #    train_min_loss = loss_sum
         print(" loss: %lf"%(loss_sum))
-    return train_min_loss
+
+        valid_loss_sum = 0
+        vae.eval()
+        mu,sigma, *result = vae(valid_dataset)
+        encoder_loss = encoder_criterion(mu, sigma)
+        valid_loss = encoder_loss
+        for j, pred in enumerate(result):
+            # loss calc
+            correct = valid_label[j]
+            correct = utils.try_gpu(correct)
+            tmp_loss = criterion(pred.transpose(2, 1), correct)
+            valid_loss+=tmp_loss
+        valid_loss_sum+=valid_loss.item()
+
+        if valid_min_loss>valid_loss_sum:
+            valid_min_loss = valid_loss_sum
+        print(" valid loss: %lf"%(valid_loss_sum))
+
+    return valid_min_loss
 
 study = optuna.create_study()
 study.optimize(tuning_trial, n_trials=opt_epoch)
