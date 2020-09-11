@@ -31,15 +31,15 @@ print("start preprocess...")
 # preprocess
 if is_preprocess:
     shutil.rmtree("dataset")
-    required_dirs = ["dataset", "dataset/train", "dataset/test"]
+    required_dirs = ["dataset", "dataset/train", "dataset/valid"]
     utils.make_dir(required_dirs)
-    pp.preprocess(train_generate_detail, test_generate_detail)
+    pp.preprocess(train_generate_detail, valid_generate_detail)
 
 # data load
 train_dataset = joblib.load("dataset/train/onehot")[0]
 train_label = joblib.load("dataset/train/label")
-test_dataset = joblib.load("dataset/test/onehot")[0]
-test_label = joblib.load("dataset/test/label")
+valid_dataset = joblib.load("dataset/valid/onehot")[0]
+valid_label = joblib.load("dataset/valid/label")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
@@ -56,21 +56,21 @@ opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
 train_data_num = train_dataset.shape[0]
 train_label_args = torch.LongTensor(list(range(train_data_num)))
-test_data_num = test_dataset.shape[0]
-test_label_args = torch.LongTensor(list(range(test_data_num)))
+valid_data_num = valid_dataset.shape[0]
+valid_label_args = torch.LongTensor(list(range(valid_data_num)))
 
 train_dl = DataLoader(
         TensorDataset(train_label_args, train_dataset),\
         shuffle=True, batch_size=batch_size)
-test_dl = DataLoader(
-        TensorDataset(test_label_args, test_dataset),\
+valid_dl = DataLoader(
+        TensorDataset(valid_label_args, valid_dataset),\
         shuffle=True, batch_size=batch_size)
 
 keys = ["tu", "tv", "lu", "lv", "le"]
 train_loss = {key:[] for key in keys+["encoder"]}
 train_acc = {key:[] for key in keys}
-test_loss = {key:[] for key in keys+["encoder"]}
-test_acc = {key:[] for key in keys}
+valid_loss = {key:[] for key in keys+["encoder"]}
+valid_acc = {key:[] for key in keys}
 train_min_loss = 1e10
 
 criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
@@ -143,31 +143,31 @@ for epoch in range(1, epochs):
     # memory free
     del current_train_loss, current_train_acc
 
-    # test
-    print("test:")
-    current_test_loss = {key:[] for key in keys+["encoder"]}
-    current_test_acc = {key:[] for key in keys}
-    for i, (args, datas) in enumerate(test_dl):
+    # valid
+    print("valid:")
+    current_valid_loss = {key:[] for key in keys+["encoder"]}
+    current_valid_acc = {key:[] for key in keys}
+    for i, (args, datas) in enumerate(valid_dl):
         if i%1000==0:
-            print("step: [%d/%d]"%(i, test_data_num))
+            print("step: [%d/%d]"%(i, valid_data_num))
         vae.eval()
         opt.zero_grad()
         datas = utils.try_gpu(datas)
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
         encoder_loss = encoder_criterion(mu, sigma)
-        current_test_loss["encoder"].append(encoder_loss.item())
+        current_valid_loss["encoder"].append(encoder_loss.item())
         loss = encoder_loss
         for j, pred in enumerate(result):
             current_key = keys[j]
             # loss calc
-            correct = test_label[j]
+            correct = valid_label[j]
             correct = correct[args]
             correct = utils.try_gpu(correct)
             tmp_loss = criterion(pred.transpose(2, 1), correct)
 
             # save
-            current_test_loss[current_key].append(tmp_loss.item())
+            current_valid_loss[current_key].append(tmp_loss.item())
 
             # acc calc
             pred = torch.argmax(pred, dim=2)  # predicted onehot->label
@@ -176,23 +176,23 @@ for epoch in range(1, epochs):
             score = utils.calc_calssification_acc(pred, correct, ignore_label)
 
             # save
-            current_test_acc[current_key].append(score)
+            current_valid_acc[current_key].append(score)
 
     # loss, acc save
     print("----------------------------")
     for key in keys:
-        loss = np.average(current_test_loss[key])
-        test_loss[key].append(loss)
-        acc = np.average(current_test_acc[key])
-        test_acc[key].append(acc)
+        loss = np.average(current_valid_loss[key])
+        valid_loss[key].append(loss)
+        acc = np.average(current_valid_acc[key])
+        valid_acc[key].append(acc)
 
         print(" %s:"%(key))
         print("     loss:%lf"%(loss))
         print("     acc:%lf"%(acc))
 
     ekey = "encoder"
-    loss = np.average(current_test_loss[ekey])
-    test_loss[ekey].append(loss)
+    loss = np.average(current_valid_loss[ekey])
+    valid_loss[ekey].append(loss)
     print(" %s:"%(ekey))
     print("     loss:%lf"%(loss))
     print("----------------------------")
@@ -202,8 +202,8 @@ for epoch in range(1, epochs):
     utils.time_draw(range(epoch), train_acc, "train_result/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
     for key in keys:
         utils.time_draw(range(epoch), {key: train_loss[key]}, "train_result/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-    utils.time_draw(range(epoch), test_loss, "train_result/test_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-    utils.time_draw(range(epoch), test_acc, "train_result/test_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+    utils.time_draw(range(epoch), valid_loss, "train_result/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+    utils.time_draw(range(epoch), valid_acc, "train_result/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
     # output weight if train loss is min
     if loss_sum<train_min_loss:

@@ -19,15 +19,15 @@ print("start preprocess...")
 # preprocess
 if is_preprocess:
     shutil.rmtree("dataset")
-    required_dirs = ["dataset", "dataset/train", "dataset/test"]
+    required_dirs = ["dataset", "dataset/train", "dataset/valid"]
     utils.make_dir(required_dirs)
-    pp.preprocess(train_generate_detail, test_generate_detail)
+    pp.preprocess(train_generate_detail, valid_generate_detail)
 
 # data load
 train_dataset = joblib.load("dataset/train/onehot")[0]
 train_label = joblib.load("dataset/train/label")
-test_dataset = joblib.load("dataset/test/onehot")[0]
-test_label = joblib.load("dataset/test/label")
+valid_dataset = joblib.load("dataset/valid/onehot")[0]
+valid_label = joblib.load("dataset/valid/label")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
