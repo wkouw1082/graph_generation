@@ -35,6 +35,7 @@ valid_label = joblib.load("dataset/valid/label")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
+valid_dataset = utils.try_gpu(valid_dataset)
 
 print("--------------")
 print("time size: %d"%(time_size))
@@ -104,7 +105,7 @@ def tuning_trial(trial):
 
         #if train_min_loss>loss_sum:
         #    train_min_loss = loss_sum
-        print(" loss: %lf"%(loss_sum))
+        print("train loss: %lf"%(loss_sum))
 
         valid_loss_sum = 0
         vae.eval()
@@ -122,7 +123,6 @@ def tuning_trial(trial):
         if valid_min_loss>valid_loss_sum:
             valid_min_loss = valid_loss_sum
         print(" valid loss: %lf"%(valid_loss_sum))
-
     return valid_min_loss
 
 study = optuna.create_study()
