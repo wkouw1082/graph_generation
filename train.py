@@ -69,7 +69,9 @@ valid_dl = DataLoader(
 keys = ["tu", "tv", "lu", "lv", "le"]
 train_loss = {key:[] for key in keys+["encoder"]}
 train_acc = {key:[] for key in keys}
+train_loss_sums = []
 valid_loss = {key:[] for key in keys+["encoder"]}
+valid_loss_sums = []
 valid_acc = {key:[] for key in keys}
 train_min_loss = 1e10
 
@@ -83,7 +85,7 @@ for epoch in range(1, epochs):
     print("train:")
     current_train_loss = {key:[] for key in keys+["encoder"]}
     current_train_acc = {key:[] for key in keys}
-    loss_sum = 0
+    train_loss_sum = 0
     for i, (args, datas) in enumerate(train_dl, 1):
         if i%100==0:
             print("step: [%d/%d]"%(i, train_data_num))
@@ -117,7 +119,7 @@ for epoch in range(1, epochs):
             # save
             current_train_acc[current_key].append(score)
         loss.backward()
-        loss_sum+=loss.item()
+        train_loss_sum+=loss.item()
         opt.step()
 
         torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
@@ -147,6 +149,7 @@ for epoch in range(1, epochs):
     print("valid:")
     current_valid_loss = {key:[] for key in keys+["encoder"]}
     current_valid_acc = {key:[] for key in keys}
+    valid_loss_sum = 0
     for i, (args, datas) in enumerate(valid_dl):
         if i%1000==0:
             print("step: [%d/%d]"%(i, valid_data_num))
@@ -165,6 +168,7 @@ for epoch in range(1, epochs):
             correct = correct[args]
             correct = utils.try_gpu(correct)
             tmp_loss = criterion(pred.transpose(2, 1), correct)
+            loss+=tmp_loss.item()
 
             # save
             current_valid_loss[current_key].append(tmp_loss.item())
@@ -177,6 +181,7 @@ for epoch in range(1, epochs):
 
             # save
             current_valid_acc[current_key].append(score)
+        valid_loss_sum+=loss.item()
 
     # loss, acc save
     print("----------------------------")
@@ -200,13 +205,20 @@ for epoch in range(1, epochs):
     # output loss/acc transition
     utils.time_draw(range(epoch), train_loss, "train_result/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), train_acc, "train_result/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
-    for key in keys:
+    for key in keys+["encoder"]:
         utils.time_draw(range(epoch), {key: train_loss[key]}, "train_result/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), valid_loss, "train_result/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
     utils.time_draw(range(epoch), valid_acc, "train_result/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
+    train_loss_sums.append(train_loss_sum/train_data_num)
+    valid_loss_sums.append(valid_loss_sum/valid_data_num)
+    utils.time_draw(
+            range(epoch),
+            {"train": train_loss_sums, "valid": valid_loss_sums},
+            "train_result/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+
     # output weight if train loss is min
-    if loss_sum<train_min_loss:
-        train_min_loss = loss_sum
+    if train_loss_sum<train_min_loss:
+        train_min_loss = train_loss_sum
         torch.save(vae.state_dict(), "param/weight")
     print("\n")
