@@ -12,6 +12,8 @@ from scipy.optimize import curve_fit
 import config
 import sys
 import time
+import math
+from config import *
 
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
@@ -33,9 +35,62 @@ class complex_networks():
                 datasets.extend(datas)
         return datasets
 
+    def create_conditional_dataset(self,detail):
+        datasets = []
+        for i, (key,value) in enumerate(detail.items()):
+            generate_num = value[0]
+            data_dim = value[1]
+            params = value[2]
+            end_flag = True
+            # 本来ならlen(power_degree_lable):len(cluster_coefficient_label)がサイズ　簡略化してるためこの数字
+            generate_counter = [0]*len(power_degree_label)
+            for param in params:
+                if key == "BA":
+                    while True:
+                        data = self.generate_BA(1, data_dim)                        
+                        st = graph_statistic()
+
+                        if len(datasets) == generate_num:
+                            break
+
+                        if generate_counter[0] < int(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
+                            generate_counter[0] += 1
+                            datasets.extend(data)
+                        
+                        if generate_counter[1] < int(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
+                            generate_counter[1] += 1
+                            datasets.extend(data)
+                        
+                        if generate_counter[2] < int(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
+                            generate_counter[2] += 1
+                            datasets.extend(data)
+                        
+
+                elif key == "fixed_BA":
+                    while True:
+                        data = self.generate_fixed_BA(1, data_dim)
+                        st = graph_statistic()
+                        if abs(round(st.degree_dist(data[0]),1)) == power_degree_label and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label:
+                            datasets.extend(data)
+                        
+                        if len(datasets) == generate_num:
+                            break
+
+                elif key == "NN":
+                    while True:
+                        data = self.nearest_neighbor_model(1, data_dim, param)
+                        st = graph_statistic()
+                        if abs(round(st.degree_dist(data[0]),1)) == power_degree_label and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label:
+                            datasets.extend(data)
+                        
+                        if len(datasets) == generate_num:
+                            break
+        
+        return datasets
+
     # 俗に言う修正BAモデルの生成
     def generate_fixed_BA(self, generate_num, data_dim):
-        print("     generate fixed BA:")
+        # print("     generate fixed BA:")
         datas = []
 
         for i in range(generate_num):
@@ -78,7 +133,7 @@ class complex_networks():
         return datas
 
     def generate_BA(self, generate_num, data_dim):
-        print("     generate BA:")
+        # print("     generate BA:")
         tmp = []
         for _ in range(generate_num):
             tmp.append(nx.barabasi_albert_graph(data_dim,3,None))
@@ -379,27 +434,11 @@ def dfs_code_to_graph_obj(dfs_code,end_value_list):
     return G
 
 if __name__ == "__main__":
-    G = nx.barabasi_albert_graph(25,3,1)
-    nx.draw_networkx(G)
-    plt.show()
-    code = ConvertToDfsCode(G)
-    dfs_code = code.get_dfs_code()
-    print(dfs_code)
-    dfs_code = np.append(dfs_code,np.array([25,25,25,25,25]).reshape((1,5)),axis=0)
-    print(dfs_code)
-    # print(tu)
-    # print(tv)
-    # tu = tu.T
-    # tv = tv.T
-    # lu = lu.T
-    # lv = lv.T
-    # le = le.T
-    # dfs_code = torch.cat([tu,tv,lu,lv,le],dim=1)
-    # time_size, node_size, edge_size = joblib.load("dataset/param")
-    # print(tu)
-    # print(tv)
-    G2 = dfs_code_to_graph_obj(dfs_code,[26,26,26,26,26])
-    nx.draw_networkx(G2)
-    plt.show()
-    print(nx.is_isomorphic(G,G2))
+    complex_network = complex_networks()
+    datasets = complex_network.create_conditional_dataset(train_generate_detail)
+    for data in datasets:
+        st = graph_statistic()
+        print(round(st.degree_dist(data),1))
+        print(nx.average_clustering(data))
+
 
