@@ -1,3 +1,4 @@
+from networkx.algorithms.assortativity.mixing import degree_mixing_dict
 import utils
 import joblib
 import torch
@@ -19,8 +20,7 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
 
-
-    time_dict = {time:index for index, time in enumerate(time_stamp_set)}   
+    time_dict = {time:index for index, time in enumerate(time_stamp_set)}
     node_dict = {node:index for index, node in enumerate(node_label_set)}
 
     del time_stamp_set, node_label_set
@@ -111,3 +111,15 @@ def  to_dfs(detail):
 
     return dfs_code, time_stamp_set, nodes_label_set,\
         max_sequence_length
+
+def create_label():
+    degree_dict = {degree:index for index, degree in enumerate(power_degree_label)}
+    cluster_dict = {cluster:index for index, cluster in enumerate(cluster_coefficient_label)}
+    power_degree_conditinal_label = utils.convert2onehot(list(degree_dict.values()),power_degree_dim)
+    cluster_coefficient_conditinal_label = utils.convert2onehot(list(cluster_dict.values()),cluster_coefficient_dim)
+    label = torch.cat((power_degree_conditinal_label,cluster_coefficient_conditinal_label),1)
+
+    return label
+
+if __name__ == "__main__":
+    print(create_label())
