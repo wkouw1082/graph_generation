@@ -36,10 +36,12 @@ if is_preprocess:
     pp.preprocess(train_generate_detail, valid_generate_detail)
 
 # data load
-train_dataset = joblib.load("dataset/train/onehot")[0]
+train_dataset = joblib.load("dataset/train/onehot")
 train_label = joblib.load("dataset/train/label")
-valid_dataset = joblib.load("dataset/valid/onehot")[0]
+train_conditional = joblib.load("dataset/train/conditional")
+valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
+valid_conditional = joblib.load("dataset/valid/conditional")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
