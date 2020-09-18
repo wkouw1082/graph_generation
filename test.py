@@ -1,83 +1,164 @@
-import sys
-import matplotlib.pyplot as plt
-from collections import OrderedDict
-import networkx as nx
-from collections import deque
+import torch
+from torch import nn
+import utils
+from config import *
 
-# 再起の上限回数を10^9
-sys.setrecursionlimit(10**9)
+class Encoder(nn.Module):
+    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):
+        super(Encoder, self).__init__()
+        self.emb = nn.Linear(input_size, emb_size)
+        self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.mu = nn.Linear(hidden_size, rep_size)
+        self.sigma = nn.Linear(hidden_size, rep_size)
 
-G = nx.barabasi_albert_graph(30,3,1)
-node_tree = [node for node in G.nodes()]
-node_time_stamp = [-1 for i in range(G.number_of_nodes())]
-print(node_time_stamp)
-edge_tree = [edge for edge in G.edges()]
-time_stamp=0
-print(len(edge_tree))
-# print(len(edge_tree))
-visited_edges = list()
-dfs_code = list()
-max_node = 0
-first_node = 0
-for i in range(G.number_of_nodes()):
-    if(G.degree(i) >= max_node):
-        max_node = G.degree(i)
-        first_node = i
+    def forward(self, x, label):
+        x = self.emb(x)
+        x, (h,c) = self.lstm(x)
+        x = x[:, -1, :].unsqueeze(1)
+        return self.mu(torch.cat((x,label))), self.sigma(torch.cat((x,label)))
 
-def dfs(current_node=first_node,backward=False):
-    print("current node = "+ str(current_node))
-    # もしbackward edgeなら探索せずに帰る
-    # if(backward == True):
-    #     return
+class Decoder(nn.Module):
+    def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
+        super(Decoder, self).__init__()
+        self.emb = nn.Linear(input_size, emb_size)
+        self.f_rep = nn.Linear(rep_size, input_size)
+        self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.f_tu = nn.Linear(hidden_size, time_size)
+        self.f_tv = nn.Linear(hidden_size, time_size)
+        self.f_lu = nn.Linear(hidden_size, node_label_size)
+        self.f_lv = nn.Linear(hidden_size, node_label_size)
+        self.f_le = nn.Linear(hidden_size, edge_label_size)
+        self.softmax = nn.Softmax(dim=2)
+        self.dropout = nn.Dropout(0.5)
 
-    neightbor_node_dict = OrderedDict({neightbor:node_time_stamp[neightbor] for neightbor in G.neighbors(current_node)})
-    print(neightbor_node_dict)
-    sorted_neightbor_node = OrderedDict(sorted(neightbor_node_dict.items(), key=lambda x: x[1], reverse=True))
-    print(list(sorted_neightbor_node.keys()))
+        self.time_size = time_size
+        self.node_label_size = node_label_size
+        self.edge_label_size = edge_label_size
 
-    for next_node in sorted_neightbor_node.keys():
-        # print(sorted_neightbor_node.keys())
-        # print(next_node)
-        if((current_node, next_node) in visited_edges or (next_node, current_node)in visited_edges):
-            continue
-        else:
-            # 次のノードにタイムスタンプが登録されている場合、backward
-            if (node_time_stamp[next_node] != -1):
-                # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
-                if(node_time_stamp[current_node] == -1):
-                    node_time_stamp[current_node] = time_stamp
-                    time_stamp += 1
+    def forward(self, rep, x, label):
+        """
+        学習時のforward
+        Args:
+            rep: encoderの出力
+            x: dfs code
+        Returns:
+            tu: source time
+            tv: sink time
+            lu: source node label
+            lv: sink node label
+            le: edge label
+        """
+        rep = self.f_rep(rep)
+        x = torch.cat((rep, x), dim=1)[:,:-1,:]
+        x = self.emb(x)
+        x, (h, c) = self.lstm(x)
+        x = torch.cat((x,label))
+        #x = self.dropout(x)
+        tu = self.softmax(self.f_tu(x))
+        tv = self.softmax(self.f_tv(x))
+        lu = self.softmax(self.f_lu(x))
+        lv = self.softmax(self.f_lv(x))
+        le = self.softmax(self.f_le(x))
+        return tu, tv, lu, lv, le
 
-                visited_edges.append((current_node,next_node))
-                dfs_code.append((node_time_stamp[current_node],node_time_stamp[next_node],G.degree(current_node),G.degree(next_node),0))
-                print(visited_edges)
-                print("backward")
-                # dfs(next_node,time_stamp,backward=True)
+    def generate(self, rep, max_size=100):
+        """
+        生成時のforward. 生成したdfsコードを用いて、新たなコードを生成していく
+        Args:
+            rep: encoderの出力
+            max_size: 生成を続ける最大サイズ(生成を続けるエッジの最大数)
+        Returns:
+        """
+        rep = self.f_rep(rep)
+        rep = self.emb(rep)
+        x = rep
+        batch_size = x.shape[0]
+        h = torch.zeros(1, batch_size, x.shape[2])
+        c = torch.zeros(1, batch_size, x.shape[2])
 
-            # 次のノードにタイムスタンプが登録されていない場合、forward
+        tus = torch.LongTensor()
+        tvs = torch.LongTensor()
+        lus = torch.LongTensor()
+        lvs = torch.LongTensor()
+        les = torch.LongTensor()
+
+        for i in range(max_size):
+            if i == 0:
+                x, (h, c) = self.lstm(x)
             else:
-                # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
-                if(node_time_stamp[current_node] == -1):
-                    node_time_stamp[current_node] = time_stamp
-                    time_stamp += 1
-                # 次のノードにタイムスタンプが登録されていなければタイムスタンプを登録
-                if(node_time_stamp[next_node] == -1):
-                    node_time_stamp[next_node] = time_stamp
-                    time_stamp += 1
-                # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のタプルを作成
-                dfs_code.append((node_time_stamp[current_node],node_time_stamp[next_node],G.degree(current_node),G.degree(next_node),0))
-                visited_edges.append((current_node,next_node))
-                print(visited_edges)
-                print("forward")
-                dfs(next_node,backward=False)
-    
-    if(len(visited_edges) == len(edge_tree)):
-        print(len(visited_edges))
-        print(len(dfs_code))
-        print(dfs_code)
-        return
+                x = self.emb(x)
+                x, (h, c) = self.lstm(x, (h, c))
+            tu = torch.argmax(self.softmax(self.f_tu(x)), dim=2)
+            tv = torch.argmax(self.softmax(self.f_tv(x)), dim=2)
+            lu = torch.argmax(self.softmax(self.f_lu(x)), dim=2)
+            lv = torch.argmax(self.softmax(self.f_lv(x)), dim=2)
+            le = torch.argmax(self.softmax(self.f_le(x)), dim=2)
 
-dfs()
-print
-# nx.draw_networkx(G)
-# plt.show()
+            tus = torch.cat((tus, tu), dim=1)
+            tvs = torch.cat((tvs, tv), dim=1)
+            lus = torch.cat((lus, lu), dim=1)
+            lvs = torch.cat((lvs, lv), dim=1)
+            les = torch.cat((les, le), dim=1)
+            tu = tu.squeeze().detach().numpy()
+            tv = tv.squeeze().detach().numpy()
+            lu = lu.squeeze().detach().numpy()
+            lv = lv.squeeze().detach().numpy()
+            le = le.squeeze().detach().numpy()
+
+            tu = utils.convert2onehot(tu, self.time_size)
+            tv = utils.convert2onehot(tv, self.time_size)
+            lu = utils.convert2onehot(lu, self.node_label_size)
+            lv = utils.convert2onehot(lv, self.node_label_size)
+            le = utils.convert2onehot(le, self.edge_label_size)
+            x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+        return tus, tvs, lus, lvs, les
+
+class VAE(nn.Module):
+    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
+        super(VAE, self).__init__()
+        emb_size = model_param["emb_size"]
+        en_hidden_size = model_param["en_hidden_size"]
+        de_hidden_size = model_param["de_hidden_size"]
+        rep_size = model_param["rep_size"]
+        self.rep_size = rep_size
+        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
+        self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
+
+    def noise_generator(self, rep_size, batch_num = batch_size):
+        return torch.randn(batch_num, rep_size)
+
+    def forward(self, x):
+        mu, sigma = self.encoder(x)
+        z = transformation(mu, sigma)
+        tu, tv, lu, lv, le = self.decoder(z, x)
+        return mu, sigma, tu, tv, lu, lv, le
+
+    def generate(self, data_num, max_size=100):
+        z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
+        tu, tv, lu, lv, le =\
+            self.decoder.generate(z, max_size)
+        return tu, tv, lu, lv, le
+
+    def encode(self, x):
+        mu, sigma = self.encoder(x)
+        z = transformation(mu, sigma)
+        return z
+
+def transformation(mu, sigma):
+    return mu + torch.exp(0.5*sigma) * utils.try_gpu(torch.randn(sigma.shape))
+
+if __name__=="__main__":
+    import numpy as np
+    x = torch.randn(batch_size,200,10)
+    y = torch.randn(batch_size,200,10)
+    vae = VAE(10,2,2,2)
+    vae(x,y)
+    vae.generate()
+    """
+    encoder = Encoder(20, 10, 10, 10)
+    mu, sigma = encoder(x)
+    z = transformation(mu, sigma)
+    decoder = Decoder(10, 20, 10, 10, 2, 2, 2)
+    tu, tv, lu, lv, le = decoder(z, y)
+    tu, tv, lu, lv, le = decoder.generate(z, 10)
+    """

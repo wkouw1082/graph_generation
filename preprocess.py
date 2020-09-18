@@ -11,8 +11,8 @@ import graph_process
 def preprocess(train_network_detail,valid_network_detail,train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
     print('start--preprocess')
     
-    train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
-    valid_dfs,valid_time_set,valid_node_set,valid_max_length = to_dfs(valid_network_detail)
+    train_dfs,train_time_set,train_node_set,train_max_length,train_label = to_dfs_conditional(train_network_detail)
+    valid_dfs,valid_time_set,valid_node_set,valid_max_length,valid_label = to_dfs_conditional(valid_network_detail)
 
     time_stamp_set = train_time_set | valid_time_set
     node_label_set = train_node_set | valid_node_set
@@ -25,10 +25,10 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
 
     del time_stamp_set, node_label_set
     
-    get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
-    get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory)
+    get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_label,train_directory)
+    get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_label,valid_directory)
 
-def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,directory):
+def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,label_set,directory):
 
     time_end_num = len(time_dict.keys())
     node_end_num = len(node_dict.keys())
@@ -77,8 +77,9 @@ def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,directo
     n_v_list = torch.LongTensor(utils.padding(n_v_list,max_sequence_length,ignore_label))
     e_list = torch.LongTensor(utils.padding(e_list,max_sequence_length,ignore_label))
 
-    joblib.dump([dfs_code_onehot_list],directory+'onehot')
+    joblib.dump(dfs_code_onehot_list,directory+'onehot')
     joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
+    joblib.dump(label_set,directory+'conditional')
 
 
 def  to_dfs(detail):
@@ -112,14 +113,35 @@ def  to_dfs(detail):
     return dfs_code, time_stamp_set, nodes_label_set,\
         max_sequence_length
 
-def create_label():
-    degree_dict = {degree:index for index, degree in enumerate(power_degree_label)}
-    cluster_dict = {cluster:index for index, cluster in enumerate(cluster_coefficient_label)}
-    power_degree_conditinal_label = utils.convert2onehot(list(degree_dict.values()),power_degree_dim)
-    cluster_coefficient_conditinal_label = utils.convert2onehot(list(cluster_dict.values()),cluster_coefficient_dim)
-    label = torch.cat((power_degree_conditinal_label,cluster_coefficient_conditinal_label),1)
+def  to_dfs_conditional(detail):
+    complex_network = graph_process.complex_networks()
+    datasets, labelsets= complex_network.create_conditional_dataset(detail)
 
-    return label
+    dfs_code = list()
+    time_stamp_set = set()
+    nodes_label_set = set()
+    max_sequence_length = 0
 
-if __name__ == "__main__":
-    print(create_label())
+    for graph in datasets:
+        covert_graph = graph_process.ConvertToDfsCode(graph)
+        tmp = covert_graph.get_dfs_code()
+        # 一旦tmpにdfscodeを出してからdfscodeにappend
+        dfs_code.append(tmp)
+        # グラフの中の最大のシーケンス長を求める　+1はeosが最後に入る分
+        if max_sequence_length < len(tmp)+1:
+            max_sequence_length = len(tmp)+1
+
+        time_u = set(tmp[:, 0])
+        time_v = set(tmp[:, 1])
+        time = time_u | time_v
+        time_stamp_set = time_stamp_set| time
+
+        node_u = set(tmp[:,2])
+        node_v = set(tmp[:,3])
+        node = node_u | node_v
+        nodes_label_set = nodes_label_set | node
+
+    
+    
+    return dfs_code, time_stamp_set, nodes_label_set,\
+        max_sequence_length, labelsets
