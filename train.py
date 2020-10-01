@@ -37,19 +37,28 @@ if is_preprocess:
 
 # data load
 train_dataset = joblib.load("dataset/train/onehot")
-train_label = joblib.load("dataset/train/label")
+train_label = joblib.load("dataset/train/label") 
 train_conditional = joblib.load("dataset/train/conditional")
 valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
 valid_conditional = joblib.load("dataset/valid/conditional")
 
-time_size, node_size, edge_size = joblib.load("dataset/param")
-dfs_size = 2*time_size+2*node_size+edge_size
+train_conditional = torch.cat((train_conditional,torch.zeros(train_dataset.shape[0],train_dataset.shape[1]-1,train_conditional.shape[2])),dim=1)
+valid_conditional = torch.cat((valid_conditional,torch.zeros(valid_dataset.shape[0],valid_dataset.shape[1]-1,valid_conditional.shape[2])),dim=1)
+
+train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
+valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
+
+
+time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+
+dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 
 print("--------------")
 print("time size: %d"%(time_size))
 print("node size: %d"%(node_size))
 print("edge size: %d"%(edge_size))
+print("conditional size: %d"%(conditional_size))
 print("--------------")
 
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
@@ -67,6 +76,8 @@ train_dl = DataLoader(
 valid_dl = DataLoader(
         TensorDataset(valid_label_args, valid_dataset),\
         shuffle=True, batch_size=batch_size)
+
+
 
 keys = ["tu", "tv", "lu", "lv", "le"]
 train_loss = {key:[] for key in keys+["encoder"]}

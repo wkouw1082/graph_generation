@@ -17,8 +17,9 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     time_stamp_set = train_time_set | valid_time_set
     node_label_set = train_node_set | valid_node_set
     max_sequence_length = max(train_max_length,valid_max_length)
+    conditional_label_length = power_degree_dim + cluster_coefficient_dim
     
-    joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
+    joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, conditional_label_length], "dataset/param")
 
     time_dict = {time:index for index, time in enumerate(time_stamp_set)}
     node_dict = {node:index for index, node in enumerate(node_label_set)}
