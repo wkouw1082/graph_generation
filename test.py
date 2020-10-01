@@ -13,9 +13,10 @@ class Encoder(nn.Module):
 
     def forward(self, x, label):
         x = self.emb(x)
+        x = torch.cat((x,label),dim=0)
         x, (h,c) = self.lstm(x)
         x = x[:, -1, :].unsqueeze(1)
-        return self.mu(torch.cat((x,label))), self.sigma(torch.cat((x,label)))
+        return self.mu(x), self.sigma(x)
 
 class Decoder(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
@@ -51,8 +52,8 @@ class Decoder(nn.Module):
         rep = self.f_rep(rep)
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
         x = self.emb(x)
+        x = torch.cat((x,label),dim=0)
         x, (h, c) = self.lstm(x)
-        x = torch.cat((x,label))
         #x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))

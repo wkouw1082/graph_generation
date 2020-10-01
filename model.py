@@ -13,6 +13,7 @@ class Encoder(nn.Module):
 
     def forward(self, x):
         x = self.emb(x)
+        # x = torch.cat((x,label),dim=2)
         x, (h,c) = self.lstm(x)
         x = x[:, -1, :].unsqueeze(1)
         return self.mu(x), self.sigma(x)
@@ -51,6 +52,7 @@ class Decoder(nn.Module):
         rep = self.f_rep(rep)
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
         x = self.emb(x)
+        # x = torch.cat((x,label),dim=2)
         x, (h, c) = self.lstm(x)
         #x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
