@@ -37,6 +37,7 @@ class complex_networks():
 
     def create_conditional_dataset(self,detail):
         datasets = []
+        labelsets = torch.Tensor()
         for i, (key,value) in enumerate(detail.items()):
             generate_num = value[0]
             data_dim = value[1]
@@ -73,7 +74,7 @@ class complex_networks():
                         print("C"+str(generate_counter[2]))
                         datasets.extend(data)
         
-        return datasets
+        return datasets, labelsets.unsqueeze(1)
 
     # 俗に言う修正BAモデルの生成
     def generate_fixed_BA(self, generate_num, data_dim):
@@ -177,6 +178,15 @@ class complex_networks():
                         potential_links.remove(args)
             datas.append(mat2graph_obj(data))
         return datas
+
+    def create_label(self,label_index):
+        degree_dict = {degree:index for index, degree in enumerate(power_degree_label)}
+        cluster_dict = {cluster:index for index, cluster in enumerate(cluster_coefficient_label)}
+        power_degree_conditinal_label = utils.convert2onehot(list(degree_dict.values()),power_degree_dim)
+        cluster_coefficient_conditinal_label = utils.convert2onehot(list(cluster_dict.values()),cluster_coefficient_dim)
+        label = torch.cat((power_degree_conditinal_label,cluster_coefficient_conditinal_label),1)
+        
+        return label[label_index]
 
 class graph_statistic():
     def fitting_function(self, k, a, b):
@@ -422,7 +432,8 @@ def dfs_code_to_graph_obj(dfs_code,end_value_list):
 
 if __name__ == "__main__":
     complex_network = complex_networks()
-    datasets = complex_network.create_conditional_dataset(train_generate_detail)
-    print(len(datasets))
+    datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
+    print(datasets)
+    print(labelsets.unsqueeze(1).size())
 
 

@@ -24,9 +24,9 @@ if is_preprocess:
     pp.preprocess(train_generate_detail, valid_generate_detail)
 
 # data load
-train_dataset = joblib.load("dataset/train/onehot")[0]
+train_dataset = joblib.load("dataset/train/onehot")
 train_label = joblib.load("dataset/train/label")
-valid_dataset = joblib.load("dataset/valid/onehot")[0]
+valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
 
 time_size, node_size, edge_size = joblib.load("dataset/param")
