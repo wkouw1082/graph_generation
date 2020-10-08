@@ -46,50 +46,34 @@ class complex_networks():
             # 本来ならlen(power_degree_lable):len(cluster_coefficient_label)がサイズ　簡略化してるためこの数字
             generate_counter = [0]*len(power_degree_label)
             for param in params:
-                if key == "BA":
-                    while True:
-                        data = self.generate_BA(1, data_dim)                        
-                        st = graph_statistic()
-
-                        if len(datasets) == generate_num:
-                            break
-
-                        if generate_counter[0] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
-                            generate_counter[0] += 1
-                            labelsets = torch.cat((labelsets,self.create_label(0).unsqueeze(0)),dim=0)
-                            datasets.extend(data)
-                        
-                        if generate_counter[1] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[1] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[1]:
-                            generate_counter[1] += 1
-                            labelsets = torch.cat((labelsets,self.create_label(1).unsqueeze(0)),dim=0)
-                            datasets.extend(data)
-                        
-                        if generate_counter[2] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[2] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[2]:
-                            generate_counter[2] += 1
-                            labelsets = torch.cat((labelsets,self.create_label(2).unsqueeze(0)),dim=0)
-                            datasets.extend(data)
-                        
-
-                elif key == "fixed_BA":
-                    while True:
+                while True:
+                    if key == "BA":
+                        data = self.generate_BA(1, data_dim)
+                    elif key == "fixed_BA":
                         data = self.generate_fixed_BA(1, data_dim)
-                        st = graph_statistic()
-                        if abs(round(st.degree_dist(data[0]),1)) == power_degree_label and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label:
-                            datasets.extend(data)
-                        
-                        if len(datasets) == generate_num:
-                            break
-
-                elif key == "NN":
-                    while True:
+                    elif key == "NN":
                         data = self.nearest_neighbor_model(1, data_dim, param)
-                        st = graph_statistic()
-                        if abs(round(st.degree_dist(data[0]),1)) == power_degree_label and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label:
-                            datasets.extend(data)
+                    
+                    st = graph_statistic()
+
+                    if len(datasets) == generate_num:
+                        break
+
+                    if generate_counter[0] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
+                        generate_counter[0] += 1
+                        labelsets = torch.cat((labelsets,self.create_label(0).unsqueeze(0)),dim=0)
+                        datasets.extend(data)
+                    
+                    if generate_counter[1] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[1] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[1]:
+                        generate_counter[1] += 1
+                        labelsets = torch.cat((labelsets,self.create_label(1).unsqueeze(0)),dim=0)
+                        datasets.extend(data)
+                    
+                    if generate_counter[2] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[2] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[2]:
+                        generate_counter[2] += 1
+                        labelsets = torch.cat((labelsets,self.create_label(2).unsqueeze(0)),dim=0)
+                        datasets.extend(data)
                         
-                        if len(datasets) == generate_num:
-                            break
-        
         return datasets, labelsets.unsqueeze(1)
 
     # 俗に言う修正BAモデルの生成
