@@ -25,8 +25,8 @@ required_dirs = ["param", "eval_result", "dataset"]
 utils.make_dir(required_dirs)
 
 train_label = joblib.load("dataset/train/label")
-time_size, node_size, edge_size = joblib.load("dataset/param")
-dfs_size = 2*time_size+2*node_size+edge_size
+time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 
 print("--------------")
 print("time size: %d"%(time_size))
