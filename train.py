@@ -1,5 +1,6 @@
 import utils
 import preprocess as pp
+from graph_process import graph_statistic
 from config import *
 import model
 import self_loss
@@ -43,12 +44,15 @@ valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
 valid_conditional = joblib.load("dataset/valid/conditional")
 
-train_conditional = torch.cat((train_conditional,torch.zeros(train_dataset.shape[0],train_dataset.shape[1]-1,train_conditional.shape[2])),dim=1)
-valid_conditional = torch.cat((valid_conditional,torch.zeros(valid_dataset.shape[0],valid_dataset.shape[1]-1,valid_conditional.shape[2])),dim=1)
+train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
+valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
+
+for i in train_conditional:
+    print(i)
+    print(i.shape)
 
 train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
 valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-
 
 time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
 

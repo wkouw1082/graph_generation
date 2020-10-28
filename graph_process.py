@@ -1,4 +1,5 @@
 from time import time_ns
+from networkx.classes import graph
 import numpy as np
 import networkx as nx
 import torch
@@ -59,17 +60,17 @@ class complex_networks():
                     if len(datasets) == generate_num:
                         break
 
-                    if generate_counter[0] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
+                    if generate_counter[0] != math.ceil(generate_num/3) and -1*round(st.degree_dist(data[0]),1)) == power_degree_label[0] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[0]:
                         generate_counter[0] += 1
                         labelsets = torch.cat((labelsets,self.create_label(0).unsqueeze(0)),dim=0)
                         datasets.extend(data)
                     
-                    if generate_counter[1] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[1] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[1]:
+                    if generate_counter[1] != math.ceil(generate_num/3) and -1*round(st.degree_dist(data[0]),1)) == power_degree_label[1] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[1]:
                         generate_counter[1] += 1
                         labelsets = torch.cat((labelsets,self.create_label(1).unsqueeze(0)),dim=0)
                         datasets.extend(data)
                     
-                    if generate_counter[2] != math.ceil(generate_num/3) and abs(round(st.degree_dist(data[0]),1)) == power_degree_label[2] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[2]:
+                    if generate_counter[2] != math.ceil(generate_num/3) and -1*round(st.degree_dist(data[0]),1)) == power_degree_label[2] and abs(round(nx.average_clustering(data[0]),1)) == cluster_coefficient_label[2]:
                         generate_counter[2] += 1
                         labelsets = torch.cat((labelsets,self.create_label(2).unsqueeze(0)),dim=0)
                         datasets.extend(data)
@@ -179,14 +180,17 @@ class complex_networks():
             datas.append(mat2graph_obj(data))
         return datas
 
-    def create_label(self,label_index):
+    def create_label(self,label_index="all"):
         degree_dict = {degree:index for index, degree in enumerate(power_degree_label)}
         cluster_dict = {cluster:index for index, cluster in enumerate(cluster_coefficient_label)}
         power_degree_conditinal_label = utils.convert2onehot(list(degree_dict.values()),power_degree_dim)
         cluster_coefficient_conditinal_label = utils.convert2onehot(list(cluster_dict.values()),cluster_coefficient_dim)
         label = torch.cat((power_degree_conditinal_label,cluster_coefficient_conditinal_label),1)
         
-        return label[label_index]
+        if type(label_index) is str:
+            return label
+        else:
+            return label[label_index]
 
 class graph_statistic():
     def fitting_function(self, k, a, b):
@@ -286,6 +290,9 @@ def graph_obj2mat(G):
 def is_connect(graph):
     #graph = np.array(graph)
     #graph = mat2graph_obj(graph)
+    if nx.is_empty(graph):
+        return False
+    
     return nx.is_connected(graph)
 
 # グラフの描画
@@ -429,6 +436,38 @@ def dfs_code_to_graph_obj(dfs_code,end_value_list):
         G.add_edge(tu,tv)
     
     return G
+
+def divide_label(label,end_value_list):
+    label_data_num = power_degree_dim*1 # ちゃんと3x3通りになったらこっちを使う power_degree_dim*cluster_coefficient_dim
+    divide_list = list()
+    
+    st = graph_statistic()
+    
+    # correct graphs
+    train_label = [code.unsqueeze(2) for code in label]
+    dfs_code = torch.cat(train_label, dim=2)
+    correct_graph = [
+            dfs_code_to_graph_obj(
+                code.detach().numpy(),
+                end_value_list
+                )
+            for code in dfs_code]
+    
+    for i in range(label_data_num):
+        divide_list.append(list())
+        
+    for graph in correct_graph:
+        if abs(round(st.degree_dist(graph),1)) == power_degree_label[0]:
+            if abs(round(nx.average_clustering(graph),1)) == cluster_coefficient_label[0]:
+                divide_list[0].append(graph)
+        elif abs(round(st.degree_dist(graph),1)) == power_degree_label[1]:
+            if abs(round(nx.average_clustering(graph),1)) == cluster_coefficient_label[1]:
+                divide_list[1].append(graph)
+        elif abs(round(st.degree_dist(graph),1)) == power_degree_label[2]:
+            if abs(round(nx.average_clustering(graph),1)) == cluster_coefficient_label[2]:
+                divide_list[2].append(graph)
+                
+    return divide_list
 
 if __name__ == "__main__":
     complex_network = complex_networks()

@@ -6,12 +6,21 @@ lr = 2e-2
 decay=0.098
 clip_th=5e-4
 
-model_param = {
-    "emb_size" : 100,
-    "en_hidden_size" : 50,
-    "de_hidden_size" : 256,
-    "rep_size" : 50
-}
+# model_param = {
+#     "emb_size" : 100,
+#     "en_hidden_size" : 50,
+#     "de_hidden_size" : 256,
+#     "rep_size" : 50
+# }
+
+model_param = {'batch_size': 72, 
+               'lr': 0.007187765594212197, 
+               'weight_decay': 0.015236811904854352, 
+               'clip_th': 0.008380857476336032, 
+               'emb_size': 253, 
+               'en_hidden_size': 33, 
+               'de_hidden_size': 249, 
+               'rep_size': 57}
 
 # graph_paremeter
 data_dim = 25 # トポロジーの頂点数
