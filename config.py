@@ -1,10 +1,10 @@
 # basic hyper parameters
 epochs = 500
 batch_size = 75
-lr = 2e-2
+lr = 7e-3
 
-decay=0.098
-clip_th=5e-4
+decay=0.015
+clip_th=8e-3
 
 # model_param = {
 #     "emb_size" : 100,
