@@ -184,5 +184,3 @@ def box_plot(predict, correct, trait_name, directory):
     ax.set_xlabel('network')
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
-
-

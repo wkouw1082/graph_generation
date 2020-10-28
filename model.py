@@ -1,7 +1,10 @@
 import torch
-from torch import nn
+from torch import empty, nn
+from graph_process import complex_networks
+import numpy as np
 import utils
 from config import *
+from utils import try_gpu
 
 class Encoder(nn.Module):
     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):
@@ -62,7 +65,7 @@ class Decoder(nn.Module):
         le = self.softmax(self.f_le(x))
         return tu, tv, lu, lv, le
 
-    def generate(self, rep, max_size=100):
+    def generate(self, rep, conditional_label, max_size=100):
         """
         生成時のforward. 生成したdfsコードを用いて、新たなコードを生成していく
         Args:
@@ -76,12 +79,21 @@ class Decoder(nn.Module):
         batch_size = x.shape[0]
         h = torch.zeros(1, batch_size, x.shape[2])
         c = torch.zeros(1, batch_size, x.shape[2])
-
+        
         tus = torch.LongTensor()
+        tus = try_gpu(tus)
         tvs = torch.LongTensor()
+        tvs = try_gpu(tvs)
         lus = torch.LongTensor()
+        lus = try_gpu(lus)
         lvs = torch.LongTensor()
+        lvs = try_gpu(lvs)
         les = torch.LongTensor()
+        les = try_gpu(les)
+        
+        conditional_size = len(conditional_label)
+        conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
+        conditional_label = torch.cat((conditional_label,torch.zeros(x.shape[0]-1,1,conditional_size)),dim=0)
 
         for i in range(max_size):
             if i == 0:
@@ -100,11 +112,11 @@ class Decoder(nn.Module):
             lus = torch.cat((lus, lu), dim=1)
             lvs = torch.cat((lvs, lv), dim=1)
             les = torch.cat((les, le), dim=1)
-            tu = tu.squeeze().detach().numpy()
-            tv = tv.squeeze().detach().numpy()
-            lu = lu.squeeze().detach().numpy()
-            lv = lv.squeeze().detach().numpy()
-            le = le.squeeze().detach().numpy()
+            tu = tu.squeeze().cpu().detach().numpy()
+            tv = tv.squeeze().cpu().detach().numpy()
+            lu = lu.squeeze().cpu().detach().numpy()
+            lv = lv.squeeze().cpu().detach().numpy()
+            le = le.squeeze().cpu().detach().numpy()
 
             tu = utils.convert2onehot(tu, self.time_size)
             tv = utils.convert2onehot(tv, self.time_size)
@@ -112,6 +124,9 @@ class Decoder(nn.Module):
             lv = utils.convert2onehot(lv, self.node_label_size)
             le = utils.convert2onehot(le, self.edge_label_size)
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+    
+            x = torch.cat((x, conditional_label),dim=2)
+            x = try_gpu(x)
         return tus, tvs, lus, lvs, les
 
 class VAE(nn.Module):
@@ -134,10 +149,11 @@ class VAE(nn.Module):
         tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
-    def generate(self, data_num, max_size=100):
+    def generate(self, data_num, conditional_label, max_size=100):
         z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
+        z = utils.try_gpu(z)
         tu, tv, lu, lv, le =\
-            self.decoder.generate(z, max_size)
+            self.decoder.generate(z, conditional_label, max_size)
         return tu, tv, lu, lv, le
 
     def encode(self, x):

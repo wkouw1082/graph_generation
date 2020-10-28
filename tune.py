@@ -29,12 +29,20 @@ if is_preprocess:
 
 # data load
 train_dataset = joblib.load("dataset/train/onehot")
-train_label = joblib.load("dataset/train/label")
+train_label = joblib.load("dataset/train/label") 
+train_conditional = joblib.load("dataset/train/conditional")
 valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
+valid_conditional = joblib.load("dataset/valid/conditional")
 
-time_size, node_size, edge_size = joblib.load("dataset/param")
-dfs_size = 2*time_size+2*node_size+edge_size
+train_conditional = torch.cat((train_conditional,torch.zeros(train_dataset.shape[0],train_dataset.shape[1]-1,train_conditional.shape[2])),dim=1)
+valid_conditional = torch.cat((valid_conditional,torch.zeros(valid_dataset.shape[0],valid_dataset.shape[1]-1,valid_conditional.shape[2])),dim=1)
+
+train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
+valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
+
+time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 valid_dataset = utils.try_gpu(valid_dataset)
 
 print("--------------")
@@ -103,8 +111,8 @@ def tuning_trial(trial):
 
             torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
 
-        #if train_min_loss>loss_sum:
-        #    train_min_loss = loss_sum
+        if train_min_loss>loss_sum:
+           train_min_loss = loss_sum
         print("train loss: %lf"%(loss_sum))
 
         valid_loss_sum = 0
@@ -123,7 +131,7 @@ def tuning_trial(trial):
         if valid_min_loss>valid_loss_sum:
             valid_min_loss = valid_loss_sum
         print(" valid loss: %lf"%(valid_loss_sum))
-    return valid_min_loss
+    return train_min_loss
 
 study = optuna.create_study()
 study.optimize(tuning_trial, n_trials=opt_epoch)
