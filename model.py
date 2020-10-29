@@ -25,7 +25,8 @@ class Decoder(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
         super(Decoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
-        self.f_rep = nn.Linear(rep_size, input_size)
+        self.f_rep = nn.Linear(rep_size+6, input_size)
+        #self.f_rep = nn.Linear(rep_size, input_size)
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
@@ -52,6 +53,9 @@ class Decoder(nn.Module):
             lv: sink node label
             le: edge label
         """
+        conditional=x[:,0,-6:].unsqueeze(1)
+        rep = torch.cat([rep, conditional], dim=2)
+
         rep = self.f_rep(rep)
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
         x = self.emb(x)
@@ -73,6 +77,12 @@ class Decoder(nn.Module):
             max_size: 生成を続ける最大サイズ(生成を続けるエッジの最大数)
         Returns:
         """
+        conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
+        conditional_label = torch.cat([conditional_label for _ in range(rep.shape[0])], dim=0)
+        conditional_label = utils.try_gpu(conditional_label)
+
+        rep = torch.cat([rep, conditional_label], dim=2)
+
         rep = self.f_rep(rep)
         rep = self.emb(rep)
         x = rep
@@ -92,8 +102,7 @@ class Decoder(nn.Module):
         les = try_gpu(les)
         
         conditional_size = len(conditional_label)
-        conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
-        conditional_label = torch.cat((conditional_label,torch.zeros(x.shape[0]-1,1,conditional_size)),dim=0)
+        #conditional_label = torch.cat((conditional_label,torch.zeros(x.shape[0]-1,1,conditional_size)),dim=0)
 
         for i in range(max_size):
             if i == 0:
@@ -124,9 +133,9 @@ class Decoder(nn.Module):
             lv = utils.convert2onehot(lv, self.node_label_size)
             le = utils.convert2onehot(le, self.edge_label_size)
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+            x = try_gpu(x)
     
             x = torch.cat((x, conditional_label),dim=2)
-            x = try_gpu(x)
         return tus, tvs, lus, lvs, les
 
 class VAE(nn.Module):
