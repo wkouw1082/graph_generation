@@ -3,10 +3,12 @@
 /train_result/*
 /eval_result/*
 /analysis_result/*
+/classifier_train_result/*
 /param/*
 /venv/*
 /dataset/*
 ._*.*
 log
 evallog
+tunelog
 .vscode

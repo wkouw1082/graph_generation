@@ -14,7 +14,7 @@ import torch
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--preprocess", action="store_true")
-    parser.add_argument("--load", action="store_true")
+    parser.add_argument("--classifier", action="store_true")
 
     args = parser.parse_args()
     return args

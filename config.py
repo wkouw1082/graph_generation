@@ -1,10 +1,10 @@
 # basic hyper parameters
 epochs = 500
-batch_size = 75
-lr = 7e-3
+batch_size = 72
+lr = 8e-3
 
-decay=0.015
-clip_th=8e-3
+decay=0
+clip_th=4e-4
 
 # model_param = {
 #     "emb_size" : 100,
@@ -13,14 +13,22 @@ clip_th=8e-3
 #     "rep_size" : 50
 # }
 
-model_param = {'batch_size': 72, 
-               'lr': 0.007187765594212197, 
-               'weight_decay': 0.015236811904854352, 
+model_param = {'batch_size': 122, 
+               'lr': 0.009, 
+               'weight_decay': 0.05, 
                'clip_th': 0.008380857476336032, 
                'emb_size': 253, 
                'en_hidden_size': 33, 
                'de_hidden_size': 249, 
-               'rep_size': 57}
+               'rep_size': 58}
+
+classifier_epochs=200
+classifier_param = {
+               'batch_size': 100, 
+               'lr': 0.0006, 
+               'emb_size': 256, 
+               "hidden_size": 195,
+               }
 
 # graph_paremeter
 data_dim = 25 # トポロジーの頂点数

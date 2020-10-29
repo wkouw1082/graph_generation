@@ -13,12 +13,13 @@ class Classifier(nn.Module):
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.degree = nn.Linear(hidden_size, len(power_degree_label))
         self.cluster = nn.Linear(hidden_size, len(cluster_coefficient_label))
+        self.softmax = nn.Softmax(dim=2)
 
     def forward(self, x):
         x = self.emb(x)
         x, (h,c) = self.lstm(x)
         x = x[:, -1, :].unsqueeze(1)
-        return self.degree(x), self.cluster(x)
+        return self.softmax(self.degree(x)), self.softmax(self.cluster(x))
 
 class Encoder(nn.Module):
     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):

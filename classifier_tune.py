@@ -61,7 +61,7 @@ def tuning_trial(trial):
     lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
     model_param = {
         "emb_size" : trial.suggest_int("emb_size", 10, 256),
-        "hidden_size" : trial.suggest_int("de_hidden_size", 10, 256),
+        "hidden_size" : trial.suggest_int("hidden_size", 10, 256),
     }
 
     #vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
@@ -80,7 +80,7 @@ def tuning_trial(trial):
 
     keys = ["tu", "tv", "lu", "lv", "le"]
     for epoch in range(1, classifier_epochs):
-        print("Epoch: [%d/%d]:"%(epoch, epochs))
+        print("Epoch: [%d/%d]:"%(epoch, classifier_epochs))
 
         # train
         loss_sum = 0
@@ -116,7 +116,7 @@ def tuning_trial(trial):
         if valid_min_loss>valid_loss_sum:
             valid_min_loss = valid_loss_sum
         print(" valid loss: %lf"%(valid_loss_sum))
-    return train_min_loss
+    return valid_min_loss
 
 study = optuna.create_study()
 study.optimize(tuning_trial, n_trials=opt_epoch)

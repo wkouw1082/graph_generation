@@ -18,6 +18,7 @@ from torch.utils.data import TensorDataset
 
 args = utils.get_args()
 is_preprocess = args.preprocess
+is_classifier = args.classifier
 
 # recreate directory
 if utils.is_dir_existed("train_result"):
@@ -43,6 +44,28 @@ train_conditional = joblib.load("dataset/train/conditional")
 valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
 valid_conditional = joblib.load("dataset/valid/conditional")
+time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+
+dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
+dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
+
+if is_classifier:
+    # モデルの作成、重み読み込み、gpu化
+    classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
+    classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
+    classifier = utils.try_gpu(classifier)
+
+    # すべてのパラメータを固定
+    for param in classifier.parameters():
+        param.requires_grad = False
+
+    # 分類用正解データの作成
+    train_classifier_correct=torch.LongTensor(
+            [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
+    valid_classifier_correct=torch.LongTensor(
+            [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
+    train_classifier_correct = utils.try_gpu(train_classifier_correct)
+    valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
 
 train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
 valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
@@ -51,9 +74,6 @@ train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
 valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
 #print(train_dataset[0,:,-6:])
 
-time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
-
-dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 
 print("--------------")
 print("time size: %d"%(time_size))
@@ -65,6 +85,7 @@ print("--------------")
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
 vae = utils.try_gpu(vae)
 opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
+
 
 train_data_num = train_dataset.shape[0]
 train_label_args = torch.LongTensor(list(range(train_data_num)))
@@ -79,8 +100,10 @@ valid_dl = DataLoader(
         shuffle=True, batch_size=batch_size)
 
 
-
 keys = ["tu", "tv", "lu", "lv", "le"]
+if is_classifier:
+    keys+=["classifier"]
+
 train_loss = {key:[] for key in keys+["encoder"]}
 train_acc = {key:[] for key in keys}
 train_loss_sums = []
@@ -132,6 +155,31 @@ for epoch in range(1, epochs):
 
             # save
             current_train_acc[current_key].append(score)
+
+        if is_classifier:
+            # とりあえずsamplingせずそのまま突っ込む
+            pred_dfs=torch.cat(result, dim=2)
+            degree, cluster=classifier(pred_dfs)
+            degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
+            cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
+            current_train_loss["classifier"].append((degree_loss+cluster_loss).item())
+            loss+=degree_loss
+            loss+=cluster_loss
+
+            # acc calc
+            pred=degree
+            pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+            pred = pred.view(-1)
+            degreescore = utils.calc_calssification_acc(pred, train_classifier_correct[args][:, 0], ignore_label)
+
+            pred=cluster
+            pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+            pred = pred.view(-1)
+            clusterscore = utils.calc_calssification_acc(pred, train_classifier_correct[args][:, 1], ignore_label)
+            score=(degreescore+clusterscore)/2
+
+            current_train_acc["classifier"].append(score)
+
         loss.backward()
         train_loss_sum+=loss.item()
         opt.step()
@@ -195,6 +243,31 @@ for epoch in range(1, epochs):
 
             # save
             current_valid_acc[current_key].append(score)
+
+        if is_classifier:
+            # とりあえずsamplingせずそのまま突っ込む
+            pred_dfs=torch.cat(result, dim=2)
+            degree, cluster=classifier(pred_dfs)
+            degree_loss = criterion(degree.squeeze(), valid_classifier_correct[args][:, 0])
+            cluster_loss = criterion(cluster.squeeze(), valid_classifier_correct[args][:, 1])
+            current_valid_loss["classifier"].append((degree_loss+cluster_loss).item())
+            loss+=degree_loss
+            loss+=cluster_loss
+
+            # acc calc
+            pred=degree
+            pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+            pred = pred.view(-1)
+            degreescore = utils.calc_calssification_acc(pred, valid_classifier_correct[args][:, 0], ignore_label)
+
+            pred=cluster
+            pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+            pred = pred.view(-1)
+            clusterscore = utils.calc_calssification_acc(pred, valid_classifier_correct[args][:, 1], ignore_label)
+            score=(degreescore+clusterscore)/2
+
+            current_valid_acc["classifier"].append(score)
+
         valid_loss_sum+=loss.item()
 
     # loss, acc save

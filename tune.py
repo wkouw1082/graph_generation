@@ -20,6 +20,8 @@ utils.make_dir(required_dirs)
 
 args = utils.get_args()
 is_preprocess = args.preprocess
+is_classifier = args.classifier
+
 # preprocess
 if is_preprocess:
     shutil.rmtree("dataset")
@@ -34,6 +36,27 @@ train_conditional = joblib.load("dataset/train/conditional")
 valid_dataset = joblib.load("dataset/valid/onehot")
 valid_label = joblib.load("dataset/valid/label")
 valid_conditional = joblib.load("dataset/valid/conditional")
+time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
+dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
+
+if is_classifier:
+    # モデルの作成、重み読み込み、gpu化
+    classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
+    classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
+    classifier = utils.try_gpu(classifier)
+
+    # すべてのパラメータを固定
+    for param in classifier.parameters():
+        param.requires_grad = False
+
+    # 分類用正解データの作成
+    train_classifier_correct=torch.LongTensor(
+            [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
+    valid_classifier_correct=torch.LongTensor(
+            [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
+    train_classifier_correct = utils.try_gpu(train_classifier_correct)
+    valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
 
 train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
 valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
@@ -41,8 +64,6 @@ valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.s
 train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
 valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
 
-time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
-dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 valid_dataset = utils.try_gpu(valid_dataset)
 
 print("--------------")
@@ -82,6 +103,9 @@ def tuning_trial(trial):
 
     keys = ["tu", "tv", "lu", "lv", "le"]
 
+    if is_classifier:
+        keys+=["classifier"]
+
     for epoch in range(1, epochs):
         print("Epoch: [%d/%d]:"%(epoch, epochs))
 
@@ -105,6 +129,16 @@ def tuning_trial(trial):
                 correct = utils.try_gpu(correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss
+
+            if is_classifier:
+                # とりあえずsamplingせずそのまま突っ込む
+                pred_dfs=torch.cat(result, dim=2)
+                degree, cluster=classifier(pred_dfs)
+                degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
+                cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
+                loss+=degree_loss
+                loss+=cluster_loss
+
             loss.backward()
             loss_sum+=loss.item()
             opt.step()
@@ -127,6 +161,15 @@ def tuning_trial(trial):
             tmp_loss = criterion(pred.transpose(2, 1), correct)
             valid_loss+=tmp_loss
         valid_loss_sum+=valid_loss.item()
+
+        if is_classifier:
+            # とりあえずsamplingせずそのまま突っ込む
+            pred_dfs=torch.cat(result, dim=2)
+            degree, cluster=classifier(pred_dfs)
+            degree_loss = criterion(degree.squeeze(), valid_classifier_correct[:, 0])
+            cluster_loss = criterion(cluster.squeeze(), valid_classifier_correct[:, 1])
+            valid_loss_sum+=degree_loss
+            valid_loss_sum+=cluster_loss
 
         if valid_min_loss>valid_loss_sum:
             valid_min_loss = valid_loss_sum
