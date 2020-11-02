@@ -26,6 +26,7 @@ if utils.is_dir_existed("eval_result"):
 required_dirs = [
         "param",
         "eval_result",
+        "eval_result/tsne",
         "eval_result/dist_compare",
         "eval_result/generated",
         "eval_result/reconstruct",
@@ -146,7 +147,7 @@ for key1, key2 in combinations:
     plt.savefig("eval_result/dist_compare/%s_%s.png"%(key1, key2))
     plt.close()
 
-# t-SNE
+# datasetの読み込み
 train_dataset = joblib.load("dataset/train/onehot")
 train_conditional = joblib.load("dataset/train/conditional")
 train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
@@ -159,21 +160,14 @@ uniqued, inverses=torch.unique(tmp, return_inverse=True, dim=0)
 conditional_vecs=uniqued
 same_conditional_args=[[j for j in range(len(inverses)) if inverses[j]==i] for i in range(uniqued.shape[0])]
 
-result={}
-for i, args in enumerate(same_conditional_args):
-    z = vae.encode(train_dataset[args]).cpu().detach().numpy()
-    result["conditional: %d"%(i)]=z
-utils.tsne(result, "eval_result/tsne.png")
-
 # 入力に応じたencode+generate
+get_key=lambda vec: str(power_degree_label[torch.argmax(vec[:3])])+" "+\
+            str(cluster_coefficient_label[torch.argmax(vec[3:])]) # conditional vec->key
 reconstruct_graphs={}
 for i, args in enumerate(same_conditional_args):
     # trait keyの作成
     tmp_dict = {key: [] for key in eval_params}
-    conditional_vec=conditional_vecs[i][0]
-    degree_value=power_degree_label[torch.argmax(conditional_vec[:3])]
-    cluster_value=cluster_coefficient_label[torch.argmax(conditional_vec[3:])]
-    traitkey=str(degree_value)+" "+str(cluster_value)
+    traitkey=get_key(conditional_vecs[i][0])
 
     # predict
     mu, sigma, *result = vae(train_dataset[args])
@@ -220,7 +214,6 @@ for key, value in reconstruct_graphs.items():
 
 # boxplot
 for param_key in eval_params:
-    dict = {}
     keys = list(results.keys())
     keys = list(sorted([keys[0], keys[2], keys[4]]))
     reconstructkeys=list(sorted(list(reconstruct_graphs.keys())))
@@ -234,3 +227,38 @@ for param_key in eval_params:
             param_key,
             "eval_result/reconstruct/%s_box_plot.png"%(param_key)
             )
+
+# t-SNE
+# conditional vectorをcatしていない状態での埋め込み
+result={}
+for i, args in enumerate(same_conditional_args):
+    # trait keyの作成
+    traitkey=get_key(conditional_vecs[i][0])
+
+    z = vae.encode(train_dataset[args]).cpu().detach().numpy()
+    result[traitkey]=z
+result["N(0, I)"]=vae.noise_generator(
+        model_param["rep_size"], len(args)).cpu().unsqueeze(1).detach().numpy()
+utils.tsne(result, "eval_result/tsne/raw_tsne.png")
+
+# conditional vectorをcatして埋め込み
+result={}
+for i, args in enumerate(same_conditional_args):
+    # trait keyの作成
+    traitkey=get_key(conditional_vecs[i][0])
+    # encode
+    z = vae.encode(train_dataset[args])
+    # conditional vecをcat
+    tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
+    catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    z=torch.cat([z, catconditional], dim=2)
+    # save
+    result[traitkey]=z.cpu().detach().numpy()
+
+    # noiseにもcat
+    noise=vae.noise_generator(
+            model_param["rep_size"], len(args)).unsqueeze(1)
+    noise=utils.try_gpu(noise)
+    noise=torch.cat([noise, catconditional], dim=2)
+    result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
+utils.tsne(result, "eval_result/tsne/condition_cat_tsne.png")
