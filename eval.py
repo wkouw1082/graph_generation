@@ -61,6 +61,7 @@ end_value_list = [time_size, time_size, node_size, node_size, edge_size]
 correct_all = graph_process.divide_label(train_label,end_value_list)
 
 results = {}
+generated_keys=[]
 
 for index,(result,correct_graph) in enumerate(zip(result_all,correct_all)):
 # generated graphs
@@ -79,6 +80,11 @@ for index,(result,correct_graph) in enumerate(zip(result_all,correct_all)):
     results.update(dict_tmp)
     dict_tmp = {str(power_degree_label[index])+" "+str(cluster_coefficient_label[index]): {key: [] for key in eval_params}}
     results.update(dict_tmp)
+
+    #生成グラフのkeyの保存
+    key=str(power_degree_label[index])+" "+str(cluster_coefficient_label[index])
+    generated_keys.append(key)
+
     for generated, correct in zip(generated_graph, correct_graph):
         for key in eval_params:
             if "degree" in key:
@@ -124,14 +130,21 @@ for param_key in eval_params:
 
 # 散布図
 combinations = utils.combination(eval_params, 2)
-for index in range(power_degree_dim):
-    for key1, key2 in combinations:
-        plt.figure()
-        plt.scatter(results[str(power_degree_label[index])+" "+str(cluster_coefficient_label[index])][key1], results[str(power_degree_label[index])+" "+str(cluster_coefficient_label[index])][key2])
-        plt.xlabel(key1)
-        plt.ylabel(key2)
-        plt.savefig("eval_result/dist_compare/%s_%s.png"%(key1, key2))
-        plt.close()
+colorlist = ["r", "g", "b", "c", "m", "y", "k", "w"]
+for key1, key2 in combinations:
+    plt.figure()
+    for i, conditionkey in enumerate(generated_keys):
+        plt.scatter(
+            results[conditionkey][key1],
+            results[conditionkey][key2],
+            c=colorlist[i],
+            label=conditionkey,
+            )
+    plt.legend()
+    plt.xlabel(key1)
+    plt.ylabel(key2)
+    plt.savefig("eval_result/dist_compare/%s_%s.png"%(key1, key2))
+    plt.close()
 
 # t-SNE
 train_dataset = joblib.load("dataset/train/onehot")
