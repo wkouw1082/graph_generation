@@ -128,6 +128,20 @@ for index in range(power_degree_dim):
         plt.close()
 
 # t-SNE
-train_dataset = joblib.load("dataset/train/onehot")[0]
-z = vae.encode(train_dataset).detach().numpy()
-utils.tsne({"train": z}, "eval_result/tsne.png")
+train_dataset = joblib.load("dataset/train/onehot")
+train_conditional = joblib.load("dataset/train/conditional")
+train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
+train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
+train_dataset = utils.try_gpu(train_dataset)
+
+# conditionalのlabelと同じラベルの引数のget
+tmp=train_conditional.squeeze()
+uniqued, inverses=torch.unique(tmp, return_inverse=True, dim=0)
+conditional_labels=uniqued
+same_conditional_args=[[j for j in range(len(inverses)) if inverses[j]==i] for i in range(uniqued.shape[0])]
+
+result={}
+for i, args in enumerate(same_conditional_args):
+    z = vae.encode(train_dataset[args]).cpu().detach().numpy()
+    result["conditional: %d"%(i)]=z
+utils.tsne(result, "eval_result/tsne.png")
