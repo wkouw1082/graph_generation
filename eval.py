@@ -28,7 +28,8 @@ required_dirs = [
         "eval_result",
         "eval_result/tsne",
         "eval_result/dist_compare",
-        "eval_result/generated",
+        "eval_result/generated_normal",
+        "eval_result/generated_encoded",
         "eval_result/reconstruct",
         "dataset"]
 utils.make_dir(required_dirs)
@@ -46,6 +47,7 @@ print("--------------")
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
 vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
 vae = utils.try_gpu(vae)
+vae.eval()
 
 keys = ["tu", "tv", "lu", "lv", "le"]
 
@@ -126,7 +128,7 @@ for param_key in eval_params:
              keys[2]: results[keys[2]][param_key],
              keys[4]: results[keys[4]][param_key]},
             param_key,
-            "eval_result/generated/%s_box_plot.png"%(param_key)
+            "eval_result/generated_normal/%s_box_plot.png"%(param_key)
             )
 
 # 散布図
@@ -160,24 +162,40 @@ uniqued, inverses=torch.unique(tmp, return_inverse=True, dim=0)
 conditional_vecs=uniqued
 same_conditional_args=[[j for j in range(len(inverses)) if inverses[j]==i] for i in range(uniqued.shape[0])]
 
+# 入力に応じたencode+predict
 # 入力に応じたencode+generate
 get_key=lambda vec: str(power_degree_label[torch.argmax(vec[:3])])+" "+\
             str(cluster_coefficient_label[torch.argmax(vec[3:])]) # conditional vec->key
 reconstruct_graphs={}
+encoded_generate_graphs={}
 for i, args in enumerate(same_conditional_args):
     # trait keyの作成
-    tmp_dict = {key: [] for key in eval_params}
     traitkey=get_key(conditional_vecs[i][0])
 
     # predict
-    mu, sigma, *result = vae(train_dataset[args])
-
-    # argmax
-    tmps=[]
-    for tmp in result:
-        tmps.append(torch.argmax(tmp, dim=2).unsqueeze(2))
+    mu, sigma, *reconstruct_result = vae(train_dataset[args])
+    # generate
+    z=vae.encode(train_dataset[args])
+    generated_result=vae.generate(500, utils.try_gpu(conditional_vecs[i][0]), z=z)
 
     # graphに変換
+    # reconstruct
+    tmps=[]
+    for tmp in reconstruct_result:
+        tmps.append(torch.argmax(tmp, dim=2).unsqueeze(2))
+    dfs_code = torch.cat(tmps, dim=2)
+    reconstruct_graph=[]
+    for code in dfs_code:
+        graph = gp.dfs_code_to_graph_obj(
+                code.cpu().detach().numpy(),
+                [time_size, time_size, node_size, node_size, edge_size])
+        if gp.is_connect(graph):
+            reconstruct_graph.append(graph)
+    reconstruct_graphs[traitkey]=gs.calc_graph_traits(reconstruct_graph, eval_params) # 特性値をcalc
+    # generated
+    tmps=[]
+    for tmp in generated_result:
+        tmps.append(tmp.unsqueeze(2))
     dfs_code = torch.cat(tmps, dim=2)
     generated_graph=[]
     for code in dfs_code:
@@ -186,32 +204,27 @@ for i, args in enumerate(same_conditional_args):
                 [time_size, time_size, node_size, node_size, edge_size])
         if gp.is_connect(graph):
             generated_graph.append(graph)
-
-    # 特性値をcalc
-    for graph in generated_graph:
-        for key in eval_params:
-            if "degree" in key:
-                gamma = gs.degree_dist(graph)
-                tmp_dict[key].append(gamma)
-            if "cluster" in key:
-                tmp_dict[key].append(gs.cluster_coeff(graph))
-            if "distance" in key:
-                tmp_dict[key].append(gs.ave_dist(graph))
-            if "size" in key:
-                tmp_dict[key].append(graph.number_of_nodes())
-    reconstruct_graphs[traitkey]=tmp_dict
+    encoded_generate_graphs[traitkey]=gs.calc_graph_traits(generated_graph, eval_params) # 特性値をcalc
 
 # display result
 for key, value in reconstruct_graphs.items():
     print("====================================")
-    print("%s:"%(key))
+    print("reconstruct %s:"%(key))
     print("====================================")
     for trait_key in value.keys():
         print(" %s ave: %lf"%(trait_key, np.average(value[trait_key])))
         print(" %s var: %lf"%(trait_key, np.var(value[trait_key])))
         print("------------------------------------")
     print("\n")
-
+for key, value in encoded_generate_graphs.items():
+    print("====================================")
+    print("encoded generate %s:"%(key))
+    print("====================================")
+    for trait_key in value.keys():
+        print(" %s ave: %lf"%(trait_key, np.average(value[trait_key])))
+        print(" %s var: %lf"%(trait_key, np.var(value[trait_key])))
+        print("------------------------------------")
+    print("\n")
 # boxplot
 for param_key in eval_params:
     keys = list(results.keys())
@@ -226,6 +239,20 @@ for param_key in eval_params:
              keys[2]: results[keys[2]][param_key][:500]},
             param_key,
             "eval_result/reconstruct/%s_box_plot.png"%(param_key)
+            )
+for param_key in eval_params:
+    keys = list(results.keys())
+    keys = list(sorted([keys[0], keys[2], keys[4]]))
+    encoded_generatekeys=list(sorted(list(encoded_generate_graphs.keys())))
+    utils.box_plot(
+            {encoded_generatekeys[0]: encoded_generate_graphs[encoded_generatekeys[0]][param_key][:500],
+             encoded_generatekeys[1]: encoded_generate_graphs[encoded_generatekeys[1]][param_key][:500],
+             encoded_generatekeys[2]: encoded_generate_graphs[encoded_generatekeys[2]][param_key][:500]},
+            {keys[0]: results[keys[0]][param_key][:500],
+             keys[1]: results[keys[1]][param_key][:500],
+             keys[2]: results[keys[2]][param_key][:500]},
+            param_key,
+            "eval_result/generated_encoded/%s_box_plot.png"%(param_key)
             )
 
 # t-SNE
