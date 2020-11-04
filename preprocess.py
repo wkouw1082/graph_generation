@@ -124,7 +124,8 @@ def  to_dfs_conditional(detail):
     max_sequence_length = 0
 
     for graph in datasets:
-        covert_graph = graph_process.ConvertToDfsCode(graph)
+        #covert_graph = graph_process.ConvertToDfsCode(graph)
+        covert_graph = graph_process.ConvertToDfsCode(graph, mode="high_degree_first")
         tmp = covert_graph.get_dfs_code()
         # 一旦tmpにdfscodeを出してからdfscodeにappend
         dfs_code.append(tmp)

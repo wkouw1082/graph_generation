@@ -40,14 +40,15 @@ class complex_networks():
         datasets = []
         labelsets = torch.Tensor()
         for i, (key,value) in enumerate(detail.items()):
-            generate_num = value[0]
-            data_dim = value[1]
-            params = value[2]
-            end_flag = True
             # 本来ならlen(power_degree_lable):len(cluster_coefficient_label)がサイズ　簡略化してるためこの数字
             generate_counter = [0]*len(power_degree_label)
-            for param in params:
-                while True:
+            while True:
+                generate_num = value[0]
+                data_dim = value[1]
+                params = value[2]
+                end_flag = True
+                for param in params:
+                    print(generate_counter)
                     if key == "BA":
                         data = self.generate_BA(1, data_dim)
                     elif key == "fixed_BA":
@@ -74,7 +75,8 @@ class complex_networks():
                         generate_counter[2] += 1
                         labelsets = torch.cat((labelsets,self.create_label(2).unsqueeze(0)),dim=0)
                         datasets.extend(data)
-                        
+                if len(datasets) == generate_num:
+                    break
         return datasets, labelsets.unsqueeze(1)
 
     # 俗に言う修正BAモデルの生成
@@ -228,6 +230,27 @@ class graph_statistic():
         #graph = mat2graph_obj(graph)
         return nx.average_shortest_path_length(graph)
 
+    def calc_graph_traits(self, graphs, eval_params):
+        """
+        グラフごとにeval_paramsで指定されている特性値をcalc. {特性名: [値,...,]}
+        Args:
+            graphs: [graph_obj, ....]
+            eval_params: 計算を行う特性値の名前のlist
+        """
+        trait_dict = {key: [] for key in eval_params}
+        for graph in graphs:
+            for key in eval_params:
+                if "degree" in key:
+                    gamma = self.degree_dist(graph)
+                    trait_dict[key].append(gamma)
+                if "cluster" in key:
+                    trait_dict[key].append(self.cluster_coeff(graph))
+                if "distance" in key:
+                    trait_dict[key].append(self.ave_dist(graph))
+                if "size" in key:
+                    trait_dict[key].append(graph.number_of_nodes())
+        return trait_dict
+
 # 隣接行列を隣接リストに変換
 def mat_to_list(adj_mat):
     adj_list = []
@@ -308,7 +331,13 @@ def draw_graph(adj_mat, pic_dir="./pic.png", node_color=None, label=None):
     plt.savefig(pic_dir)
 
 class ConvertToDfsCode():
-    def __init__(self,graph):
+    def __init__(self,graph,mode="normal"):
+        """
+        Args:
+            graph:
+            mode: ["normal", "low_degree_first", "high_degree_first"]
+        """
+
         self.G = graph
         self.node_tree = [node for node in graph.nodes()]
         self.edge_tree = [edge for edge in graph.edges()]
@@ -316,6 +345,7 @@ class ConvertToDfsCode():
         self.visited_edges = list()
         self.time_stamp = 0
         self.node_time_stamp = [-1 for i in range(graph.number_of_nodes())]
+        self.mode=mode
 
     def get_max_degree_index(self):
         max_degree = 0
@@ -329,7 +359,19 @@ class ConvertToDfsCode():
 
     def dfs(self,current_node):
         neightbor_node_dict = OrderedDict({neightbor:self.node_time_stamp[neightbor] for neightbor in self.G.neighbors(current_node)})
-        sorted_neightbor_node = OrderedDict(sorted(neightbor_node_dict.items(), key=lambda x: x[1], reverse=True))
+        neighbor_degree_dict = OrderedDict({neighbor: self.G.degree[neighbor] for neighbor in neightbor_node_dict.keys()})
+        if self.mode=="high_degree_first":
+            # degreeの値でsort
+            sorted_neighbor_degree = OrderedDict(sorted(neighbor_degree_dict.items(), key=lambda x: x[1], reverse=True))
+            # neighborのnode idをdegreeで並び替え
+            sorted_neightbor_node = {key: neightbor_node_dict[key] for key in sorted_neighbor_degree.keys()}
+        elif self.mode=="low_degree_first":
+            # degreeの値でsort
+            sorted_neighbor_degree = OrderedDict(sorted(neighbor_degree_dict.items(), key=lambda x: x[1], reverse=False))
+            # neighborのnode idをdegreeで並び替え
+            sorted_neightbor_node = {key: neightbor_node_dict[key] for key in sorted_neighbor_degree.keys()}
+        else:
+            sorted_neightbor_node = OrderedDict(sorted(neightbor_node_dict.items(), key=lambda x: x[1], reverse=True))
 
         if(len(self.visited_edges) == len(self.edge_tree)):
             return
