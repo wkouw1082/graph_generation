@@ -5,6 +5,7 @@ import numpy as np
 import utils
 from config import *
 from utils import try_gpu
+import random
 
 class Classifier(nn.Module):
     def __init__(self, input_size, emb_size, hidden_size, num_layer=1):
@@ -42,7 +43,7 @@ class Decoder(nn.Module):
         self.emb = nn.Linear(input_size, emb_size)
         self.f_rep = nn.Linear(rep_size+6, input_size)
         #self.f_rep = nn.Linear(rep_size, input_size)
-        self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -55,7 +56,7 @@ class Decoder(nn.Module):
         self.node_label_size = node_label_size
         self.edge_label_size = edge_label_size
 
-    def forward(self, rep, x):
+    def forward(self, rep, x, word_drop=0.2):
         """
         学習時のforward
         Args:
@@ -68,15 +69,28 @@ class Decoder(nn.Module):
             lv: sink node label
             le: edge label
         """
+
         conditional=x[:,0,-6:].unsqueeze(1)
         rep = torch.cat([rep, conditional], dim=2)
 
+        origin_rep=rep
         rep = self.f_rep(rep)
+        #rep = self.dropout(rep)
+
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
+
+        # word drop
+        for batch in range(x.shape[0]):
+            args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
+            zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-6]))
+            x[batch,args,:-6]=zero
+
         x = self.emb(x)
-        # x = torch.cat((x,label),dim=2)
+        rep = torch.cat([origin_rep for _ in range(x.shape[1])],dim=1)
+        x = torch.cat((x,rep),dim=2)
+
         x, (h, c) = self.lstm(x)
-        #x = self.dropout(x)
+        x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))
         lu = self.softmax(self.f_lu(x))
@@ -84,12 +98,13 @@ class Decoder(nn.Module):
         le = self.softmax(self.f_le(x))
         return tu, tv, lu, lv, le
 
-    def generate(self, rep, conditional_label, max_size=100):
+    def generate(self, rep, conditional_label, max_size=100, is_output_sampling=True):
         """
         生成時のforward. 生成したdfsコードを用いて、新たなコードを生成していく
         Args:
             rep: encoderの出力
             max_size: 生成を続ける最大サイズ(生成を続けるエッジの最大数)
+            is_output_sampling: Trueなら返り値を予測dfsコードからargmaxしたものに. Falseなら予測分布を返す
         Returns:
         """
         conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
@@ -98,13 +113,14 @@ class Decoder(nn.Module):
 
         rep = torch.cat([rep, conditional_label], dim=2)
 
+        origin_rep=rep
+
         rep = self.f_rep(rep)
         rep = self.emb(rep)
         x = rep
+        x = torch.cat((x,origin_rep),dim=2)
         batch_size = x.shape[0]
-        h = torch.zeros(1, batch_size, x.shape[2])
-        c = torch.zeros(1, batch_size, x.shape[2])
-        
+
         tus = torch.LongTensor()
         tus = try_gpu(tus)
         tvs = torch.LongTensor()
@@ -115,16 +131,27 @@ class Decoder(nn.Module):
         lvs = try_gpu(lvs)
         les = torch.LongTensor()
         les = try_gpu(les)
-        
-        conditional_size = len(conditional_label)
-        #conditional_label = torch.cat((conditional_label,torch.zeros(x.shape[0]-1,1,conditional_size)),dim=0)
+
+        tus_dist=try_gpu(torch.Tensor())
+        tvs_dist=try_gpu(torch.Tensor())
+        lus_dist=try_gpu(torch.Tensor())
+        lvs_dist=try_gpu(torch.Tensor())
+        les_dist=try_gpu(torch.Tensor())
 
         for i in range(max_size):
             if i == 0:
                 x, (h, c) = self.lstm(x)
             else:
                 x = self.emb(x)
+                x = torch.cat((x,origin_rep),dim=2)
                 x, (h, c) = self.lstm(x, (h, c))
+
+            tus_dist = torch.cat([tus_dist,self.softmax(self.f_tu(x))], dim=1)
+            tvs_dist = torch.cat([tvs_dist,self.softmax(self.f_tv(x))], dim=1)
+            lus_dist = torch.cat([lus_dist,self.softmax(self.f_lu(x))], dim=1)
+            lvs_dist = torch.cat([lvs_dist,self.softmax(self.f_lv(x))], dim=1)
+            les_dist = torch.cat([les_dist,self.softmax(self.f_le(x))], dim=1)
+
             tu = torch.argmax(self.softmax(self.f_tu(x)), dim=2)
             tv = torch.argmax(self.softmax(self.f_tv(x)), dim=2)
             lu = torch.argmax(self.softmax(self.f_lu(x)), dim=2)
@@ -151,7 +178,10 @@ class Decoder(nn.Module):
             x = try_gpu(x)
     
             x = torch.cat((x, conditional_label),dim=2)
-        return tus, tvs, lus, lvs, les
+        if is_output_sampling:
+            return tus, tvs, lus, lvs, les
+        else:
+            return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
 
 class VAE(nn.Module):
     def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
@@ -164,20 +194,21 @@ class VAE(nn.Module):
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
         self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
 
-    def noise_generator(self, rep_size, batch_num = batch_size):
+    def noise_generator(self, rep_size, batch_num):
         return torch.randn(batch_num, rep_size)
 
-    def forward(self, x):
+    def forward(self, x, word_drop=0.5):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma)
         tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
-    def generate(self, data_num, conditional_label, max_size=100):
-        z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
-        z = utils.try_gpu(z)
+    def generate(self, data_num, conditional_label, z=None, max_size=generate_max_len, is_output_sampling=True):
+        if z is None:
+            z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
+            z = utils.try_gpu(z)
         tu, tv, lu, lv, le =\
-            self.decoder.generate(z, conditional_label, max_size)
+            self.decoder.generate(z, conditional_label, max_size, is_output_sampling)
         return tu, tv, lu, lv, le
 
     def encode(self, x):
