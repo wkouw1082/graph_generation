@@ -84,7 +84,7 @@ print("--------------")
 
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
 vae = utils.try_gpu(vae)
-opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
+opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
 
 
 train_data_num = train_dataset.shape[0]
@@ -94,10 +94,10 @@ valid_label_args = torch.LongTensor(list(range(valid_data_num)))
 
 train_dl = DataLoader(
         TensorDataset(train_label_args, train_dataset),\
-        shuffle=True, batch_size=batch_size)
+        shuffle=True, batch_size=model_param["batch_size"])
 valid_dl = DataLoader(
         TensorDataset(valid_label_args, valid_dataset),\
-        shuffle=True, batch_size=batch_size)
+        shuffle=True, batch_size=model_param["batch_size"])
 
 
 keys = ["tu", "tv", "lu", "lv", "le"]
@@ -114,6 +114,7 @@ train_min_loss = 1e10
 
 criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
 encoder_criterion = self_loss.Encoder_Loss()
+timestep=0
 
 for epoch in range(1, epochs):
     print("Epoch: [%d/%d]:"%(epoch, epochs))
@@ -131,8 +132,9 @@ for epoch in range(1, epochs):
         datas = utils.try_gpu(datas)
 
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-        mu, sigma, *result = vae(datas)
-        encoder_loss = encoder_criterion(mu, sigma)
+        #mu, sigma, *result = vae(datas, timestep)
+        mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
+        encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
         current_train_loss["encoder"].append(encoder_loss.item())
         loss = encoder_loss
         for j, pred in enumerate(result):
@@ -156,15 +158,16 @@ for epoch in range(1, epochs):
             # save
             current_train_acc[current_key].append(score)
 
+        timestep+=1
         if is_classifier:
             # とりあえずsamplingせずそのまま突っ込む
             pred_dfs=torch.cat(result, dim=2)
             degree, cluster=classifier(pred_dfs)
             degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
             cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
-            current_train_loss["classifier"].append((degree_loss+cluster_loss).item())
-            loss+=degree_loss
-            loss+=cluster_loss
+            current_train_loss["classifier"].append((degree_loss+cluster_loss).item()*classifier_bias)
+            loss+=degree_loss*classifier_bias
+            loss+=cluster_loss*classifier_bias
 
             # acc calc
             pred=degree
@@ -184,7 +187,7 @@ for epoch in range(1, epochs):
         train_loss_sum+=loss.item()
         opt.step()
 
-        torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
+        torch.nn.utils.clip_grad_norm_(vae.parameters(), model_param["clip_th"])
 
     # loss, acc save
     print("----------------------------")
@@ -220,7 +223,7 @@ for epoch in range(1, epochs):
         datas = utils.try_gpu(datas)
         # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
         mu, sigma, *result = vae(datas)
-        encoder_loss = encoder_criterion(mu, sigma)
+        encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
         current_valid_loss["encoder"].append(encoder_loss.item())
         loss = encoder_loss
         for j, pred in enumerate(result):

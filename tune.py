@@ -93,6 +93,7 @@ def tuning_trial(trial):
 
     train_data_num = train_dataset.shape[0]
     train_label_args = torch.LongTensor(list(range(train_data_num)))
+    timestep=0
 
     train_dl = DataLoader(
             TensorDataset(train_label_args, train_dataset),\
@@ -118,7 +119,7 @@ def tuning_trial(trial):
             opt.zero_grad()
             datas = utils.try_gpu(datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-            mu, sigma, *result = vae(datas)
+            mu, sigma, *result = vae(datas, timestep)
             encoder_loss = encoder_criterion(mu, sigma)
             loss = encoder_loss
             for j, pred in enumerate(result):
@@ -136,9 +137,10 @@ def tuning_trial(trial):
                 degree, cluster=classifier(pred_dfs)
                 degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
                 cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
-                loss+=degree_loss
-                loss+=cluster_loss
+                loss+=degree_loss*classifier_bias
+                loss+=cluster_loss*classifier_bias
 
+            timestep+=1
             loss.backward()
             loss_sum+=loss.item()
             opt.step()
@@ -168,8 +170,8 @@ def tuning_trial(trial):
             degree, cluster=classifier(pred_dfs)
             degree_loss = criterion(degree.squeeze(), valid_classifier_correct[:, 0])
             cluster_loss = criterion(cluster.squeeze(), valid_classifier_correct[:, 1])
-            valid_loss_sum+=degree_loss
-            valid_loss_sum+=cluster_loss
+            valid_loss_sum+=degree_loss*classifier_bias
+            valid_loss_sum+=cluster_loss*classifier_bias
 
         if valid_min_loss>valid_loss_sum:
             valid_min_loss = valid_loss_sum

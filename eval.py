@@ -44,6 +44,8 @@ print("node size: %d"%(node_size))
 print("edge size: %d"%(edge_size))
 print("--------------")
 
+is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
+
 vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
 vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
 vae = utils.try_gpu(vae)
@@ -54,9 +56,9 @@ keys = ["tu", "tv", "lu", "lv", "le"]
 cx = complex_networks()
 conditional_label = cx.create_label()
 
-result_low = vae.generate(500,conditional_label[0])
-result_middle = vae.generate(500,conditional_label[1])
-result_high = vae.generate(500,conditional_label[2])
+result_low = vae.generate(1000,conditional_label[0])
+result_middle = vae.generate(1000,conditional_label[1])
+result_high = vae.generate(1000,conditional_label[2])
 
 result_all = [result_low,result_middle,result_high]
 
@@ -75,7 +77,8 @@ for index,(result,correct_graph) in enumerate(zip(result_all,correct_all)):
         graph = gp.dfs_code_to_graph_obj(
                 code.cpu().detach().numpy(),
                 [time_size, time_size, node_size, node_size, edge_size])
-        if gp.is_connect(graph):
+        #if gp.is_connect(graph):
+        if gp.is_connect(graph) and is_sufficient_size(graph):
             generated_graph.append(graph)
 
     gs = gp.graph_statistic()
@@ -121,12 +124,12 @@ for param_key in eval_params:
     dict = {}
     keys = list(results.keys())
     utils.box_plot(
-            {keys[1]: results[keys[1]][param_key],
-             keys[3]: results[keys[3]][param_key],
-             keys[5]: results[keys[5]][param_key]},
-            {keys[0]: results[keys[0]][param_key],
-             keys[2]: results[keys[2]][param_key],
-             keys[4]: results[keys[4]][param_key]},
+            {keys[1]: results[keys[1]][param_key][:graph_num],
+             keys[3]: results[keys[3]][param_key][:graph_num],
+             keys[5]: results[keys[5]][param_key][:graph_num]},
+            {keys[0]: results[keys[0]][param_key][:graph_num],
+             keys[2]: results[keys[2]][param_key][:graph_num],
+             keys[4]: results[keys[4]][param_key][:graph_num]},
             param_key,
             "eval_result/generated_normal/%s_box_plot.png"%(param_key)
             )
@@ -173,10 +176,10 @@ for i, args in enumerate(same_conditional_args):
     traitkey=get_key(conditional_vecs[i][0])
 
     # predict
-    mu, sigma, *reconstruct_result = vae(train_dataset[args])
+    mu, sigma, *reconstruct_result = vae(train_dataset[args], 0.0)
     # generate
     z=vae.encode(train_dataset[args])
-    generated_result=vae.generate(500, utils.try_gpu(conditional_vecs[i][0]), z=z)
+    generated_result=vae.generate(1000, utils.try_gpu(conditional_vecs[i][0]), z=z)
 
     # graphに変換
     # reconstruct
@@ -190,6 +193,7 @@ for i, args in enumerate(same_conditional_args):
                 code.cpu().detach().numpy(),
                 [time_size, time_size, node_size, node_size, edge_size])
         if gp.is_connect(graph):
+        #if gp.is_connect(graph) and is_sufficient_size(graph):
             reconstruct_graph.append(graph)
     reconstruct_graphs[traitkey]=gs.calc_graph_traits(reconstruct_graph, eval_params) # 特性値をcalc
     # generated
@@ -203,6 +207,7 @@ for i, args in enumerate(same_conditional_args):
                 code.cpu().detach().numpy(),
                 [time_size, time_size, node_size, node_size, edge_size])
         if gp.is_connect(graph):
+        #if gp.is_connect(graph) and is_sufficient_size(graph):
             generated_graph.append(graph)
     encoded_generate_graphs[traitkey]=gs.calc_graph_traits(generated_graph, eval_params) # 特性値をcalc
 
@@ -225,18 +230,19 @@ for key, value in encoded_generate_graphs.items():
         print(" %s var: %lf"%(trait_key, np.var(value[trait_key])))
         print("------------------------------------")
     print("\n")
+
 # boxplot
 for param_key in eval_params:
     keys = list(results.keys())
     keys = list(sorted([keys[0], keys[2], keys[4]]))
     reconstructkeys=list(sorted(list(reconstruct_graphs.keys())))
     utils.box_plot(
-            {reconstructkeys[0]: reconstruct_graphs[reconstructkeys[0]][param_key][:500],
-             reconstructkeys[1]: reconstruct_graphs[reconstructkeys[1]][param_key][:500],
-             reconstructkeys[2]: reconstruct_graphs[reconstructkeys[2]][param_key][:500]},
-            {keys[0]: results[keys[0]][param_key][:500],
-             keys[1]: results[keys[1]][param_key][:500],
-             keys[2]: results[keys[2]][param_key][:500]},
+            {reconstructkeys[0]: reconstruct_graphs[reconstructkeys[0]][param_key][:100],
+             reconstructkeys[1]: reconstruct_graphs[reconstructkeys[1]][param_key][:100],
+             reconstructkeys[2]: reconstruct_graphs[reconstructkeys[2]][param_key][:100]},
+            {keys[0]: results[keys[0]][param_key][:100],
+             keys[1]: results[keys[1]][param_key][:100],
+             keys[2]: results[keys[2]][param_key][:100]},
             param_key,
             "eval_result/reconstruct/%s_box_plot.png"%(param_key)
             )
@@ -245,12 +251,12 @@ for param_key in eval_params:
     keys = list(sorted([keys[0], keys[2], keys[4]]))
     encoded_generatekeys=list(sorted(list(encoded_generate_graphs.keys())))
     utils.box_plot(
-            {encoded_generatekeys[0]: encoded_generate_graphs[encoded_generatekeys[0]][param_key][:500],
-             encoded_generatekeys[1]: encoded_generate_graphs[encoded_generatekeys[1]][param_key][:500],
-             encoded_generatekeys[2]: encoded_generate_graphs[encoded_generatekeys[2]][param_key][:500]},
-            {keys[0]: results[keys[0]][param_key][:500],
-             keys[1]: results[keys[1]][param_key][:500],
-             keys[2]: results[keys[2]][param_key][:500]},
+            {encoded_generatekeys[0]: encoded_generate_graphs[encoded_generatekeys[0]][param_key][:graph_num],
+             encoded_generatekeys[1]: encoded_generate_graphs[encoded_generatekeys[1]][param_key][:graph_num],
+             encoded_generatekeys[2]: encoded_generate_graphs[encoded_generatekeys[2]][param_key][:graph_num]},
+            {keys[0]: results[keys[0]][param_key][:graph_num],
+             keys[1]: results[keys[1]][param_key][:graph_num],
+             keys[2]: results[keys[2]][param_key][:graph_num]},
             param_key,
             "eval_result/generated_encoded/%s_box_plot.png"%(param_key)
             )

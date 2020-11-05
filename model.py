@@ -56,7 +56,7 @@ class Decoder(nn.Module):
         self.node_label_size = node_label_size
         self.edge_label_size = edge_label_size
 
-    def forward(self, rep, x, word_drop=0.2):
+    def forward(self, rep, x, word_drop=0):
         """
         学習時のforward
         Args:
@@ -197,7 +197,7 @@ class VAE(nn.Module):
     def noise_generator(self, rep_size, batch_num):
         return torch.randn(batch_num, rep_size)
 
-    def forward(self, x, word_drop=0.5):
+    def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma)
         tu, tv, lu, lv, le = self.decoder(z, x)
