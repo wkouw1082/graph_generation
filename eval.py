@@ -26,6 +26,7 @@ if utils.is_dir_existed("eval_result"):
 required_dirs = [
         "param",
         "eval_result",
+        "eval_result/statistic",
         "eval_result/tsne",
         "eval_result/dist_compare",
         "eval_result/generated_normal",
@@ -109,15 +110,19 @@ for index,(result,correct_graph) in enumerate(zip(result_all,correct_all)):
                 results["correct"+str(power_degree_label[index])+" "+str(cluster_coefficient_label[index])][key].append(correct.number_of_nodes())
                 
 # display result
-for key, value in results.items():
-    print("====================================")
-    print("%s:"%(key))
-    print("====================================")
-    for trait_key in value.keys():
-        print(" %s ave: %lf"%(trait_key, np.average(value[trait_key])))
-        print(" %s var: %lf"%(trait_key, np.var(value[trait_key])))
-        print("------------------------------------")
-    print("\n")
+with open('eval_result/statistic/log.txt', 'w') as f:
+    for key, value in results.items():
+        print("====================================")
+        print("%s:"%(key), file=f)
+        print("%s:"%(key))
+        print("====================================")
+        for trait_key in value.keys():
+            print(" %s ave: %lf"%(trait_key, np.average(value[trait_key])), file=f)
+            print(" %s ave: %lf"%(trait_key, np.average(value[trait_key])))
+            print(" %s var: %lf"%(trait_key, np.var(value[trait_key])), file=f)
+            print(" %s var: %lf"%(trait_key, np.var(value[trait_key])))
+            print("------------------------------------")
+        print("\n")
 
 # boxplot
 for param_key in eval_params:
