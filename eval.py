@@ -294,4 +294,24 @@ for i, args in enumerate(same_conditional_args):
     noise=utils.try_gpu(noise)
     noise=torch.cat([noise, catconditional], dim=2)
     result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
+utils.tsne(result, "eval_result/tsne/condition_cat_tsne1.png")
+result={}
+for i, args in enumerate(same_conditional_args):
+    # trait keyの作成
+    traitkey=get_key(conditional_vecs[i][0])
+    # encode
+    z = vae.encode(train_dataset[args])
+    # conditional vecをcat
+    tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
+    catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    z=torch.cat([z, catconditional], dim=2)
+    # save
+    result[traitkey]=z.cpu().detach().numpy()
+
+    # noiseにもcat
+    noise=vae.noise_generator(
+            model_param["rep_size"], len(args)).unsqueeze(1)
+    noise=utils.try_gpu(noise)
+    noise=torch.cat([noise, catconditional], dim=2)
+    #result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
 utils.tsne(result, "eval_result/tsne/condition_cat_tsne.png")
