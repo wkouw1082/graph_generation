@@ -53,3 +53,5 @@ size_th=0
 graph_num=300
 # 生成する最大dfsコード長
 generate_max_len=500
+
+reddit_path = "./data/reddit_threads/reddit_edges.json"

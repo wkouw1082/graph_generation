@@ -1,5 +1,6 @@
 from time import time_ns
 from networkx.classes import graph
+from networkx.readwrite import json_graph
 import numpy as np
 import networkx as nx
 import torch
@@ -14,6 +15,7 @@ import config
 import sys
 import time
 import math
+import json
 from config import *
 
 # 複雑ネットワークを返すクラス
@@ -511,10 +513,28 @@ def divide_label(label,end_value_list):
                 
     return divide_list
 
-if __name__ == "__main__":
-    complex_network = complex_networks()
-    datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
-    print(datasets)
-    print(labelsets.unsqueeze(1).size())
+# redditのデータをnetworkxの形でグラフを生成する
+def make_reddit_data():
+    with open(reddit_path, 'r') as f:
+        json_datas = json.load(f)
 
+    graph_data = json2graph(json_datas)
+    print(graph_data[0].edges())
+    dd
+
+def json2graph(json_datas):
+    graph_data = []
+    for json_data in json_datas.values():
+        G = nx.Graph()
+        G.add_edges_from(json_data)
+        graph_data.append(G)
+    return graph_data
+
+
+if __name__ == "__main__":
+    # complex_network = complex_networks()
+    # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
+    # print(datasets)
+    # print(labelsets.unsqueeze(1).size())
+    make_reddit_data()
 
