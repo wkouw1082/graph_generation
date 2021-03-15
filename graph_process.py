@@ -16,6 +16,7 @@ import sys
 import time
 import math
 import json
+import glob
 from config import *
 
 # 複雑ネットワークを返すクラス
@@ -519,8 +520,12 @@ def make_reddit_data():
         json_datas = json.load(f)
 
     graph_data = json2graph(json_datas)
-    print(graph_data[0].edges())
-    dd
+    # 後でgraph_dataをjoblibでdumpする
+
+def make_twitter_data():
+    text_datas = utils.get_directory_datas(twitter_path)
+    graph_data = text2graph(text_datas)
+    # 後でgraph_dataをjoblibでdumpする
 
 def json2graph(json_datas):
     graph_data = []
@@ -530,11 +535,19 @@ def json2graph(json_datas):
         graph_data.append(G)
     return graph_data
 
+def text2graph(text_datas):
+    graph_data = []
+    for text_data in text_datas:
+        with open(text_data, 'rb') as f:
+            G = nx.read_edgelist(f,nodetype=int)
+    
+    return graph_data
+
 
 if __name__ == "__main__":
     # complex_network = complex_networks()
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    make_reddit_data()
+    make_twitter_data()
 

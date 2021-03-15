@@ -136,6 +136,9 @@ def combination(list_, num):
     import itertools
     return list(itertools.combinations(list_, num))
 
+def get_directory_datas(path):
+    return glob.glob(path)
+
 # ---研究用---
 # vecは入れ子になっている前提
 def tsne(multi_vecs, dir):

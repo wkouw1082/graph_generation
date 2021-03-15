@@ -55,3 +55,4 @@ graph_num=300
 generate_max_len=500
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
+twitter_path = "./data/Twitter/edgelists/renum*"
