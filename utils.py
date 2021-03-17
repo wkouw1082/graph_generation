@@ -188,11 +188,3 @@ def box_plot(predict, correct, trait_name, directory):
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
 
-def graph_visualize(graph):
-    plt.figure(figsize=(15, 15))
-    pos = nx.spring_layout(graph)
-    nx.draw_networkx(G,pos)
-
-    plt.axis("off")
-    # plt.savefig("default.png")
-    plt.show()

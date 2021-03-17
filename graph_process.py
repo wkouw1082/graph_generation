@@ -233,6 +233,7 @@ class graph_statistic():
         #graph = mat2graph_obj(graph)
         return nx.average_shortest_path_length(graph)
 
+    # 全グラフのパラメータを導出してリスト形式で保存
     def calc_graph_traits(self, graphs, eval_params):
         """
         グラフごとにeval_paramsで指定されている特性値をcalc. {特性名: [値,...,]}
@@ -253,6 +254,36 @@ class graph_statistic():
                 if "size" in key:
                     trait_dict[key].append(graph.number_of_nodes())
         return trait_dict
+
+    def calc_graph_traits2csv(self,graphs,eval_params):
+        '''
+        グラフごとにeval_paramsで指定されている特性値を計算してcsvへの保存形式に変換
+        Prameters
+        ---------
+            graphs: [graph_obj, ....]
+            eval_params: 計算を行う特性値の名前のlist
+
+        Returns
+        -------
+            trait_list: 各グラフのparamのdictのlist
+        '''
+        trait_list=[]
+        for index, graph in enumerate(graphs):
+            tmp_dict = {}
+            for key in eval_params:
+                #if "id" in key:
+                #    param = index
+                if "power_degree" in key:
+                    param = self.degree_dist(graph)
+                if "cluster_coefficient" in key:
+                    param = self.cluster_coeff(graph)
+                if "distance" in key:
+                    param = self.ave_dist(graph)
+                if "size" in key:
+                    param = graph.number_of_nodes()
+                tmp_dict.update({key:param})
+            trait_list.append(tmp_dict)
+        return trait_list
 
 # 隣接行列を隣接リストに変換
 def mat_to_list(adj_mat):
@@ -514,18 +545,27 @@ def divide_label(label,end_value_list):
                 
     return divide_list
 
-# redditのデータをnetworkxの形でグラフを生成する
 def make_reddit_data():
+    '''
+    redditのデータのグラフをnetworkxの形で作成する
+
+    Parameters
+    ----------
+
+    '''
     with open(reddit_path, 'r') as f:
         json_datas = json.load(f)
 
     graph_data = json2graph(json_datas)
     # 後でgraph_dataをjoblibでdumpする
+    joblib.dump(graph_data, './data/reddit_threads/reddit.pkl.cmp', compress=True)
+
 
 def make_twitter_data():
     text_datas = utils.get_directory_datas(twitter_path)
     graph_data = text2graph(text_datas)
     # 後でgraph_dataをjoblibでdumpする
+    joblib.dump(graph_data, './data/Twitter/twitter.pkl.cmp', compress=True)
 
 def json2graph(json_datas):
     graph_data = []
@@ -540,7 +580,7 @@ def text2graph(text_datas):
     for text_data in text_datas:
         with open(text_data, 'rb') as f:
             G = nx.read_edgelist(f,nodetype=int)
-    
+        graph_data.append(G)
     return graph_data
 
 
@@ -550,4 +590,5 @@ if __name__ == "__main__":
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
     make_twitter_data()
+    # make_reddit_data()
 
