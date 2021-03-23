@@ -233,6 +233,20 @@ class graph_statistic():
         #graph = mat2graph_obj(graph)
         return nx.average_shortest_path_length(graph)
 
+    def ave_degree(self, graph):
+        degree_count = 0
+        degree_dict = graph.degree()
+        for node in degree_dict:
+            node_num, node_degree = node
+            degree_count += node_degree
+        return degree_count/graph.number_of_nodes()
+
+    def density(self,graph):
+        return nx.density(graph)
+
+    def clique(self,graph):
+        return nx.graph_number_of_cliques(graph)
+
     # 全グラフのパラメータを導出してリスト形式で保存
     def calc_graph_traits(self, graphs, eval_params):
         """
@@ -589,6 +603,8 @@ if __name__ == "__main__":
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    make_twitter_data()
-    # make_reddit_data()
+    G = nx.barabasi_albert_graph(25,3)
+    gs = graph_statistic()
+    print(gs.clique(G))
+    print(G.number_of_nodes())
 
