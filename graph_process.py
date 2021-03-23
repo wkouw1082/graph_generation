@@ -6,6 +6,8 @@ import networkx as nx
 import torch
 from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
+import networkx.algorithms.community as nx_comm
+import community
 import random
 import matplotlib.pyplot as plt
 import joblib
@@ -244,8 +246,44 @@ class graph_statistic():
     def density(self,graph):
         return nx.density(graph)
 
+    # 未完成
     def clique(self,graph):
         return nx.graph_number_of_cliques(graph)
+
+    # 未完成
+    def modularity(self,graph):
+        return nx_comm.modularity(graph, nx_comm.label_propagation_communities(graph))
+
+    def number_of_clusters(self,graph):
+        clusters_dict = community.best_partition(graph)
+        clusters_set = set(value for key, value in clusters_dict.items())
+        return len(clusters_set)
+
+    # 未完成
+    def giant_component(self,graph):
+        print(graph.subgraph(max(nx.connected_components(graph), key=len)))
+        return graph.subgraph(max(nx.connected_components(graph), key=len))
+
+    def number_of_connected_component(self,graph):
+        pass
+
+    def degree_assortativity(self,graph):
+        pass
+
+    def reciprocity(self,graph):
+        pass
+
+    def maximum_of_shortest_path_lengths(self,graph):
+        pass
+
+    def centralization_based_on_degree(self,graph):
+        pass
+
+    def centralization_based_on_betweenness_centrality(self,graph):
+        pass
+
+    def centralization_based_on_closeness_centrality(self,graph):
+        pass
 
     # 全グラフのパラメータを導出してリスト形式で保存
     def calc_graph_traits(self, graphs, eval_params):
@@ -605,6 +643,5 @@ if __name__ == "__main__":
     # print(labelsets.unsqueeze(1).size())
     G = nx.barabasi_albert_graph(25,3)
     gs = graph_statistic()
-    print(gs.clique(G))
-    print(G.number_of_nodes())
+    print(gs.giant_component(G))
 
