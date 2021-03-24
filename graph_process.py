@@ -276,14 +276,53 @@ class graph_statistic():
     def maximum_of_shortest_path_lengths(self,graph):
         pass
 
-    def centralization_based_on_degree(self,graph):
-        pass
+    def degree_centrality(self,graph):
+        '''
+        グラフの次数中心性を導出する　ノードごとに出力されるためその平均をとっている
+        Parameters
+        ----------
+            graph:計算したいグラフ
+        
+        Returns
+        -------
+            average_degree_centrality:グラフの平均次数中心性
+        '''
+        degree_centers = nx.degree_centrality(graph)
+        centers_value = [value for value in degree_centers.values()]
+        average_degree_centrality = sum(centers_value)/len(centers_value)
+        return average_degree_centrality
 
-    def centralization_based_on_betweenness_centrality(self,graph):
-        pass
+    def betweenness_centrality(self,graph):
+        '''
+        グラフの媒介中心性を導出する　ノードごとに出力されるためその平均をとっている
+        Parameters
+        ----------
+            graph:計算したいグラフ
+        
+        Returns
+        -------
+            average_betweenness_centrality:グラフの平均媒介中心性
+        '''
+        betweenness_centers = nx.betweenness_centrality(graph)
+        centers_value = [value for value in betweenness_centers.values()]
+        average_betweenness_centrality = sum(centers_value)/len(centers_value)
+        return average_betweenness_centrality
 
-    def centralization_based_on_closeness_centrality(self,graph):
-        pass
+    def closeness_centrality(self,graph):
+        '''
+        グラフの近接中心性を導出する　ノードごとに出力されるためその平均をとっている
+        Parameters
+        ----------
+            graph:計算したいグラフ
+        
+        Returns
+        -------
+            average_closeness_centrality:グラフの平均近接中心性
+        '''
+        closeness_centers = nx.closeness_centrality(graph)
+        centers_value = [value for value in closeness_centers.values()]
+        average_closeness_centrality = sum(centers_value)/len(centers_value)
+        return average_closeness_centrality
 
     # 全グラフのパラメータを導出してリスト形式で保存
     def calc_graph_traits(self, graphs, eval_params):
@@ -643,5 +682,5 @@ if __name__ == "__main__":
     # print(labelsets.unsqueeze(1).size())
     G = nx.barabasi_albert_graph(25,3)
     gs = graph_statistic()
-    print(gs.giant_component(G))
+    print(gs.degree_centrality(G))
 
