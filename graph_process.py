@@ -244,6 +244,14 @@ class graph_statistic():
         return degree_count/graph.number_of_nodes()
 
     def density(self,graph):
+        """グラフの密度を求める
+
+        Args:
+            graph (nx.graph)): [計算したいnetworkx型のグラフ]
+
+        Returns:
+            [int]: [密度の値]
+        """
         return nx.density(graph)
 
     # 未完成
@@ -278,7 +286,7 @@ class graph_statistic():
 
     def degree_centrality(self,graph):
         '''
-        グラフの次数中心性を導出する　ノードごとに出力されるためその平均をとっている
+        グラフの次数中心性を導出する　分布を出力するように変更
         Parameters
         ----------
             graph:計算したいグラフ
@@ -294,7 +302,7 @@ class graph_statistic():
 
     def betweenness_centrality(self,graph):
         '''
-        グラフの媒介中心性を導出する　ノードごとに出力されるためその平均をとっている
+        グラフの媒介中心性を導出する　分布を
         Parameters
         ----------
             graph:計算したいグラフ
@@ -310,7 +318,7 @@ class graph_statistic():
 
     def closeness_centrality(self,graph):
         '''
-        グラフの近接中心性を導出する　ノードごとに出力されるためその平均をとっている
+        グラフの近接中心性を導出する　分布を出力するように変更
         Parameters
         ----------
             graph:計算したいグラフ
