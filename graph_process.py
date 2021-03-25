@@ -258,9 +258,17 @@ class graph_statistic():
     def clique(self,graph):
         return nx.graph_number_of_cliques(graph)
 
-    # 未完成
     def modularity(self,graph):
-        return nx_comm.modularity(graph, nx_comm.label_propagation_communities(graph))
+        """グラフのmodularityを求める関数
+
+        Args:
+            graph (nx.graph): 計算したいnetworkx型のグラフ
+
+        Returns:
+            float: modularityの値
+        """
+        partition = community.best_partition(graph)
+        return community.modularity(partition,graph)
 
     def number_of_clusters(self,graph):
         clusters_dict = community.best_partition(graph)
