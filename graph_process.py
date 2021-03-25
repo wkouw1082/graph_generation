@@ -290,7 +290,23 @@ class graph_statistic():
         pass
 
     def maximum_of_shortest_path_lengths(self,graph):
-        pass
+        """最長の長さを持つ最短経路長の長さを求める関数
+
+        Args:
+            graph (nx.graph): 計算したいnetworkx型のグラフ
+
+        Returns:
+            int: 経路の長さ
+        """
+        max_shortest_path_length = 0
+        path_dict = nx.shortest_path(graph)
+        for node_num, paths in path_dict.items():
+            for connect_node_num, path in paths.items():
+                if len(path) >= max_shortest_path_length:
+                    max_shortest_path_length = len(path)
+
+        return max_shortest_path_length
+        
 
     def degree_centrality(self,graph):
         '''
@@ -696,7 +712,7 @@ if __name__ == "__main__":
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    G = nx.barabasi_albert_graph(25,3)
+    G = nx.barabasi_albert_graph(25,1)
     gs = graph_statistic()
-    print(gs.degree_centrality(G))
+    print(gs.maximum_of_shortest_path_lengths(G))
 
