@@ -34,6 +34,12 @@ valid_generate_detail = {"BA": [200, data_dim, [None]]}
 train_generate_detail = {"NN": [2000, data_dim, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
 valid_generate_detail = {"NN": [200, data_dim, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
 
+# データ分析時のdetail
+visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
+                    "twitter": [None,None,[None]]}
+# NNのparamのkeyがだぶるので名前だけ別で定義
+visualize_names = ["NN_0.1","NN_0.5","NN_0.9","twitter"]
+
 ignore_label=1000
 
 opt_epoch=100
@@ -46,7 +52,7 @@ cluster_coefficient_dim = len(cluster_coefficient_label)
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
-eval_params = ["power_degree", "cluster_coefficient", "distance", "size"]
+eval_params = ["power_degree", "cluster_coefficient", "distance","average_degree","density","modularity","maximum_distance","degree_centrality","betweenness_centrality","closeness_centrality", "size"]
 # 評価に用いるネットワークのサイズの閾値
 size_th=0
 # 評価に用いるネットワーク数

@@ -12,3 +12,6 @@ log
 evallog
 tunelog
 .vscode
+/visualize/*
+requirementsbk.txt
+*.pyc

@@ -19,6 +19,7 @@ import time
 import math
 import json
 import glob
+import csv
 from config import *
 
 # 複雑ネットワークを返すクラス
@@ -38,7 +39,14 @@ class complex_networks():
                     datas = self.generate_fixed_BA(generate_num, data_dim)
                 elif key == "NN":
                     datas = self.nearest_neighbor_model(generate_num, data_dim, param)
-                datasets.extend(datas)
+                elif key == "twitter":
+                    datas = self.make_twitter_graph()
+                elif key == "reddit":
+                    datas = self.make_reddit_graph()
+                # NNモデルでの生成時にはこっちを使う　いろんなparamのデータをまとめて一つのデータセットにするため
+                # datasets.extend(datas)
+                # visualizeのみはこっちを使う　paramを分けてデータを分析したいため
+                datasets.append(datas)
         return datasets
 
     def create_conditional_dataset(self,detail):
@@ -187,6 +195,55 @@ class complex_networks():
             datas.append(mat2graph_obj(data))
         return datas
 
+    def make_reddit_graph(self):
+        """redditのグラフデータを作成する関数
+
+        Returns
+        -------
+        list
+            networkx型のグラフが入ったlist
+        """
+        with open(reddit_path, 'r') as f:
+            json_datas = json.load(f)
+
+        datas = json2graph(json_datas)
+
+        return datas
+
+    def make_twitter_graph(self):
+        """twitterのグラフデータを作成する関数
+
+        Returns
+        -------
+        list:
+            networkx型のグラフが入ったlist
+        """
+        text_datas = utils.get_directory_datas(twitter_path)
+        datas = text2graph(text_datas)
+
+        return datas
+
+    def graph2csv(self, graph_datas, file_name):
+        '''
+        各グラフデータのパラメータをcsvファイルに出力する関数
+
+        Parameters
+        ----------
+        graph_datas : list
+            グラフデータが格納されているリスト [GraphObj, ...]
+        file_name : string
+            csvファイルの格納先フォルダを指定する変数 例:Twitter/twitter.csv
+        '''
+        statistic = graph_statistic()
+        trait_dict = statistic.calc_graph_traits2csv(graph_datas, eval_params)
+        with open('./data/csv/' + file_name + '.csv', 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=eval_params)
+            writer.writeheader()
+            writer.writerows(trait_dict)
+
+    def graph_data_compress(datas,file_name):
+        joblib.dump(datas,'./data/graph_datas/'+file_name+'.pkl.cmp',compress=True)
+
     def create_label(self,label_index="all"):
         degree_dict = {degree:index for index, degree in enumerate(power_degree_label)}
         cluster_dict = {cluster:index for index, cluster in enumerate(cluster_coefficient_label)}
@@ -310,51 +367,45 @@ class graph_statistic():
 
     def degree_centrality(self,graph):
         '''
-        グラフの次数中心性を導出する　分布を出力するように変更
+        グラフの各ノードの次数中心性を導出する
         Parameters
         ----------
             graph:計算したいグラフ
         
         Returns
         -------
-            average_degree_centrality:グラフの平均次数中心性
+            degree_centrality:グラフの各ノードの次数中心性のdict
         '''
         degree_centers = nx.degree_centrality(graph)
-        centers_value = [value for value in degree_centers.values()]
-        average_degree_centrality = sum(centers_value)/len(centers_value)
-        return average_degree_centrality
+        return degree_centers
 
     def betweenness_centrality(self,graph):
         '''
-        グラフの媒介中心性を導出する　分布を
+        グラフの各ノードの媒介中心性を導出する
         Parameters
         ----------
             graph:計算したいグラフ
         
         Returns
         -------
-            average_betweenness_centrality:グラフの平均媒介中心性
+            betweenness_centrality:グラフの各ノードの媒介中心性のdict
         '''
         betweenness_centers = nx.betweenness_centrality(graph)
-        centers_value = [value for value in betweenness_centers.values()]
-        average_betweenness_centrality = sum(centers_value)/len(centers_value)
-        return average_betweenness_centrality
+        return betweenness_centers
 
     def closeness_centrality(self,graph):
         '''
-        グラフの近接中心性を導出する　分布を出力するように変更
+        グラフの各ノードの近接中心性を導出する
         Parameters
         ----------
             graph:計算したいグラフ
         
         Returns
         -------
-            average_closeness_centrality:グラフの平均近接中心性
+            closeness_centrality:グラフの各ノードの近接中心性のdict
         '''
         closeness_centers = nx.closeness_centrality(graph)
-        centers_value = [value for value in closeness_centers.values()]
-        average_closeness_centrality = sum(centers_value)/len(centers_value)
-        return average_closeness_centrality
+        return closeness_centers
 
     # 全グラフのパラメータを導出してリスト形式で保存
     def calc_graph_traits(self, graphs, eval_params):
@@ -402,6 +453,20 @@ class graph_statistic():
                     param = self.cluster_coeff(graph)
                 if "distance" in key:
                     param = self.ave_dist(graph)
+                if "average_degree" in key:
+                    param = self.ave_degree(graph)
+                if "density" in key:
+                    param = self.density(graph)
+                if "modularity" in key:
+                    param = self.modularity(graph)
+                if "maximum_distance" in key:
+                    param = self.maximum_of_shortest_path_lengths(graph)
+                if "degree_centrality" in key:
+                    param = self.degree_centrality(graph)
+                if "betweenness_centrality" in key:
+                    param = self.betweenness_centrality(graph)
+                if "closeness_centrality" in key:
+                    param = self.closeness_centrality(graph)
                 if "size" in key:
                     param = graph.number_of_nodes()
                 tmp_dict.update({key:param})
@@ -667,28 +732,6 @@ def divide_label(label,end_value_list):
                 divide_list[2].append(graph)
                 
     return divide_list
-
-def make_reddit_data():
-    '''
-    redditのデータのグラフをnetworkxの形で作成する
-
-    Parameters
-    ----------
-
-    '''
-    with open(reddit_path, 'r') as f:
-        json_datas = json.load(f)
-
-    graph_data = json2graph(json_datas)
-    # 後でgraph_dataをjoblibでdumpする
-    joblib.dump(graph_data, './data/reddit_threads/reddit.pkl.cmp', compress=True)
-
-
-def make_twitter_data():
-    text_datas = utils.get_directory_datas(twitter_path)
-    graph_data = text2graph(text_datas)
-    # 後でgraph_dataをjoblibでdumpする
-    joblib.dump(graph_data, './data/Twitter/twitter.pkl.cmp', compress=True)
 
 def json2graph(json_datas):
     graph_data = []
