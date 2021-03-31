@@ -2,12 +2,15 @@ import joblib
 from graph_process import graph_statistic
 import csv
 import re
+import os
+import ast
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import networkx as nx
 from config import *
+import utils
 
 
 def graph_visualize(graph):
@@ -34,18 +37,75 @@ def convert_csv2image(csv_path):
         plt.savefig('./visualize/' + param + '.png')
         plt.clf()
 
-def scatter_diagram_visualize(csv_file_path):
+def histogram_visualize(csv_path):
+    """ヒストグラムを作成する関数
+
+    Parameters
+    ----------
+    csv_path : str
+        ヒストグラムを作成したいcsvファイルのパス
+    """
+    dir_name = os.path.splitext(os.path.basename(csv_path))[0]
+    df = pd.read_csv(csv_path)
+    for param in eval_params:
+        fig = plt.figure()
+        if re.search('centrality', param):
+            # 全グラフのノードのパラメータを１つのリストにまとめる
+            # 原因はわからないがなぜかstrで保存されてしまうのでdictに再変換:ast.literal_eval(graph_centrality)
+            total_param = [centrality for graph_centrality in df[param] for centrality in ast.literal_eval(graph_centrality).values()]
+            sns.histplot(total_param, kde=False)
+        else:
+            if eval_params_limit[param] is not None:
+                plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
+            sns.histplot(df[param],kde=False)
+
+        plt.savefig('./visualize/histogram/'+dir_name+'/'+ param + '.png')
+        plt.clf()
+        plt.close('all')
+
+def concat_histogram_visualize(save_dir,csv_paths):
+    """複数のデータを結合したヒストグラムを作成する関数
+
+    Parameters
+    ----------
+    save_dir : str
+        保存するディレクトリの名前
+    csv_paths : list
+        ヒストグラムを作成するcsvファイルパスのリスト
+    """
+    for param in eval_params:
+        fig = plt.figure()
+        for path in csv_paths:
+            df = pd.read_csv(path)
+            label_name = os.path.splitext(os.path.basename(path))[0]
+            if re.search('centrality', param):
+                # 全グラフのノードのパラメータを１つのリストにまとめる
+                # 原因はわからないがなぜかstrで保存されてしまうのでdictに再変換:ast.literal_eval(graph_centrality)
+                total_param = [centrality for graph_centrality in df[param] for centrality in ast.literal_eval(graph_centrality).values()]
+                sns.histplot(total_param,label=label_name, kde=False)
+            else:
+                if eval_params_limit[param] is not None:
+                    plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
+                sns.histplot(df[param],label=label_name, kde=False)
+
+        plt.legend(frameon=True)
+        plt.savefig('./visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
+        plt.clf()
+        plt.close('all')
+
+def scatter_diagram_visualize(csv_path):
     """散布図を作成する関数
        なお、作成時にはeval paramsの全ての組み合わせが作成される
 
     Parameters
     ----------
-    csv_file_path : str
+    csv_path : str
         散布図を作成したいcsvfileのpath
 
     >>> scatter_diagram_visualize('./data/Twitter/twitter.csv')
     """
-    df = pd.read_csv(csv_file_path)
+    dir_name = os.path.splitext(os.path.basename(csv_path))[0]
+    df = pd.read_csv(csv_path)
     for param_v in eval_params:
         for param_u in eval_params:
             if re.search('centrality', param_v) or re.search('centrality', param_u) or param_v == param_u:
@@ -54,7 +114,20 @@ def scatter_diagram_visualize(csv_file_path):
             x_data = df[param_v]
             y_data = df[param_u]
             sns.jointplot(x=x_data,y=y_data,data=df)
-            plt.savefig('./visualize/scatter_diagram/'+param_v+'_'+param_u+'.png')
+            plt.savefig('./visualize/scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
+            fig.clf()
+            plt.close('all')
+
+def concat_scatter_diagram_visualize(save_dir,csv_paths):
+    for param_v in eval_params:
+        for param_u in eval_params:
+            if re.search('centrality', param_v) or re.search('centrality', param_u) or param_v == param_u:
+                continue
+            fig = plt.figure()
+            df = utils.concat_csv(csv_paths)
+            sns.jointplot(x=df[param_v],y=df[param_u],data=df,hue='type')
+
+            plt.savefig('./visualize/concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
             fig.clf()
             plt.close('all')
 

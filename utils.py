@@ -136,7 +136,7 @@ def combination(list_, num):
     import itertools
     return list(itertools.combinations(list_, num))
 
-def get_directory_datas(path):
+def get_directory_paths(path):
     return glob.glob(path)
 
 # ---研究用---
@@ -188,3 +188,25 @@ def box_plot(predict, correct, trait_name, directory):
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
 
+def concat_csv(csv_paths):
+    """複数のcsvファイルを結合する関数
+
+    Parameters
+    ----------
+    csv_paths : list
+        結合したいcsvファイルのパスのリスト
+
+    Returns
+    -------
+    pandas.df
+        csvファイルを結合してtypeを追加したpandasのデータフレーム
+    """
+    df_concat = pd.read_csv(csv_paths[0])
+    df_concat['type'] = os.path.splitext(os.path.basename(csv_paths[0]))[0]
+
+    for path in csv_paths[1:]:
+        df_add = pd.read_csv(path)
+        df_add['type'] = os.path.splitext(os.path.basename(path))[0]
+        df_concat = pd.concat([df_concat,df_add])
+
+    return df_concat

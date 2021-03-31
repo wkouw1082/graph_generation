@@ -22,16 +22,69 @@ def main(parser):
         cn = graph_process.complex_networks()
         dataset = cn.create_dataset(visualize_detail)
         # csvファイルに変換
-        for name,data in zip(visualize_names,dataset):
+        for name,data in zip(visualize_types.keys(),dataset):
             cn.graph2csv(data,name)
-        
 
+
+    if os.path.isdir("visualize") is False:
+        utils.make_dir(["visualize"])
+
+    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+
+    if args.scatter:
+        if os.path.isdir("visualize/scatter_diagram/"):
+            shutil.rmtree("visualize/scatter_diagram")
+        dir_names = [os.path.splitext(os.path.basename(csv_path))[0] for csv_path in csv_paths]
+        required_dirs = ["visualize/scatter_diagram"] + ["visualize/scatter_diagram/" + dir_name for dir_name in dir_names]
+        utils.make_dir(required_dirs)
+
+        for path in csv_paths:
+                bi.scatter_diagram_visualize(path)
+
+    if args.histogram:
+        if os.path.isdir("visualize/histogram/"):
+            shutil.rmtree("visualize/histogram")
+        dir_names = [os.path.splitext(os.path.basename(path))[0] for path in csv_paths]
+        required_dirs = ["visualize/histogram"] + ["visualize/histogram/" + dir_name for dir_name in dir_names]
+        utils.make_dir(required_dirs)
+
+        for path in csv_paths:
+            bi.histogram_visualize(path)
+        
+    if args.concat_scatter:
+        if os.path.isdir("visualize/concat_scatter_diagram/"):
+            shutil.rmtree("visualize/concat_scatter_diagram")
+        dir_name = ''
+        for index,path in enumerate(csv_paths):
+            dir_name += os.path.splitext(os.path.basename(path))[0]
+            if index != len(csv_paths)-1:
+                dir_name += '&'
+        required_dirs = ["visualize/concat_scatter_diagram"] + ["visualize/concat_scatter_diagram/" + dir_name]
+        utils.make_dir(required_dirs)
+        
+        bi.concat_scatter_diagram_visualize(dir_name,csv_paths)
+
+    if args.concat_histogram:
+        if os.path.isdir("visualize/concat_histogram/"):
+            shutil.rmtree("visualize/concat_histogram")
+        dir_name = ''
+        for index,path in enumerate(csv_paths):
+            dir_name += os.path.splitext(os.path.basename(path))[0]
+            if index != len(csv_paths)-1:
+                dir_name += '&'
+        required_dirs = ["visualize/concat_histogram"] + ["visualize/concat_histogram/" + dir_name]
+        utils.make_dir(required_dirs)
+
+        bi.concat_histogram_visualize(dir_name,csv_paths)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='グラフのデータを可視化するプログラム')
     parser.add_argument('--preprocess',action='store_true')
-    parser.add_argument('--histgram',action='store_true')
+    parser.add_argument('--histogram',action='store_true')
     parser.add_argument('--scatter',action='store_true')
+    parser.add_argument('--concat_histogram',action='store_true')
+    parser.add_argument('--concat_scatter',action='store_true')
+    parser.add_argument('--type',nargs='*')
     
     main(parser)

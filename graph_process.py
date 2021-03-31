@@ -8,6 +8,7 @@ from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
 import networkx.algorithms.community as nx_comm
 import community
+from community import community_louvain
 import random
 import matplotlib.pyplot as plt
 import joblib
@@ -218,7 +219,7 @@ class complex_networks():
         list:
             networkx型のグラフが入ったlist
         """
-        text_datas = utils.get_directory_datas(twitter_path)
+        text_datas = utils.get_directory_paths(twitter_path)
         datas = text2graph(text_datas)
 
         return datas
@@ -324,11 +325,11 @@ class graph_statistic():
         Returns:
             float: modularityの値
         """
-        partition = community.best_partition(graph)
-        return community.modularity(partition,graph)
+        partition = community_louvain.best_partition(graph)
+        return community_louvain.modularity(partition,graph)
 
     def number_of_clusters(self,graph):
-        clusters_dict = community.best_partition(graph)
+        clusters_dict = community_louvain.best_partition(graph)
         clusters_set = set(value for key, value in clusters_dict.items())
         return len(clusters_set)
 
@@ -757,5 +758,5 @@ if __name__ == "__main__":
     # print(labelsets.unsqueeze(1).size())
     G = nx.barabasi_albert_graph(25,1)
     gs = graph_statistic()
-    print(gs.maximum_of_shortest_path_lengths(G))
+    print(gs.degree_centrality(G))
 
