@@ -77,6 +77,13 @@ def main(parser):
 
         bi.concat_histogram_visualize(dir_name,csv_paths)
 
+    if args.pair:
+        if os.path.isdir("visualize/pair_plot/"):
+            shutil.rmtree("visualize/pair_plot")
+        required_dirs = ["visualize/pair_plot"]
+        utils.make_dir(required_dirs)
+
+        bi.pair_plot(csv_paths)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='グラフのデータを可視化するプログラム')
@@ -85,6 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('--scatter',action='store_true')
     parser.add_argument('--concat_histogram',action='store_true')
     parser.add_argument('--concat_scatter',action='store_true')
+    parser.add_argument('--pair',action='store_true')
     parser.add_argument('--type',nargs='*')
     
     main(parser)

@@ -131,6 +131,14 @@ def concat_scatter_diagram_visualize(save_dir,csv_paths):
             fig.clf()
             plt.close('all')
 
+def pair_plot(csv_paths):
+    fig = plt.figure()
+    df = utils.concat_csv(csv_paths)
+    sns.pairplot(df,data=df,hue='type')
+    plt.savefig('./visualize/pair_plot/pair_plot.png')
+    fig.clf()
+    plt.close('all')
+
 def box_plot(generate, correct, trait_name, directory):
     fig = plt.figure()
     sns.set_context("paper", 1.2)
