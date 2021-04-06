@@ -30,9 +30,13 @@ test_generate_detail = {"fixed_BA": [100, data_dim, [None]],\
 """
 train_generate_detail = {"BA": [2000, data_dim, [None]]}
 valid_generate_detail = {"BA": [200, data_dim, [None]]}
-"""
+
 train_generate_detail = {"NN": [2000, data_dim, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
 valid_generate_detail = {"NN": [200, data_dim, [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]]}
+"""
+
+train_generate_detail = {"twitter_train":[None,None,[None]]}
+valid_generate_detail = {"twitter_valid":[None,None,[None]]}
 
 # データ分析時のdetail
 visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],

@@ -1,4 +1,5 @@
 import joblib
+import graph_process
 from graph_process import graph_statistic
 import csv
 import re
@@ -161,8 +162,73 @@ def box_plot(generate, correct, trait_name, directory):
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
 
+def log_plot():
+    cx = graph_process.complex_networks()
+    dataset = cx.create_dataset({"twitter":[None,None,[None]]})
+
+    all_nodes = 0
+    for graph in dataset:
+        all_nodes += graph.number_of_nodes() #全ノード数を受け取る
+        degree_dist_dict = {}
+        for node_num in graph.nodes():
+            num_of_degree = graph.degree(node_num)
+            if num_of_degree not in degree_dist_dict.keys():
+                degree_dist_dict.update({num_of_degree:1})
+            else:
+                degree_dist_dict[num_of_degree] += 1
+
+    for key,value in degree_dist_dict.items():
+        degree_dist_dict[key] = value/all_nodes
+
+    degree_dist_dict = sorted(degree_dist_dict.items(), key=lambda x:x[0])
+
+    x = [i[0] for i in degree_dist_dict]
+    y = [i[1] for i in degree_dist_dict]
+
+    x = np.log(np.array(x))
+    y = np.log(np.array(y))
+
+    plt.scatter(x,y)
+    plt.show()
+
+    # param, cov = curve_fit(self.fitting_function, x, y)
+    # return param[0]
+
+def log_log():
+    cx = graph_process.complex_networks()
+    dataset = cx.create_dataset({"twitter":[100,100,[0.5]]})
+
+    degree = []
+    for G in dataset:
+        degree.extend(list(dict(nx.degree(G)).values()))
+    # degree = list(dict(nx.degree(dataset[0])).values())
+
+    import collections
+    degree_dict = dict(collections.Counter(degree))
+    # b = np.array(b) / sum(b)#次数を確率化
+
+    degree_dict = sorted(degree_dict.items(), key=lambda x:x[0])
+
+    x = [i[0] for i in degree_dict]
+    y = [i[1] for i in degree_dict]
+
+    x = np.log(np.array(x))
+    y = np.log(np.array(y))
+
+    print(np.polyfit(x,y,1))
+
+    plt.figure(dpi=50, figsize=(10, 10))
+    plt.scatter(x, y, marker='o',lw=0)
+    plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
+    # plt.yscale('log')
+    # plt.xscale('log')
+    plt.yticks(fontsize=20)
+    plt.xlabel('degree', fontsize=24)
+    plt.show()
+
 if __name__ == '__main__':
     #graph = joblib.load('./data/Twitter/twitter.pkl.cmp')
     #graph2csv(graph, 'Twitter/twitter.csv')
-    import doctest
-    doctest.testmod()
+    # import doctest
+    # doctest.testmod()
+    log_log()

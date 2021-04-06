@@ -20,7 +20,7 @@ def main(parser):
 
         # visualize_detailをもとにデータセットを作成
         cn = graph_process.complex_networks()
-        dataset = cn.create_dataset(visualize_detail)
+        dataset = cn.create_dataset(visualize_detail, do_type='visualize')
         # csvファイルに変換
         for name,data in zip(visualize_types.keys(),dataset):
             cn.graph2csv(data,name)

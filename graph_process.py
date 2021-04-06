@@ -14,6 +14,8 @@ import matplotlib.pyplot as plt
 import joblib
 import utils
 from scipy.optimize import curve_fit
+import sympy as sym
+from sympy.plotting import plot
 import config
 import sys
 import time
@@ -26,7 +28,7 @@ from config import *
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
 class complex_networks():
-    def create_dataset(self, detail):
+    def create_dataset(self, detail, do_type='train'):
         datasets = []
         for i, (key, value) in enumerate(detail.items()):
             generate_num = value[0]
@@ -40,14 +42,22 @@ class complex_networks():
                     datas = self.generate_fixed_BA(generate_num, data_dim)
                 elif key == "NN":
                     datas = self.nearest_neighbor_model(generate_num, data_dim, param)
+                elif key == "twitter_train":
+                    datas = self.make_twitter_graph('train')
+                elif key == "twitter_valid":
+                    datas = self.make_twitter_graph('valid')
                 elif key == "twitter":
                     datas = self.make_twitter_graph()
                 elif key == "reddit":
                     datas = self.make_reddit_graph()
                 # NNモデルでの生成時にはこっちを使う　いろんなparamのデータをまとめて一つのデータセットにするため
-                # datasets.extend(datas)
-                # visualizeのみはこっちを使う　paramを分けてデータを分析したいため
-                datasets.append(datas)
+                if do_type == 'train':
+                    datasets.extend(datas)
+                elif do_type == 'visualize':
+                    # visualizeのみはこっちを使う　paramを分けてデータを分析したいため
+                    datasets.append(datas)
+                else:
+                    exit(1)
         return datasets
 
     def create_conditional_dataset(self,detail):
@@ -211,7 +221,7 @@ class complex_networks():
 
         return datas
 
-    def make_twitter_graph(self):
+    def make_twitter_graph(self,do_type=None):
         """twitterのグラフデータを作成する関数
 
         Returns
@@ -222,7 +232,12 @@ class complex_networks():
         text_datas = utils.get_directory_paths(twitter_path)
         datas = text2graph(text_datas)
 
-        return datas
+        if do_type == 'train':
+            return datas[:len(datas)*0.9]
+        elif do_type == 'valid':
+            return datas[len(datas)*0.9:]
+        else:
+            return datas
 
     def graph2csv(self, graph_datas, file_name):
         '''
@@ -263,23 +278,31 @@ class graph_statistic():
 
     # 隣接行列を入力として, 次数分布を作成
     def degree_dist(self, graph):
-        graph = graph_obj2mat(graph)
-        degree_list = np.sum(graph, axis=0)
+        number_of_nodes = graph.number_of_nodes() #全ノード数を受け取る
         degree_dist_dict = {}
-
-        # もしひとつだけ孤立しているようなノードが存在するのならば
-        if 0 in degree_list:
-            return None
-
-        for degree in degree_list:
-            if degree in degree_dist_dict:
-                degree_dist_dict[degree] += 1
+        for node_num in graph.nodes():
+            num_of_degree = graph.degree(node_num)
+            if num_of_degree not in degree_dist_dict.keys():
+                degree_dist_dict.update({num_of_degree:1})
             else:
-                if degree != 0:
-                    degree_dist_dict[degree] = 1
+                degree_dist_dict[num_of_degree] += 1
 
-        x = np.log(np.array(list(degree_dist_dict.keys())))
-        y = np.log(np.array(list(degree_dist_dict.values())))
+        for key,value in degree_dist_dict.items():
+            degree_dist_dict[key] = value/number_of_nodes
+
+        degree_dist_dict = sorted(degree_dist_dict.items(), key=lambda x:x[0])
+
+        x = [i[0] for i in degree_dist_dict]
+        y = [i[1] for i in degree_dist_dict]
+
+        x = np.log(np.array(x))
+        y = np.log(np.array(y))
+
+        plt.scatter(x,y)
+        plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
+        print(np.polyfit(x, y, 1))
+        plt.show()
+        dd
         param, cov = curve_fit(self.fitting_function, x, y)
         return param[0]
 
@@ -752,11 +775,12 @@ def text2graph(text_datas):
 
 
 if __name__ == "__main__":
-    # complex_network = complex_networks()
+    complex_network = complex_networks()
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    G = nx.barabasi_albert_graph(25,1)
+    dataset = complex_network.make_twitter_graph()
+    # for graph
     gs = graph_statistic()
-    print(gs.degree_centrality(G))
+    print(gs.degree_dist(dataset[0]))
 
