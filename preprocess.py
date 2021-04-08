@@ -25,8 +25,8 @@ def preprocess_not_conditional(train_network_detail,valid_network_detail,train_d
 
     del time_stamp_set, node_label_set
     
-    get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_label,train_directory)
-    get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_label,valid_directory)
+    get_onehot_and_list_no_conditional(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
+    get_onehot_and_list_no_conditional(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory)
 
 def preprocess(train_network_detail,valid_network_detail,train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
     print('start--preprocess')
@@ -49,7 +49,7 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_label,train_directory)
     get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_label,valid_directory)
 
-def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,label_set,directory):
+def get_onehot_and_list_no_conditional(dfs_code,time_dict,node_dict,max_sequence_length,directory):
 
     time_end_num = len(time_dict.keys())
     node_end_num = len(node_dict.keys())

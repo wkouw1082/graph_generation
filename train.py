@@ -1,4 +1,5 @@
 import utils
+import argparse
 import preprocess as pp
 from graph_process import graph_statistic
 from config import *
@@ -313,7 +314,8 @@ def conditional_train(args):
             torch.save(vae.state_dict(), "param/weight")
         print("\n")
 
-def train(args):
+def train(parser):
+    args = parser.parse_args()
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
@@ -332,7 +334,7 @@ def train(args):
         shutil.rmtree("dataset")
         required_dirs = ["dataset", "dataset/train", "dataset/valid"]
         utils.make_dir(required_dirs)
-        pp.preprocess(train_generate_detail, valid_generate_detail)
+        pp.preprocess_not_conditional(train_generate_detail, valid_generate_detail)
 
     # data load
     train_dataset = joblib.load("dataset/train/onehot")

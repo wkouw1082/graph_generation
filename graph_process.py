@@ -231,11 +231,13 @@ class complex_networks():
         """
         text_datas = utils.get_directory_paths(twitter_path)
         datas = text2graph(text_datas)
+        
+        split_num = len(datas)
 
         if do_type == 'train':
-            return datas[:len(datas)*0.9]
+            return datas[:int(split_num*0.9)]
         elif do_type == 'valid':
-            return datas[len(datas)*0.9:]
+            return datas[int(split_num*0.9):]
         else:
             return datas
 

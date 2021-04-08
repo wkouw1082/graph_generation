@@ -5,6 +5,7 @@ import csv
 import re
 import os
 import ast
+import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -53,7 +54,10 @@ def histogram_visualize(csv_path):
         if re.search('centrality', param):
             # 全グラフのノードのパラメータを１つのリストにまとめる
             # 原因はわからないがなぜかstrで保存されてしまうのでdictに再変換:ast.literal_eval(graph_centrality)
-            total_param = [centrality for graph_centrality in df[param] for centrality in ast.literal_eval(graph_centrality).values()]
+            total_param = []
+            for graph_centrality in df[param]:
+                for centrality in ast.literal_eval(graph_centrality).values():
+                    total_param.append(centrality)
             sns.histplot(total_param, kde=False)
         else:
             if eval_params_limit[param] is not None:
@@ -82,7 +86,10 @@ def concat_histogram_visualize(save_dir,csv_paths):
             if re.search('centrality', param):
                 # 全グラフのノードのパラメータを１つのリストにまとめる
                 # 原因はわからないがなぜかstrで保存されてしまうのでdictに再変換:ast.literal_eval(graph_centrality)
-                total_param = [centrality for graph_centrality in df[param] for centrality in ast.literal_eval(graph_centrality).values()]
+                total_param = []
+                for graph_centrality in df[param]:
+                    for centrality in ast.literal_eval(graph_centrality).values():
+                        total_param.append(centrality)
                 sns.histplot(total_param,label=label_name, kde=False)
             else:
                 if eval_params_limit[param] is not None:
@@ -196,35 +203,52 @@ def log_plot():
 
 def log_log():
     cx = graph_process.complex_networks()
-    dataset = cx.create_dataset({"twitter":[100,100,[0.5]]})
 
-    degree = []
-    for G in dataset:
-        degree.extend(list(dict(nx.degree(G)).values()))
-    # degree = list(dict(nx.degree(dataset[0])).values())
+    required_dirs = ["visualize/power_degree_line"]
+    names = ["NN_0.1","NN_0.5","NN_0.9","twitter"]
+    if os.path.isdir("visualize/power_degree_line/"):
+        shutil.rmtree("visualize/power_degree_line")
+    utils.make_dir(required_dirs)
 
-    import collections
-    degree_dict = dict(collections.Counter(degree))
-    # b = np.array(b) / sum(b)#次数を確率化
+    for detail,name in zip([{"NN":[1,10000,[0.1]]},{"NN":[1,10000,[0.5]]},{"NN":[1,10000,[0.9]]},{"twitter":[1,10000,[0.1]]}],names):
+        dataset = cx.create_dataset(detail)
 
-    degree_dict = sorted(degree_dict.items(), key=lambda x:x[0])
+        degree = []
+        for G in dataset:
+            degree.extend(list(dict(nx.degree(G)).values()))
+        # degree = list(dict(nx.degree(dataset[0])).values())
 
-    x = [i[0] for i in degree_dict]
-    y = [i[1] for i in degree_dict]
+        import collections
+        degree_dict = dict(collections.Counter(degree))
+        # b = np.array(b) / sum(b)#次数を確率化
 
-    x = np.log(np.array(x))
-    y = np.log(np.array(y))
+        degree_dict = sorted(degree_dict.items(), key=lambda x:x[0])
 
-    print(np.polyfit(x,y,1))
+        x = [i[0] for i in degree_dict]
+        y = [i[1] for i in degree_dict]
 
-    plt.figure(dpi=50, figsize=(10, 10))
-    plt.scatter(x, y, marker='o',lw=0)
-    plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
-    # plt.yscale('log')
-    # plt.xscale('log')
-    plt.yticks(fontsize=20)
-    plt.xlabel('degree', fontsize=24)
-    plt.show()
+        x_split = int(len(x)*0.10)
+        y_split = int(len(y)*0.10)
+
+        x = np.log(np.array(x))
+        y = np.log(np.array(y))
+
+        x_split_plot = x[x_split:]
+        y_split_plot = y[y_split:]
+
+        print(np.polyfit(x,y,1))
+        print(np.polyfit(x_split_plot,y_split_plot,1))
+
+        plt.figure(dpi=50, figsize=(10, 10))
+        plt.scatter(x, y, marker='o',lw=0)
+        plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
+        plt.plot(x_split_plot, np.poly1d(np.polyfit(x_split_plot, y_split_plot, 1))(x_split_plot), label='split')
+        # plt.yscale('log')
+        # plt.xscale('log')
+        plt.yticks(fontsize=20)
+        plt.xlabel('degree', fontsize=24)
+        plt.savefig("visualize/power_degree_line/" + name + ".png")
+        plt.clf()
 
 if __name__ == '__main__':
     #graph = joblib.load('./data/Twitter/twitter.pkl.cmp')

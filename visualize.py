@@ -29,12 +29,15 @@ def main(parser):
     if os.path.isdir("visualize") is False:
         utils.make_dir(["visualize"])
 
+    # args type が何も指定されていない場合は全てのtypeが指定され、指定がある場合はそのtypeのcsv pathが持ってこられる
     csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
 
     if args.scatter:
         if os.path.isdir("visualize/scatter_diagram/"):
             shutil.rmtree("visualize/scatter_diagram")
+        # csvのファイルパスからdir名を持ってくる
         dir_names = [os.path.splitext(os.path.basename(csv_path))[0] for csv_path in csv_paths]
+        # dir名からdirを生成
         required_dirs = ["visualize/scatter_diagram"] + ["visualize/scatter_diagram/" + dir_name for dir_name in dir_names]
         utils.make_dir(required_dirs)
 
@@ -44,7 +47,9 @@ def main(parser):
     if args.histogram:
         if os.path.isdir("visualize/histogram/"):
             shutil.rmtree("visualize/histogram")
+        # csvのファイルパスからdir名を持ってくる
         dir_names = [os.path.splitext(os.path.basename(path))[0] for path in csv_paths]
+        # dir名からdirを生成
         required_dirs = ["visualize/histogram"] + ["visualize/histogram/" + dir_name for dir_name in dir_names]
         utils.make_dir(required_dirs)
 
@@ -59,6 +64,7 @@ def main(parser):
             dir_name += os.path.splitext(os.path.basename(path))[0]
             if index != len(csv_paths)-1:
                 dir_name += '&'
+        # dir名からdirを生成
         required_dirs = ["visualize/concat_scatter_diagram"] + ["visualize/concat_scatter_diagram/" + dir_name]
         utils.make_dir(required_dirs)
         
@@ -72,6 +78,7 @@ def main(parser):
             dir_name += os.path.splitext(os.path.basename(path))[0]
             if index != len(csv_paths)-1:
                 dir_name += '&'
+        # dir名からdirを生成
         required_dirs = ["visualize/concat_histogram"] + ["visualize/concat_histogram/" + dir_name]
         utils.make_dir(required_dirs)
 

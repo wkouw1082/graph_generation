@@ -71,3 +71,6 @@ generate_max_len=500
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
 twitter_path = "./data/Twitter/edgelists/renum*"
+
+# 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
+power_degree_split_raito = {"NN":0.04,"twitter":10}
