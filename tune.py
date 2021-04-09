@@ -205,14 +205,14 @@ def tune():
         shutil.rmtree("dataset")
         required_dirs = ["dataset", "dataset/train", "dataset/valid"]
         utils.make_dir(required_dirs)
-        pp.preprocess(train_generate_detail, valid_generate_detail)
+        pp.preprocess_not_conditional(train_generate_detail, valid_generate_detail)
 
     # data load
     train_dataset = joblib.load("dataset/train/onehot")
     train_label = joblib.load("dataset/train/label")
     valid_dataset = joblib.load("dataset/valid/onehot")
     valid_label = joblib.load("dataset/valid/label")
-    time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
+    time_size, node_size, edge_size = joblib.load("dataset/param")
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
 
