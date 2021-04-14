@@ -219,29 +219,36 @@ def log_log():
         # degree = list(dict(nx.degree(dataset[0])).values())
 
         import collections
-        degree_dict = dict(collections.Counter(degree))
-        # b = np.array(b) / sum(b)#次数を確率化
+        power_degree = dict(collections.Counter(degree))
+        power_degree = sorted(power_degree.items(), key=lambda x:x[0])
+        x = []
+        y = []
+        
+        for i in power_degree:
+            num = i[0]
+            amount = i[1]
+            x.append(num)
+            y.append(amount)
+        y = np.array(y) / sum(y)#次数を確率化
+        sum_prob = 0
+        for index,prob in enumerate(y):
+            sum_prob += prob
+            if sum_prob >= power_degree_border_line:
+                border_index = index + 1
+                break
 
-        degree_dict = sorted(degree_dict.items(), key=lambda x:x[0])
+        x_log = np.log(np.array(x))
+        y_log = np.log(np.array(y))
 
-        x = [i[0] for i in degree_dict]
-        y = [i[1] for i in degree_dict]
+        x_split_plot = x_log[border_index:]
+        y_split_plot = y_log[border_index:]
 
-        x_split = int(len(x)*0.10)
-        y_split = int(len(y)*0.10)
-
-        x = np.log(np.array(x))
-        y = np.log(np.array(y))
-
-        x_split_plot = x[x_split:]
-        y_split_plot = y[y_split:]
-
-        print(np.polyfit(x,y,1))
+        print(np.polyfit(x_log,y_log,1))
         print(np.polyfit(x_split_plot,y_split_plot,1))
 
         plt.figure(dpi=50, figsize=(10, 10))
-        plt.scatter(x, y, marker='o',lw=0)
-        plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
+        plt.scatter(x_log, y_log, marker='o',lw=0)
+        plt.plot(x_log, np.poly1d(np.polyfit(x_log, y_log, 1))(x_log), label='d=1')
         plt.plot(x_split_plot, np.poly1d(np.polyfit(x_split_plot, y_split_plot, 1))(x_split_plot), label='split')
         # plt.yscale('log')
         # plt.xscale('log')
