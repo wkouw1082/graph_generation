@@ -184,12 +184,6 @@ class Decoder(nn.Module):
             return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
     
     def non_conditional_generate(self, rep, max_size=100, is_output_sampling=True):
-        # conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
-        # conditional_label = torch.cat([conditional_label for _ in range(rep.shape[0])], dim=0)
-        # conditional_label = utils.try_gpu(conditional_label)
-
-        # rep = torch.cat([rep, conditional_label], dim=2)
-
         origin_rep=rep
 
         rep = self.f_rep(rep)
