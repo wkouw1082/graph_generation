@@ -182,6 +182,83 @@ class Decoder(nn.Module):
             return tus, tvs, lus, lvs, les
         else:
             return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
+    
+    def non_conditional_generate(self, rep, max_size=100, is_output_sampling=True):
+        # conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
+        # conditional_label = torch.cat([conditional_label for _ in range(rep.shape[0])], dim=0)
+        # conditional_label = utils.try_gpu(conditional_label)
+
+        # rep = torch.cat([rep, conditional_label], dim=2)
+
+        origin_rep=rep
+
+        rep = self.f_rep(rep)
+        rep = self.emb(rep)
+        x = rep
+        x = torch.cat((x,origin_rep),dim=2)
+        batch_size = x.shape[0]
+
+        tus = torch.LongTensor()
+        tus = try_gpu(tus)
+        tvs = torch.LongTensor()
+        tvs = try_gpu(tvs)
+        lus = torch.LongTensor()
+        lus = try_gpu(lus)
+        lvs = torch.LongTensor()
+        lvs = try_gpu(lvs)
+        les = torch.LongTensor()
+        les = try_gpu(les)
+
+        tus_dist=try_gpu(torch.Tensor())
+        tvs_dist=try_gpu(torch.Tensor())
+        lus_dist=try_gpu(torch.Tensor())
+        lvs_dist=try_gpu(torch.Tensor())
+        les_dist=try_gpu(torch.Tensor())
+
+        for i in range(max_size):
+            if i == 0:
+                x, (h, c) = self.lstm(x)
+            else:
+                x = self.emb(x)
+                x = torch.cat((x,origin_rep),dim=2)
+                x, (h, c) = self.lstm(x, (h, c))
+
+            tus_dist = torch.cat([tus_dist,self.softmax(self.f_tu(x))], dim=1)
+            tvs_dist = torch.cat([tvs_dist,self.softmax(self.f_tv(x))], dim=1)
+            lus_dist = torch.cat([lus_dist,self.softmax(self.f_lu(x))], dim=1)
+            lvs_dist = torch.cat([lvs_dist,self.softmax(self.f_lv(x))], dim=1)
+            les_dist = torch.cat([les_dist,self.softmax(self.f_le(x))], dim=1)
+
+            tu = torch.argmax(self.softmax(self.f_tu(x)), dim=2)
+            tv = torch.argmax(self.softmax(self.f_tv(x)), dim=2)
+            lu = torch.argmax(self.softmax(self.f_lu(x)), dim=2)
+            lv = torch.argmax(self.softmax(self.f_lv(x)), dim=2)
+            le = torch.argmax(self.softmax(self.f_le(x)), dim=2)
+
+            tus = torch.cat((tus, tu), dim=1)
+            tvs = torch.cat((tvs, tv), dim=1)
+            lus = torch.cat((lus, lu), dim=1)
+            lvs = torch.cat((lvs, lv), dim=1)
+            les = torch.cat((les, le), dim=1)
+            tu = tu.squeeze().cpu().detach().numpy()
+            tv = tv.squeeze().cpu().detach().numpy()
+            lu = lu.squeeze().cpu().detach().numpy()
+            lv = lv.squeeze().cpu().detach().numpy()
+            le = le.squeeze().cpu().detach().numpy()
+
+            tu = utils.convert2onehot(tu, self.time_size)
+            tv = utils.convert2onehot(tv, self.time_size)
+            lu = utils.convert2onehot(lu, self.node_label_size)
+            lv = utils.convert2onehot(lv, self.node_label_size)
+            le = utils.convert2onehot(le, self.edge_label_size)
+            x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+            x = try_gpu(x)
+    
+            # x = torch.cat((x, conditional_label),dim=2)
+        if is_output_sampling:
+            return tus, tvs, lus, lvs, les
+        else:
+            return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
 
 class VAE(nn.Module):
     def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
@@ -209,6 +286,14 @@ class VAE(nn.Module):
             z = utils.try_gpu(z)
         tu, tv, lu, lv, le =\
             self.decoder.generate(z, conditional_label, max_size, is_output_sampling)
+        return tu, tv, lu, lv, le
+    
+    def non_conditional_generate(self, data_num, z=None, max_size=generate_max_len, is_output_sampling=True):
+        if z is None:
+            z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
+            z = utils.try_gpu(z)
+        tu, tv, lu, lv, le =\
+            self.decoder.non_conditinal_generate(z, max_size, is_output_sampling)
         return tu, tv, lu, lv, le
 
     def encode(self, x):
