@@ -287,7 +287,7 @@ class VAE(nn.Module):
             z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
             z = utils.try_gpu(z)
         tu, tv, lu, lv, le =\
-            self.decoder.non_conditinal_generate(z, max_size, is_output_sampling)
+            self.decoder.non_conditional_generate(z, max_size, is_output_sampling)
         return tu, tv, lu, lv, le
 
     def encode(self, x):
