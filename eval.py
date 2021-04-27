@@ -394,8 +394,10 @@ def non_conditional_eval():
         required_dirs = ["data/result_csv"]
         utils.make_dir(required_dirs)
 
+    joblib.dump(generated_graph,'./data/result_graph')
+
     # 生成グラフをcsvファイルに書き出し
-    cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
+    # cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
                     
     # display result
     # with open('eval_result/statistic/log.txt', 'w') as f:
