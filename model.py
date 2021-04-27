@@ -41,9 +41,11 @@ class Decoder(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
         super(Decoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
-        self.f_rep = nn.Linear(rep_size+6, input_size)
-        #self.f_rep = nn.Linear(rep_size, input_size)
-        self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
+        # 「+6」はコンディショナル用. コンディショナルを使用しない場合は、「+6」を外す.
+        # self.f_rep = nn.Linear(rep_size+6, input_size)
+        self.f_rep = nn.Linear(rep_size, input_size)
+        # self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(emb_size+rep_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
