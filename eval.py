@@ -7,6 +7,7 @@ import model
 import graph_process as gp
 import networkx as nx
 import matplotlib.pyplot as plt
+import os
 
 import numpy as np
 import joblib
