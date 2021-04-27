@@ -78,9 +78,10 @@ def concat_histogram_visualize(save_dir,csv_paths):
     csv_paths : list
         ヒストグラムを作成するcsvファイルパスのリスト
     """
+    color_list = ['blue','red','green','gray']
     for param in eval_params:
         fig = plt.figure()
-        for path in csv_paths:
+        for path,color in zip(csv_paths,color_list):
             df = pd.read_csv(path)
             label_name = os.path.splitext(os.path.basename(path))[0]
             if re.search('centrality', param):
@@ -90,11 +91,12 @@ def concat_histogram_visualize(save_dir,csv_paths):
                 for graph_centrality in df[param]:
                     for centrality in ast.literal_eval(graph_centrality).values():
                         total_param.append(centrality)
-                sns.histplot(total_param,label=label_name, kde=False)
+                print('here')
+                sns.histplot(total_param,label=label_name, kde=False, color=color)
             else:
                 if eval_params_limit[param] is not None:
                     plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
-                sns.histplot(df[param],label=label_name, kde=False)
+                sns.histplot(df[param],label=label_name, kde=False, color=color)
 
         plt.legend(frameon=True)
         plt.savefig('./visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
@@ -147,7 +149,7 @@ def pair_plot(csv_paths):
     fig.clf()
     plt.close('all')
 
-def box_plot(generate, correct, trait_name, directory):
+def box_plot(predict, correct, trait_name, directory):
     fig = plt.figure()
     sns.set_context("paper", 1.2)
     ax = fig.add_subplot(1, 1, 1)

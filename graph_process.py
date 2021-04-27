@@ -254,7 +254,7 @@ class complex_networks():
         '''
         statistic = graph_statistic()
         trait_dict = statistic.calc_graph_traits2csv(graph_datas, eval_params)
-        with open('./data/' + file_name + '.csv', 'w') as f:
+        with open('./data/csv/' + file_name + '.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=eval_params)
             writer.writeheader()
             writer.writerows(trait_dict)
@@ -280,32 +280,33 @@ class graph_statistic():
 
     # 隣接行列を入力として, 次数分布を作成
     def degree_dist(self, graph):
-        number_of_nodes = graph.number_of_nodes() #全ノード数を受け取る
-        degree_dist_dict = {}
-        for node_num in graph.nodes():
-            num_of_degree = graph.degree(node_num)
-            if num_of_degree not in degree_dist_dict.keys():
-                degree_dist_dict.update({num_of_degree:1})
-            else:
-                degree_dist_dict[num_of_degree] += 1
+        degree = list(dict(nx.degree(graph)).values())
 
-        for key,value in degree_dist_dict.items():
-            degree_dist_dict[key] = value/number_of_nodes
+        import collections
+        power_degree = dict(collections.Counter(degree))
+        power_degree = sorted(power_degree.items(), key=lambda x:x[0])
+        x = []
+        y = []
+        
+        for i in power_degree:
+            num = i[0]
+            amount = i[1]
+            x.append(num)
+            y.append(amount)
+        y = np.array(y) / sum(y)#次数を確率化
+        sum_prob = 0
+        for index,prob in enumerate(y):
+            sum_prob += prob
+            if sum_prob >= power_degree_border_line:
+                border_index = index + 1
+                break
 
-        degree_dist_dict = sorted(degree_dist_dict.items(), key=lambda x:x[0])
+        x_log = np.log(np.array(x))
+        y_log = np.log(np.array(y))
 
-        x = [i[0] for i in degree_dist_dict]
-        y = [i[1] for i in degree_dist_dict]
-
-        x = np.log(np.array(x))
-        y = np.log(np.array(y))
-
-        plt.scatter(x,y)
-        plt.plot(x, np.poly1d(np.polyfit(x, y, 1))(x), label='d=1')
-        print(np.polyfit(x, y, 1))
-        plt.show()
-        dd
-        param, cov = curve_fit(self.fitting_function, x, y)
+        x_split_plot = x_log[border_index:]
+        y_split_plot = y_log[border_index:]
+        param =  np.polyfit(x_split_plot,y_split_plot,1)
         return param[0]
 
     def cluster_coeff(self, graph):
