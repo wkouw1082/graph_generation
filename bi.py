@@ -145,7 +145,7 @@ def pair_plot(csv_paths):
     fig = plt.figure()
     df = utils.concat_csv(csv_paths)
     sns.pairplot(df,data=df,hue='type')
-    plt.savefig('./visualize/pair_plot/pair_plot.png')
+    plt.savefig('./visualize/pair_plot/pair_plot.pdf')
     fig.clf()
     plt.close('all')
 
@@ -260,8 +260,7 @@ def log_log():
         plt.clf()
 
 if __name__ == '__main__':
-    #graph = joblib.load('./data/Twitter/twitter.pkl.cmp')
-    #graph2csv(graph, 'Twitter/twitter.csv')
-    # import doctest
-    # doctest.testmod()
-    log_log()
+    graphs = joblib.load('./data/result_graph')
+    for graph in graphs:
+        print(graph.number_of_nodes())
+    print(len(graphs))

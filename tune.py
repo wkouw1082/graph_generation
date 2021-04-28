@@ -216,24 +216,6 @@ def tune():
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
 
-    if is_classifier:
-        # モデルの作成、重み読み込み、gpu化
-        classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
-        classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
-        classifier = utils.try_gpu(classifier)
-
-        # すべてのパラメータを固定
-        for param in classifier.parameters():
-            param.requires_grad = False
-
-        # 分類用正解データの作成
-        train_classifier_correct=torch.LongTensor(
-                [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
-        valid_classifier_correct=torch.LongTensor(
-                [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
-        train_classifier_correct = utils.try_gpu(train_classifier_correct)
-        valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
-
     valid_dataset = utils.try_gpu(valid_dataset)
 
     print("--------------")
@@ -257,7 +239,7 @@ def tune():
             "rep_size" : trial.suggest_int("rep_size", 10, 256),
         }
 
-        vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+        vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
         vae = utils.try_gpu(vae)
         opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
@@ -301,15 +283,6 @@ def tune():
                     tmp_loss = criterion(pred.transpose(2, 1), correct)
                     loss+=tmp_loss
 
-                if is_classifier:
-                    # とりあえずsamplingせずそのまま突っ込む
-                    pred_dfs=torch.cat(result, dim=2)
-                    degree, cluster=classifier(pred_dfs)
-                    degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
-                    cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
-                    loss+=degree_loss*classifier_bias
-                    loss+=cluster_loss*classifier_bias
-
                 timestep+=1
                 loss.backward()
                 loss_sum+=loss.item()
@@ -333,15 +306,6 @@ def tune():
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 valid_loss+=tmp_loss
             valid_loss_sum+=valid_loss.item()
-
-            if is_classifier:
-                # とりあえずsamplingせずそのまま突っ込む
-                pred_dfs=torch.cat(result, dim=2)
-                degree, cluster=classifier(pred_dfs)
-                degree_loss = criterion(degree.squeeze(), valid_classifier_correct[:, 0])
-                cluster_loss = criterion(cluster.squeeze(), valid_classifier_correct[:, 1])
-                valid_loss_sum+=degree_loss*classifier_bias
-                valid_loss_sum+=cluster_loss*classifier_bias
 
             if valid_min_loss>valid_loss_sum:
                 valid_min_loss = valid_loss_sum
