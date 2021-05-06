@@ -187,7 +187,7 @@ class Decoder(nn.Module):
 
 class DecoderNonConditional(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
-        super(Decoder, self).__init__()
+        super(DecoderNonConditional, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         # 「+6」はコンディショナル用. コンディショナルを使用しない場合は、「+6」を外す.
         # self.f_rep = nn.Linear(rep_size+6, input_size)
