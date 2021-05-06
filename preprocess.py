@@ -186,7 +186,7 @@ def to_dfs(detail):
     return dfs_code, time_stamp_set, nodes_label_set,\
         max_sequence_length
 
-def  to_dfs_conditional(detail):
+def to_dfs_conditional(detail):
     complex_network = graph_process.complex_networks()
     datasets, labelsets= complex_network.create_conditional_dataset(detail)
 

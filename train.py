@@ -346,24 +346,6 @@ def train(parser):
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
 
-    if is_classifier:
-        # モデルの作成、重み読み込み、gpu化
-        classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
-        classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
-        classifier = utils.try_gpu(classifier)
-
-        # すべてのパラメータを固定
-        for param in classifier.parameters():
-            param.requires_grad = False
-
-        # 分類用正解データの作成
-        train_classifier_correct=torch.LongTensor(
-                [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
-        valid_classifier_correct=torch.LongTensor(
-                [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
-        train_classifier_correct = utils.try_gpu(train_classifier_correct)
-        valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
-
     print("--------------")
     print("time size: %d"%(time_size))
     print("node size: %d"%(node_size))
@@ -386,7 +368,6 @@ def train(parser):
     valid_dl = DataLoader(
             TensorDataset(valid_label_args, valid_dataset),\
             shuffle=True, batch_size=model_param["batch_size"])
-
 
     keys = ["tu", "tv", "lu", "lv", "le"]
     if is_classifier:
@@ -447,29 +428,6 @@ def train(parser):
                 current_train_acc[current_key].append(score)
 
             timestep+=1
-            if is_classifier:
-                # とりあえずsamplingせずそのまま突っ込む
-                pred_dfs=torch.cat(result, dim=2)
-                degree, cluster=classifier(pred_dfs)
-                degree_loss = criterion(degree.squeeze(), train_classifier_correct[args][:, 0])
-                cluster_loss = criterion(cluster.squeeze(), train_classifier_correct[args][:, 1])
-                current_train_loss["classifier"].append((degree_loss+cluster_loss).item()*classifier_bias)
-                loss+=degree_loss*classifier_bias
-                loss+=cluster_loss*classifier_bias
-
-                # acc calc
-                pred=degree
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                degreescore = utils.calc_calssification_acc(pred, train_classifier_correct[args][:, 0], ignore_label)
-
-                pred=cluster
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                clusterscore = utils.calc_calssification_acc(pred, train_classifier_correct[args][:, 1], ignore_label)
-                score=(degreescore+clusterscore)/2
-
-                current_train_acc["classifier"].append(score)
 
             loss.backward()
             train_loss_sum+=loss.item()
@@ -534,30 +492,6 @@ def train(parser):
 
                 # save
                 current_valid_acc[current_key].append(score)
-
-            if is_classifier:
-                # とりあえずsamplingせずそのまま突っ込む
-                pred_dfs=torch.cat(result, dim=2)
-                degree, cluster=classifier(pred_dfs)
-                degree_loss = criterion(degree.squeeze(), valid_classifier_correct[args][:, 0])
-                cluster_loss = criterion(cluster.squeeze(), valid_classifier_correct[args][:, 1])
-                current_valid_loss["classifier"].append((degree_loss+cluster_loss).item())
-                loss+=degree_loss
-                loss+=cluster_loss
-
-                # acc calc
-                pred=degree
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                degreescore = utils.calc_calssification_acc(pred, valid_classifier_correct[args][:, 0], ignore_label)
-
-                pred=cluster
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                clusterscore = utils.calc_calssification_acc(pred, valid_classifier_correct[args][:, 1], ignore_label)
-                score=(degreescore+clusterscore)/2
-
-                current_valid_acc["classifier"].append(score)
 
             valid_loss_sum+=loss.item()
 
