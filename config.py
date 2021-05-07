@@ -14,7 +14,7 @@ model_param = {'batch_size': 30,
                'rep_size': 171}
 """
 # model_param={'batch_size': 69, 'lr': 0.0013549389234627585, 'weight_decay': 0.010660900921725731, 'clip_th': 0.014512071116018106, 'emb_size': 165, 'en_hidden_size': 203, 'de_hidden_size': 227, 'rep_size': 20}
-model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
+model_param = {'batch_size': 28, 'lr': 0.005967467004955157, 'weight_decay': 4.645431458470567e-05, 'clip_th': 0.023132574888566335, 'emb_size': 185, 'en_hidden_size': 40, 'de_hidden_size': 232, 'rep_size': 172}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
