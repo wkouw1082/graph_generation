@@ -358,7 +358,7 @@ def non_conditional_eval():
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
-    vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
     # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
     vae = utils.try_gpu(vae)
     vae.eval()
@@ -368,7 +368,7 @@ def non_conditional_eval():
     cx = complex_networks()
 
     # graph_num個のラベルなしグラフ生成
-    result_nonc = vae.non_conditional_generate(graph_num)
+    result_nonc = vae.generate(graph_num)
     result_all = [result_nonc]
 
     end_value_list = [time_size, time_size, node_size, node_size, edge_size]
