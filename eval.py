@@ -368,7 +368,7 @@ def non_conditional_eval():
     cx = complex_networks()
 
     # graph_num個のラベルなしグラフ生成
-    result_nonc = vae.non_conditional_generate(graph_num)
+    result_nonc = vae.generate(graph_num)
     result_all = [result_nonc]
 
     end_value_list = [time_size, time_size, node_size, node_size, edge_size]
