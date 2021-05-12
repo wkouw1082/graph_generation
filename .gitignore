@@ -15,3 +15,4 @@ tunelog
 /visualize/*
 requirementsbk.txt
 *.pyc
+result_graph
