@@ -42,10 +42,8 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         # 「+6」はコンディショナル用. コンディショナルを使用しない場合は、「+6」を外す.
-        # self.f_rep = nn.Linear(rep_size+6, input_size)
-        self.f_rep = nn.Linear(rep_size, input_size)
-        # self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
-        self.lstm = nn.LSTM(emb_size+rep_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.f_rep = nn.Linear(rep_size+6, input_size)
+        self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -189,11 +187,8 @@ class DecoderNonConditional(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
         super(DecoderNonConditional, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
-        # 「+6」はコンディショナル用. コンディショナルを使用しない場合は、「+6」を外す.
-        # self.f_rep = nn.Linear(rep_size+6, input_size)
         self.f_rep = nn.Linear(rep_size, input_size)
-        # self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
-        self.lstm = nn.LSTM(emb_size+rep_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -220,21 +215,16 @@ class DecoderNonConditional(nn.Module):
             le: edge label
         """
 
-        origin_rep=rep
         rep = self.f_rep(rep)
         #rep = self.dropout(rep)
 
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
-
-        # word drop
-        for batch in range(x.shape[0]):
-            args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
-            zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-6]))
-            x[batch,args,:-6]=zero
+        # for batch in range(x.shape[0]):
+        #     args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
+        #     zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-6]))
+        #     x[batch,args,:-6]=zero
 
         x = self.emb(x)
-        rep = torch.cat([origin_rep for _ in range(x.shape[1])],dim=1)
-        x = torch.cat((x,rep),dim=2)
 
         x, (h, c) = self.lstm(x)
         x = self.dropout(x)
@@ -254,12 +244,10 @@ class DecoderNonConditional(nn.Module):
             is_output_sampling: Trueなら返り値を予測dfsコードからargmaxしたものに. Falseなら予測分布を返す
         Returns:
         """
-        origin_rep=rep
 
         rep = self.f_rep(rep)
         rep = self.emb(rep)
         x = rep
-        x = torch.cat((x,origin_rep),dim=2)
         batch_size = x.shape[0]
 
         tus = torch.LongTensor()
@@ -284,7 +272,6 @@ class DecoderNonConditional(nn.Module):
                 x, (h, c) = self.lstm(x)
             else:
                 x = self.emb(x)
-                x = torch.cat((x,origin_rep),dim=2)
                 x, (h, c) = self.lstm(x, (h, c))
 
             tus_dist = torch.cat([tus_dist,self.softmax(self.f_tu(x))], dim=1)
