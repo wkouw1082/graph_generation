@@ -71,7 +71,7 @@ graph_num=300
 generate_max_len=1000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
-twitter_path = "./data/Twitter/edgelists/renum*"
+twitter_path = "./data/Twitter_2000/renum*"
 
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
