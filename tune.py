@@ -310,7 +310,7 @@ def tune():
             if valid_min_loss>valid_loss_sum:
                 valid_min_loss = valid_loss_sum
             print(" valid loss: %lf"%(valid_loss_sum))
-        return valid_min_loss
+        return train_min_loss
 
     study = optuna.create_study()
     study.optimize(tuning_trial, n_trials=opt_epoch)

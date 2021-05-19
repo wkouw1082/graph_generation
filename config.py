@@ -47,7 +47,7 @@ visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
 # NNのparamのkeyがだぶるので名前だけ別で定義
 visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv'}
 
-ignore_label=1000
+ignore_label=1500
 
 opt_epoch=100
 
@@ -70,10 +70,10 @@ size_th=0
 # 評価に用いるネットワーク数
 graph_num=300
 # 生成する最大dfsコード長
-generate_max_len=2000
+generate_max_len=1000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
-twitter_path = "./data/Twitter/edgelists/renum*"
+twitter_path = "./data/Twitter_2000/renum*"
 
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
