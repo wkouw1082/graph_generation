@@ -261,6 +261,7 @@ def log_log():
 
 if __name__ == '__main__':
     graphs = joblib.load('./data/result_graph')
+    graph_visualize(graphs[0])
     for graph in graphs:
         print(graph.number_of_nodes())
     print(len(graphs))

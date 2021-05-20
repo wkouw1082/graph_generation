@@ -216,18 +216,10 @@ class DecoderNonConditional(nn.Module):
         """
 
         rep = self.f_rep(rep)
-        #rep = self.dropout(rep)
-
         x = torch.cat((rep, x), dim=1)[:,:-1,:]
-        # for batch in range(x.shape[0]):
-        #     args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
-        #     zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-6]))
-        #     x[batch,args,:-6]=zero
-
         x = self.emb(x)
-
         x, (h, c) = self.lstm(x)
-        x = self.dropout(x)
+        # x = self.dropout(x)
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))
         lu = self.softmax(self.f_lu(x))
