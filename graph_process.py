@@ -470,6 +470,8 @@ class graph_statistic():
         '''
         trait_list=[]
         for index, graph in enumerate(graphs):
+            if self.check_normal_graph(graph) == False:
+                continue
             tmp_dict = {}
             for key in eval_params:
                 #if "id" in key:
@@ -499,6 +501,12 @@ class graph_statistic():
                 tmp_dict.update({key:param})
             trait_list.append(tmp_dict)
         return trait_list
+
+    def check_normal_graph(graph):
+        if graph.number_of_nodes() == 0:
+            return False
+        else:
+            return True
 
 # 隣接行列を隣接リストに変換
 def mat_to_list(adj_mat):
