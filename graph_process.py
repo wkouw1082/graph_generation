@@ -50,6 +50,8 @@ class complex_networks():
                     datas = self.make_twitter_graph()
                 elif key == "reddit":
                     datas = self.make_reddit_graph()
+                elif key == "twitter_pickup":
+                    datas = self.pickup_twitter_data()
                 # NNモデルでの生成時にはこっちを使う　いろんなparamのデータをまとめて一つのデータセットにするため
                 if do_type == 'train':
                     datasets.extend(datas)
@@ -240,6 +242,14 @@ class complex_networks():
             return datas[int(split_num*0.9):]
         else:
             return datas
+
+    def pickup_twitter_data():
+        text_datas = utils.get_directory_paths(twitter_path)
+        datas = text2graph(text_datas)
+
+        sample_datas = random.sample(datas, graph_num)
+
+        return datas
 
     def graph2csv(self, graph_datas, file_name):
         '''
