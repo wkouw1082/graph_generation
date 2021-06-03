@@ -105,6 +105,18 @@ class complex_networks():
                     break
         return datasets, labelsets.unsqueeze(1)
 
+    def create_seq_conditional_dataset(self,detail):
+        for i, (key, value) in enumerate(detail.items()):
+            generate_num = value[0]
+            data_dim = value[1]
+            params = value[2]
+
+            for param in params:
+                if key=='twitter':
+                    datasets, labelsets = self.make_twitter_graph_with_label()
+
+        return datasets, labelsets
+
     # 俗に言う修正BAモデルの生成
     def generate_fixed_BA(self, generate_num, data_dim):
         # print("     generate fixed BA:")
@@ -232,24 +244,43 @@ class complex_networks():
             networkx型のグラフが入ったlist
         """
         text_datas = utils.get_directory_paths(twitter_path)
-        datas = text2graph(text_datas)
+        graph_datas = text2graph(text_datas)
         
-        split_num = len(datas)
+        split_num = len(graph_datas)
 
         if do_type == 'train':
-            return datas[:int(split_num*0.9)]
+            return graph_datas[:int(split_num*0.9)]
         elif do_type == 'valid':
-            return datas[int(split_num*0.9):]
+            return graph_datas[int(split_num*0.9):]
         else:
-            return datas
+            return graph_datas
 
-    def pickup_twitter_data():
+    def make_twitter_graph_with_label(self):
+        text_datas = utils.get_directory_paths(twitter_path)
+        graph_datas = text2graph(text_datas)
+        label_datas = torch.tensor()
+
+        split_num = len(graph_datas)
+
+        st = graph_statistic()
+        # conditionalで指定するlabelを取得する
+        for graph in graph_datas:
+            # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
+            params = st.calc_graph_traits2csv(graph,["cluster_coefficient","maximum_distance"])
+            for param in params:
+                # 小数点第二位で四捨五入する
+                param = round(param,2)
+            label_datas = torch.cat((label_datas, params),dim=0)
+
+        return graph_datas, label_datas.unsqueeze(1)
+
+    def pickup_twitter_data(self):
         text_datas = utils.get_directory_paths(twitter_path)
         datas = text2graph(text_datas)
 
         sample_datas = random.sample(datas, graph_num)
 
-        return datas
+        return sample_datas
 
     def graph2csv(self, graph_datas, file_name):
         '''
@@ -480,8 +511,6 @@ class graph_statistic():
         '''
         trait_list=[]
         for index, graph in enumerate(graphs):
-            if self.check_normal_graph(graph) == False:
-                continue
             tmp_dict = {}
             for key in eval_params:
                 #if "id" in key:
@@ -511,12 +540,6 @@ class graph_statistic():
                 tmp_dict.update({key:param})
             trait_list.append(tmp_dict)
         return trait_list
-
-    def check_normal_graph(graph):
-        if graph.number_of_nodes() == 0:
-            return False
-        else:
-            return True
 
 # 隣接行列を隣接リストに変換
 def mat_to_list(adj_mat):
