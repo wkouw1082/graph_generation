@@ -22,6 +22,7 @@ import time
 import math
 import json
 import glob
+from tqdm import tqdm
 import csv
 from config import *
 
@@ -112,8 +113,10 @@ class complex_networks():
             params = value[2]
 
             for param in params:
-                if key=='twitter':
-                    datasets, labelsets = self.make_twitter_graph_with_label()
+                if key=='twitter_train':
+                    datasets, labelsets = self.make_twitter_graph_with_label('train')
+                elif key=='twitter_valid':
+                    datasets, labelsets = self.make_twitter_graph_with_label('valid')
 
         return datasets, labelsets
 
@@ -255,24 +258,32 @@ class complex_networks():
         else:
             return graph_datas
 
-    def make_twitter_graph_with_label(self):
+    def make_twitter_graph_with_label(self,do_type=None):
         text_datas = utils.get_directory_paths(twitter_path)
         graph_datas = text2graph(text_datas)
-        label_datas = torch.tensor()
+        label_datas = torch.Tensor()
 
         split_num = len(graph_datas)
 
         st = graph_statistic()
         # conditionalで指定するlabelを取得する
-        for graph in graph_datas:
+        for graph in tqdm(graph_datas):
             # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
-            params = st.calc_graph_traits2csv(graph,["cluster_coefficient","maximum_distance"])
-            for param in params:
+            # paramsはリスト型で渡されるのでindex[0]をつける
+            params = st.calc_graph_traits2csv([graph],["cluster_coefficient","maximum_distance"])[0]
+            tmp_label = []
+            for param in params.values():
                 # 小数点第二位で四捨五入する
-                param = round(param,2)
-            label_datas = torch.cat((label_datas, params),dim=0)
+                tmp_label.append(round(param,2))
+            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            label_datas = torch.cat((label_datas, tmp_label),dim=0)
 
-        return graph_datas, label_datas.unsqueeze(1)
+        if do_type == 'train':
+            return graph_datas[:int(split_num*0.9)], label_datas[:int(split_num*0.9)].unsqueeze(1)
+        elif do_type == 'valid':
+            return graph_datas[int(split_num*0.9):], label_datas[int(split_num*0.9):].unsqueeze(1)
+        else:
+            return graph_datas, label_datas.unsqueeze(1)
 
     def pickup_twitter_data(self):
         text_datas = utils.get_directory_paths(twitter_path)

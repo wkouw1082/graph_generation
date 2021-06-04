@@ -41,9 +41,9 @@ class Decoder(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
         super(Decoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
-        # 「+6」はコンディショナル用. コンディショナルを使用しない場合は、「+6」を外す.
-        self.f_rep = nn.Linear(rep_size+6, input_size)
-        self.lstm = nn.LSTM(emb_size+rep_size+6, hidden_size, num_layers=num_layer, batch_first=True)
+        # onehot vectorではなく連続値なためサイズは+2
+        self.f_rep = nn.Linear(rep_size+2, input_size)
+        self.lstm = nn.LSTM(emb_size+rep_size+2, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -70,7 +70,7 @@ class Decoder(nn.Module):
             le: edge label
         """
 
-        conditional=x[:,0,-6:].unsqueeze(1)
+        conditional=x[:,0,-2:].unsqueeze(1)
         rep = torch.cat([rep, conditional], dim=2)
 
         origin_rep=rep
@@ -82,8 +82,8 @@ class Decoder(nn.Module):
         # word drop
         for batch in range(x.shape[0]):
             args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
-            zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-6]))
-            x[batch,args,:-6]=zero
+            zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-2]))
+            x[batch,args,:-2]=zero
 
         x = self.emb(x)
         rep = torch.cat([origin_rep for _ in range(x.shape[1])],dim=1)
