@@ -346,7 +346,7 @@ def non_conditional_eval():
             "dataset"]
     utils.make_dir(required_dirs)
 
-    train_label = joblib.load("dataset/train/label")
+    # train_label = joblib.load("dataset/train/label")
     time_size, node_size, edge_size = joblib.load("dataset/param")
     dfs_size = 2*time_size + 2*node_size + edge_size
 
@@ -397,7 +397,7 @@ def non_conditional_eval():
     joblib.dump(generated_graph,'./data/result_graph')
 
     # 生成グラフをcsvファイルに書き出し
-    # cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
+    cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
                     
     # display result
     # with open('eval_result/statistic/log.txt', 'w') as f:

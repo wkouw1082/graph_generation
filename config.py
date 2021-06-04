@@ -14,9 +14,8 @@ model_param = {'batch_size': 30,
                'rep_size': 171}
 """
 # model_param={'batch_size': 69, 'lr': 0.0013549389234627585, 'weight_decay': 0.010660900921725731, 'clip_th': 0.014512071116018106, 'emb_size': 165, 'en_hidden_size': 203, 'de_hidden_size': 227, 'rep_size': 20}
-# model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
-# model_param = {'batch_size': 16, 'lr': 0.01082131764731544, 'weight_decay': 0.09174137908657536, 'clip_th': 0.0004241902009358986, 'emb_size': 189, 'en_hidden_size': 30, 'de_hidden_size': 247, 'rep_size': 220}
-model_param = {'batch_size': 28, 'lr': 0.005967467004955157, 'weight_decay': 4.645431458470567e-05, 'clip_th': 0.023132574888566335, 'emb_size': 185, 'en_hidden_size': 40, 'de_hidden_size': 232, 'rep_size': 172}
+# model_param = {'batch_size': 28, 'lr': 0.005967467004955157, 'weight_decay': 4.645431458470567e-05, 'clip_th': 0.023132574888566335, 'emb_size': 185, 'en_hidden_size': 40, 'de_hidden_size': 232, 'rep_size': 172}
+model_param = {'batch_size': 72, 'lr': 0.011409476404107966, 'weight_decay': 0.08782510369674405, 'clip_th': 0.013199965744714763, 'emb_size': 173, 'en_hidden_size': 34, 'de_hidden_size': 252, 'rep_size': 179}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
@@ -43,19 +42,28 @@ valid_generate_detail = {"twitter_valid":[None,None,[None]]}
 
 # データ分析時のdetail
 visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
-                    "twitter": [None,None,[None]]}
+                    "twitter": [None,None,[None]],
+                    "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv'}
+visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"generate":'./data/csv/twitter_result.csv', "twitter_pickup":'./data/csv/twitter_pickup.csv',\
+    "graphgen":'./data/csv/GG_2000_300.csv'}
 
 ignore_label=1500
 
 opt_epoch=100
 
-# コンディショナルで指定する値
-power_degree_label = [1.2,0.8,0.3]
+# コンディショナルで生成時に指定する値
+power_degree_label = [0.4,0.5,0.6]
 power_degree_dim = len(power_degree_label)
-cluster_coefficient_label = [0.2,0.4,0.6]
+# クラスター係数 実際の値は[0.1~0.4]くらい
+cluster_coefficient_label = [0.1,0.25,0.4]
 cluster_coefficient_dim = len(cluster_coefficient_label)
+# 最大最小距離　実際の値は[7~20]くらい
+maximum_shortest_path_label = [7.0, 14.0, 20.0]
+
+#　補完する値
+interpolation_cluster_cofficient = [0.2, 0.3]
+interpolation_maximum_path = [10.0, 16.0]
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"

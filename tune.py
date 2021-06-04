@@ -1,3 +1,4 @@
+from ast import parse
 import optuna
 import yaml
 import shutil
@@ -15,12 +16,11 @@ import utils
 import self_loss
 from config import *
 
-def conditional_tune():
+def conditional_tune(args):
 
     required_dirs = ["param", "dataset"]
     utils.make_dir(required_dirs)
 
-    args = utils.get_args()
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
@@ -191,12 +191,11 @@ def conditional_tune():
     f.write(yaml.dump(study.best_params))
     f.close()
 
-def tune():
+def tune(args):
 
     required_dirs = ["param", "dataset"]
     utils.make_dir(required_dirs)
 
-    args = utils.get_args()
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
@@ -324,4 +323,15 @@ def tune():
     f.close()
 
 if __name__=='__main__':
-    tune()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--preprocess',action='store_true')
+    parser.add_argument('--classifier',action='store_true')
+    parser.add_argument('--condition',action='store_true')
+
+    args = parser.parse_args()
+    if args.condition:
+        conditional_tune(args)
+    else:
+        tune(args)
