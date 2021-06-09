@@ -73,7 +73,7 @@ def conditional_train(args):
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    print(train_dataset[0,:,-2:])
+    # print(train_dataset[0,:,-2:])
 
     print("--------------")
     print("time size: %d"%(time_size))
