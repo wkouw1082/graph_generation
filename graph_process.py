@@ -523,33 +523,36 @@ class graph_statistic():
         trait_list=[]
         for index, graph in enumerate(graphs):
             tmp_dict = {}
-            for key in eval_params:
-                #if "id" in key:
-                #    param = index
-                if "power_degree" in key:
-                    param = self.degree_dist(graph)
-                if "cluster_coefficient" in key:
-                    param = self.cluster_coeff(graph)
-                if "distance" in key:
-                    param = self.ave_dist(graph)
-                if "average_degree" in key:
-                    param = self.ave_degree(graph)
-                if "density" in key:
-                    param = self.density(graph)
-                if "modularity" in key:
-                    param = self.modularity(graph)
-                if "maximum_distance" in key:
-                    param = self.maximum_of_shortest_path_lengths(graph)
-                if "degree_centrality" in key:
-                    param = self.degree_centrality(graph)
-                if "betweenness_centrality" in key:
-                    param = self.betweenness_centrality(graph)
-                if "closeness_centrality" in key:
-                    param = self.closeness_centrality(graph)
-                if "size" in key:
-                    param = graph.number_of_nodes()
-                tmp_dict.update({key:param})
-            trait_list.append(tmp_dict)
+            try:
+                for key in eval_params:
+                    #if "id" in key:
+                    #    param = index
+                    if "power_degree" in key:
+                        param = self.degree_dist(graph)
+                    if "cluster_coefficient" in key:
+                        param = self.cluster_coeff(graph)
+                    if "distance" in key:
+                        param = self.ave_dist(graph)
+                    if "average_degree" in key:
+                        param = self.ave_degree(graph)
+                    if "density" in key:
+                        param = self.density(graph)
+                    if "modularity" in key:
+                        param = self.modularity(graph)
+                    if "maximum_distance" in key:
+                        param = self.maximum_of_shortest_path_lengths(graph)
+                    if "degree_centrality" in key:
+                        param = self.degree_centrality(graph)
+                    if "betweenness_centrality" in key:
+                        param = self.betweenness_centrality(graph)
+                    if "closeness_centrality" in key:
+                        param = self.closeness_centrality(graph)
+                    if "size" in key:
+                        param = graph.number_of_nodes()
+                    tmp_dict.update({key:param})
+                trait_list.append(tmp_dict)
+            except:
+                continue
         return trait_list
 
 # 隣接行列を隣接リストに変換

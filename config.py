@@ -45,7 +45,7 @@ visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
                     "twitter": [None,None,[None]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"generate":'./data/csv/twitter_result.csv', "twitter_pickup":'./data/csv/twitter_pickup.csv',\
+visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"twitter_pickup":'./data/csv/twitter_pickup.csv',\
     "graphgen":'./data/csv/GG_2000_300.csv'}
 
 ignore_label=1500

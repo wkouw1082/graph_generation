@@ -189,6 +189,9 @@ def box_plot(predict, correct, trait_name, directory):
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
 
+def get_keys_from_value(dict, val):
+    return [k for k, v in dict.items() if v == val]
+
 def concat_csv(csv_paths):
     """複数のcsvファイルを結合する関数
 
@@ -202,12 +205,11 @@ def concat_csv(csv_paths):
     pandas.df
         csvファイルを結合してtypeを追加したpandasのデータフレーム
     """
-    df_concat = pd.read_csv(csv_paths[0])
-    df_concat['type'] = os.path.splitext(os.path.basename(csv_paths[0]))[0]
+    df_concat = torch.Tensor()
 
-    for path in csv_paths[1:]:
+    for path in csv_paths:
         df_add = pd.read_csv(path)
-        df_add['type'] = os.path.splitext(os.path.basename(path))[0]
+        df_add['type'] = get_keys_from_value(visualize_types,path)
         df_concat = pd.concat([df_concat,df_add])
 
     return df_concat
