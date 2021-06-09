@@ -259,6 +259,16 @@ def log_log():
         plt.savefig("visualize/power_degree_line/" + name + ".png")
         plt.clf()
 
+def generate_result2csv():
+    gene_result = []
+    for index in range(len(cluster_coefficient_label)):
+        gene_result.append(joblib.load('./eval_result/generated_graph_'+str(index)))
+
+    cn = graph_process.complex_networks()
+
+    for index,result in enumerate(gene_result):
+        cn.graph2csv(result, './data/csv/generated_graph_'+str(index)+'.csv')
+
 if __name__ == '__main__':
     graphs = joblib.load('./data/result_graph')
     graph_visualize(graphs[0])

@@ -26,6 +26,8 @@ def main(parser):
         for name,data in zip(visualize_types.keys(),dataset):
             cn.graph2csv(data,name)
 
+        bi.generate_result2csv()
+
 
     if os.path.isdir("visualize") is False:
         utils.make_dir(["visualize"])
