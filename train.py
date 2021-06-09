@@ -73,8 +73,7 @@ def conditional_train(args):
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    #print(train_dataset[0,:,-6:])
-
+    print(train_dataset[0,:,-2:])
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -539,5 +538,10 @@ if __name__=='__main__':
     parser = argparse.ArgumentParser(description='訓練するプログラム')
     parser.add_argument('--preprocess',action='store_true')
     parser.add_argument('--classifier',action='store_true')
+    parser.add_argument('--condition', action='store_true')
 
-    train(parser)
+    args = parser.parse_args()
+    if args.condition:
+        conditional_train(args)
+    else:
+        train(parser)

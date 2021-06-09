@@ -12,11 +12,12 @@ from config import *
 def main(parser):
     args = parser.parse_args()
     if args.preprocess:
+        # 危険なのでコメントアウト
         # すでにあるディレクトリを削除して再作成
-        if os.path.isdir("data/csv/"):
-            shutil.rmtree("data/csv")
-        required_dirs = ["data/csv"]
-        utils.make_dir(required_dirs)
+        # if os.path.isdir("data/csv/"):
+        #     shutil.rmtree("data/csv")
+        # required_dirs = ["data/csv"]
+        # utils.make_dir(required_dirs)
 
         # visualize_detailをもとにデータセットを作成
         cn = graph_process.complex_networks()

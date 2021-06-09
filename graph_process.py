@@ -22,6 +22,7 @@ import time
 import math
 import json
 import glob
+from tqdm import tqdm
 import csv
 from config import *
 
@@ -50,6 +51,8 @@ class complex_networks():
                     datas = self.make_twitter_graph()
                 elif key == "reddit":
                     datas = self.make_reddit_graph()
+                elif key == "twitter_pickup":
+                    datas = self.pickup_twitter_data()
                 # NNモデルでの生成時にはこっちを使う　いろんなparamのデータをまとめて一つのデータセットにするため
                 if do_type == 'train':
                     datasets.extend(datas)
@@ -102,6 +105,20 @@ class complex_networks():
                 if len(datasets) == generate_num:
                     break
         return datasets, labelsets.unsqueeze(1)
+
+    def create_seq_conditional_dataset(self,detail):
+        for i, (key, value) in enumerate(detail.items()):
+            generate_num = value[0]
+            data_dim = value[1]
+            params = value[2]
+
+            for param in params:
+                if key=='twitter_train':
+                    datasets, labelsets = self.make_twitter_graph_with_label('train')
+                elif key=='twitter_valid':
+                    datasets, labelsets = self.make_twitter_graph_with_label('valid')
+
+        return datasets, labelsets
 
     # 俗に言う修正BAモデルの生成
     def generate_fixed_BA(self, generate_num, data_dim):
@@ -230,16 +247,51 @@ class complex_networks():
             networkx型のグラフが入ったlist
         """
         text_datas = utils.get_directory_paths(twitter_path)
-        datas = text2graph(text_datas)
+        graph_datas = text2graph(text_datas)
         
-        split_num = len(datas)
+        split_num = len(graph_datas)
 
         if do_type == 'train':
-            return datas[:int(split_num*0.9)]
+            return graph_datas[:int(split_num*0.9)]
         elif do_type == 'valid':
-            return datas[int(split_num*0.9):]
+            return graph_datas[int(split_num*0.9):]
         else:
-            return datas
+            return graph_datas
+
+    def make_twitter_graph_with_label(self,do_type=None):
+        text_datas = utils.get_directory_paths(twitter_path)
+        graph_datas = text2graph(text_datas)
+        label_datas = torch.Tensor()
+
+        split_num = len(graph_datas)
+
+        st = graph_statistic()
+        # conditionalで指定するlabelを取得する
+        for graph in tqdm(graph_datas):
+            # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
+            # paramsはリスト型で渡されるのでindex[0]をつける
+            params = st.calc_graph_traits2csv([graph],["cluster_coefficient","maximum_distance"])[0]
+            tmp_label = []
+            for param in params.values():
+                # 小数点第二位で四捨五入する
+                tmp_label.append(round(param,2))
+            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            label_datas = torch.cat((label_datas, tmp_label),dim=0)
+
+        if do_type == 'train':
+            return graph_datas[:int(split_num*0.9)], label_datas[:int(split_num*0.9)].unsqueeze(1)
+        elif do_type == 'valid':
+            return graph_datas[int(split_num*0.9):], label_datas[int(split_num*0.9):].unsqueeze(1)
+        else:
+            return graph_datas, label_datas.unsqueeze(1)
+
+    def pickup_twitter_data(self):
+        text_datas = utils.get_directory_paths(twitter_path)
+        datas = text2graph(text_datas)
+
+        sample_datas = random.sample(datas, graph_num)
+
+        return sample_datas
 
     def graph2csv(self, graph_datas, file_name):
         '''
