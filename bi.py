@@ -267,7 +267,7 @@ def generate_result2csv():
     cn = graph_process.complex_networks()
 
     for index,result in enumerate(gene_result):
-        cn.graph2csv(result, './data/csv/generated_graph_'+str(index)+'.csv')
+        cn.graph2csv(result, 'generated_graph_'+str(index)+'.csv')
 
 if __name__ == '__main__':
     graphs = joblib.load('./data/result_graph')
