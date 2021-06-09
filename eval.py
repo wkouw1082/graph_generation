@@ -621,6 +621,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     if args.condition:
-        eval()
+        eval(args)
     else:
-        non_conditional_eval()
+        non_conditional_eval(args)
