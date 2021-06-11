@@ -43,19 +43,28 @@ valid_generate_detail = {"twitter_valid":[None,None,[None]]}
 
 # データ分析時のdetail
 visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
-                    "twitter": [None,None,[None]]}
+                    "twitter": [None,None,[None]],
+                    "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv'}
+visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"generate":'./data/csv/twitter_result.csv', "twitter_pickup":'./data/csv/twitter_pickup.csv',\
+    "graphgen":'./data/csv/GG_2000_300.csv'}
 
-ignore_label=1000
+ignore_label=1500
 
 opt_epoch=100
 
-# コンディショナルで指定する値
-power_degree_label = [1.2,0.8,0.3]
+# コンディショナルで生成時に指定する値
+power_degree_label = [0.4,0.5,0.6]
 power_degree_dim = len(power_degree_label)
-cluster_coefficient_label = [0.2,0.4,0.6]
+# クラスター係数 実際の値は[0.1~0.4]くらい
+cluster_coefficient_label = [0.1,0.25,0.4]
 cluster_coefficient_dim = len(cluster_coefficient_label)
+# 最大最小距離　実際の値は[7~20]くらい
+maximum_shortest_path_label = [7.0, 14.0, 20.0]
+
+#　補完する値
+interpolation_cluster_cofficient = [0.2, 0.3]
+interpolation_maximum_path = [10.0, 16.0]
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
@@ -70,10 +79,10 @@ size_th=0
 # 評価に用いるネットワーク数
 graph_num=300
 # 生成する最大dfsコード長
-generate_max_len=2000
+generate_max_len=1000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
-twitter_path = "./data/Twitter/edgelists/renum*"
+twitter_path = "./data/Twitter_2000/renum*"
 
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
