@@ -37,7 +37,7 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     time_stamp_set = train_time_set | valid_time_set
     node_label_set = train_node_set | valid_node_set
     max_sequence_length = max(train_max_length,valid_max_length)
-    conditional_label_length = 2 #指定しているパラメータの数
+    conditional_label_length = condition_size #指定しているパラメータの数
     
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, conditional_label_length], "dataset/param")
 

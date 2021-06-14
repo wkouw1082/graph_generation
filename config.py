@@ -46,7 +46,7 @@ visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
 visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"twitter_pickup":'./data/csv/twitter_pickup.csv',\
-    "graphgen":'./data/csv/GG_2000_300.csv'}
+    "graphgen":'./data/csv/GG_2000_300.csv',"generate_0":'./data/csv/generated_graph_0.csv',"generate_1":'./data/csv/generated_graph_1.csv',"generate_2":'./data/csv/generated_graph_2.csv'}
 
 ignore_label=1500
 
@@ -56,7 +56,7 @@ opt_epoch=100
 power_degree_label = [0.4,0.5,0.6]
 power_degree_dim = len(power_degree_label)
 # クラスター係数 実際の値は[0.1~0.4]くらい
-cluster_coefficient_label = [0.1,0.25,0.4]
+cluster_coefficient_label = [0.1,0.2,0.3]
 cluster_coefficient_dim = len(cluster_coefficient_label)
 # 最大最小距離　実際の値は[7~20]くらい
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
@@ -65,9 +65,11 @@ maximum_shortest_path_label = [7.0, 14.0, 20.0]
 interpolation_cluster_cofficient = [0.2, 0.3]
 interpolation_maximum_path = [10.0, 16.0]
 
+condition_size = 1
+
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
-eval_params = ["power_degree", "cluster_coefficient", "distance","average_degree","density","modularity","maximum_distance","degree_centrality","betweenness_centrality","closeness_centrality", "size"]
+eval_params = ["power_degree", "cluster_coefficient", "distance","average_degree","density","modularity","maximum_distance","size"]
 # 評価を行うパラメータの外れ値を除くために値の上限を設定 指定は値を[最小値,最大値]の形で、指定なしはNoneで
 # 仕様変更がめんどくさいので別で定義　いつか誰か一つにして欲しい
 eval_params_limit = {"power_degree":None,"cluster_coefficient":[0,0.5],"distance":[0,8],\
@@ -78,7 +80,7 @@ size_th=0
 # 評価に用いるネットワーク数
 graph_num=300
 # 生成する最大dfsコード長
-generate_max_len=1000
+generate_max_len=2000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
 twitter_path = "./data/Twitter_2000/renum*"

@@ -56,13 +56,13 @@ def eval(args):
     keys = ["tu", "tv", "lu", "lv", "le"]
 
     cx = complex_networks()
-    conditional_label = [[maximum_shortest_path_label[i], cluster_coefficient_label[i]]\
+    conditional_label = [[cluster_coefficient_label[i]]\
         for i in range(len(cluster_coefficient_label))]
     conditional_label = torch.Tensor(conditional_label)
 
-    result_low = vae.generate(100,conditional_label[0])
-    result_middle = vae.generate(100,conditional_label[1])
-    result_high = vae.generate(100,conditional_label[2])
+    result_low = vae.generate(300,conditional_label[0])
+    result_middle = vae.generate(300,conditional_label[1])
+    result_high = vae.generate(300,conditional_label[2])
 
     result_all = [result_low,result_middle,result_high]
 

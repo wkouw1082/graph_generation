@@ -21,8 +21,7 @@ def graph_visualize(graph):
     nx.draw_networkx(graph,pos)
 
     plt.axis("off")
-    # plt.savefig("default.png")
-    plt.show()
+    plt.savefig("default.png")
 
 def convert_csv2image(csv_path):
     '''
@@ -146,6 +145,7 @@ def pair_plot(csv_paths):
     df = utils.concat_csv(csv_paths)
     sns.pairplot(df,data=df,hue='type')
     plt.savefig('./visualize/pair_plot/pair_plot.pdf')
+    plt.savefig('./visualize/pair_plot/pair_plot.png')
     fig.clf()
     plt.close('all')
 
@@ -267,11 +267,10 @@ def generate_result2csv():
     cn = graph_process.complex_networks()
 
     for index,result in enumerate(gene_result):
-        cn.graph2csv(result, 'generated_graph_'+str(index)+'.csv')
+        cn.graph2csv(result, 'generated_graph_'+str(index))
 
 if __name__ == '__main__':
-    graphs = joblib.load('./data/result_graph')
-    graph_visualize(graphs[0])
+    graphs = joblib.load('./eval_result/generated_graph_0')
     for graph in graphs:
         print(graph.number_of_nodes())
     print(len(graphs))

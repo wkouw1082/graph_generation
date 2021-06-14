@@ -270,11 +270,11 @@ class complex_networks():
         for graph in tqdm(graph_datas):
             # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
             # paramsはリスト型で渡されるのでindex[0]をつける
-            params = st.calc_graph_traits2csv([graph],["cluster_coefficient","maximum_distance"])[0]
+            params = st.calc_graph_traits2csv([graph],["cluster_coefficient"])[0]
             tmp_label = []
             for param in params.values():
-                # 小数点第二位で四捨五入する
-                tmp_label.append(round(param,2))
+                # 小数点第1位で四捨五入する
+                tmp_label.append(round(param,1))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             label_datas = torch.cat((label_datas, tmp_label),dim=0)
 
@@ -388,7 +388,10 @@ class graph_statistic():
         Returns:
             [int]: [密度の値]
         """
-        return nx.density(graph)
+        try:
+            return nx.density(graph)
+        except:
+            return 0
 
     # 未完成
     def clique(self,graph):

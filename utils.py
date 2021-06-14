@@ -205,11 +205,12 @@ def concat_csv(csv_paths):
     pandas.df
         csvファイルを結合してtypeを追加したpandasのデータフレーム
     """
-    df_concat = torch.Tensor()
+    df_concat = pd.read_csv(csv_paths[0])
+    df_concat['type'] = os.path.splitext(os.path.basename(csv_paths[0]))[0]
 
-    for path in csv_paths:
+    for path in csv_paths[1:]:
         df_add = pd.read_csv(path)
-        df_add['type'] = get_keys_from_value(visualize_types,path)
+        df_add['type'] = os.path.splitext(os.path.basename(path))[0]
         df_concat = pd.concat([df_concat,df_add])
 
     return df_concat
