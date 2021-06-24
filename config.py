@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 500
+epochs = 1000
 dropout = 0.5
 word_drop_rate=0
 
@@ -15,7 +15,8 @@ model_param = {'batch_size': 30,
 """
 # model_param={'batch_size': 69, 'lr': 0.0013549389234627585, 'weight_decay': 0.010660900921725731, 'clip_th': 0.014512071116018106, 'emb_size': 165, 'en_hidden_size': 203, 'de_hidden_size': 227, 'rep_size': 20}
 # model_param = {'batch_size': 72, 'lr': 0.011409476404107966, 'weight_decay': 0.08782510369674405, 'clip_th': 0.013199965744714763, 'emb_size': 173, 'en_hidden_size': 34, 'de_hidden_size': 252, 'rep_size': 179}
-model_param = {'batch_size': 16, 'lr': 0.0019591782738159367, 'weight_decay': 2.900821659370592e-05, 'clip_th': 0.0008643775638190553, 'emb_size': 209, 'en_hidden_size': 55, 'de_hidden_size': 255, 'rep_size': 142}
+# model_param = {'batch_size': 16, 'lr': 0.0019591782738159367, 'weight_decay': 2.900821659370592e-05, 'clip_th': 0.0008643775638190553, 'emb_size': 209, 'en_hidden_size': 55, 'de_hidden_size': 255, 'rep_size': 142}
+model_param = {'batch_size': 28, 'lr': 0.0023285213019392545, 'weight_decay': 0.060619708098476534, 'clip_th': 0.024960195072852773, 'emb_size': 222, 'en_hidden_size': 256, 'de_hidden_size': 233, 'rep_size': 70}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
@@ -84,6 +85,8 @@ generate_max_len=2000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
 twitter_path = "./data/Twitter_2000/renum*"
+twitter_train_path = './data/twitter_train'
+twitter_valid_path = './data/twitter_eval'
 
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7

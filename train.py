@@ -68,8 +68,8 @@ def conditional_train(args):
         train_classifier_correct = utils.try_gpu(train_classifier_correct)
         valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
 
-    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
-    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
+    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
+    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
@@ -97,7 +97,7 @@ def conditional_train(args):
             shuffle=True, batch_size=model_param["batch_size"])
     valid_dl = DataLoader(
             TensorDataset(valid_label_args, valid_dataset),\
-            shuffle=True, batch_size=model_param["batch_size"])
+            shuffle=False, batch_size=model_param["batch_size"])
 
     keys = ["tu", "tv", "lu", "lv", "le"]
     if is_classifier:

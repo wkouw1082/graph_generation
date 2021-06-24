@@ -60,6 +60,11 @@ def eval(args):
         for i in range(len(cluster_coefficient_label))]
     conditional_label = torch.Tensor(conditional_label)
 
+    print(conditional_label[0])
+    print(conditional_label[1])
+    print(conditional_label[2])
+    dd
+
     result_low = vae.generate(300,conditional_label[0])
     result_middle = vae.generate(300,conditional_label[1])
     result_high = vae.generate(300,conditional_label[2])

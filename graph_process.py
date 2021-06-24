@@ -24,11 +24,14 @@ import json
 import glob
 from tqdm import tqdm
 import csv
+import os
+from sklearn.model_selection import train_test_split
 from config import *
 
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
 class complex_networks():
+
     def create_dataset(self, detail, do_type='train'):
         datasets = []
         for i, (key, value) in enumerate(detail.items()):
@@ -114,11 +117,13 @@ class complex_networks():
 
             for param in params:
                 if key=='twitter_train':
-                    datasets, labelsets = self.make_twitter_graph_with_label('train')
+                    datasets = joblib.load(twitter_train_path)
+                    dataset, label = datasets[0], datasets[1]
                 elif key=='twitter_valid':
-                    datasets, labelsets = self.make_twitter_graph_with_label('valid')
+                    datasets = joblib.load(twitter_valid_path)
+                    dataset, label = datasets[0], datasets[1]
 
-        return datasets, labelsets
+        return dataset, label
 
     # 俗に言う修正BAモデルの生成
     def generate_fixed_BA(self, generate_num, data_dim):
@@ -258,16 +263,19 @@ class complex_networks():
         else:
             return graph_datas
 
-    def make_twitter_graph_with_label(self,do_type=None):
+    def make_twitter_graph_with_label(self):
         text_datas = utils.get_directory_paths(twitter_path)
         graph_datas = text2graph(text_datas)
-        label_datas = torch.Tensor()
+        train_data, valid_data = train_test_split(graph_datas, test_size=0.1)
 
-        split_num = len(graph_datas)
+        train_labels = torch.Tensor()
+        valid_labels = torch.Tensor()
 
         st = graph_statistic()
         # conditionalで指定するlabelを取得する
-        for graph in tqdm(graph_datas):
+
+        print('generate train data ...')
+        for graph in tqdm(train_data):
             # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
             # paramsはリスト型で渡されるのでindex[0]をつける
             params = st.calc_graph_traits2csv([graph],["cluster_coefficient"])[0]
@@ -276,14 +284,24 @@ class complex_networks():
                 # 小数点第1位で四捨五入する
                 tmp_label.append(round(param,1))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
-            label_datas = torch.cat((label_datas, tmp_label),dim=0)
+            train_labels = torch.cat((train_labels, tmp_label),dim=0)
+        train_labels.unsqueeze(1)
 
-        if do_type == 'train':
-            return graph_datas[:int(split_num*0.9)], label_datas[:int(split_num*0.9)].unsqueeze(1)
-        elif do_type == 'valid':
-            return graph_datas[int(split_num*0.9):], label_datas[int(split_num*0.9):].unsqueeze(1)
-        else:
-            return graph_datas, label_datas.unsqueeze(1)
+        print('generate valid data ...')
+        for graph in tqdm(valid_data):
+            # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
+            # paramsはリスト型で渡されるのでindex[0]をつける
+            params = st.calc_graph_traits2csv([graph],["cluster_coefficient"])[0]
+            tmp_label = []
+            for param in params.values():
+                # 小数点第1位で四捨五入する
+                tmp_label.append(round(param,1))
+            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
+        valid_labels.unsqueeze(1)
+
+        joblib.dump([train_data, train_labels], twitter_train_path)
+        joblib.dump([valid_data, valid_labels], twitter_valid_path)
 
     def pickup_twitter_data(self):
         text_datas = utils.get_directory_paths(twitter_path)
