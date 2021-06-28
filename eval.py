@@ -58,12 +58,7 @@ def eval(args):
     cx = complex_networks()
     conditional_label = [[cluster_coefficient_label[i]]\
         for i in range(len(cluster_coefficient_label))]
-    conditional_label = torch.Tensor(conditional_label)
-
-    print(conditional_label[0])
-    print(conditional_label[1])
-    print(conditional_label[2])
-    dd
+    conditional_label = torch.tensor(conditional_label)
 
     result_low = vae.generate(300,conditional_label[0])
     result_middle = vae.generate(300,conditional_label[1])

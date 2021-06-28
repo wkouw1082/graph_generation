@@ -77,7 +77,7 @@ eval_params_limit = {"power_degree":None,"cluster_coefficient":[0,0.5],"distance
                     "average_degree":[0,10],"density":[0,0.1],"modularity":[0,1],"maximum_distance":None,\
                     "degree_centrality":None,"betweenness_centrality":None,"closeness_centrality":None, "size":None}
 # 評価に用いるネットワークのサイズの閾値
-size_th=0
+size_th=90
 # 評価に用いるネットワーク数
 graph_num=300
 # 生成する最大dfsコード長

@@ -797,7 +797,9 @@ def dfs_code_to_graph_obj(dfs_code,end_value_list):
     G = nx.Graph()
     for current_code in dfs_code:
         for i in range(len(current_code)):
+            # 長さ自体はend_value_listの値だが実際の値は0から始まっているため-1する
             if current_code[i] == end_value_list[i]-1:
+                print('end code desu')
                 return G
         tu,tv,_,_,_ = current_code
         G.add_edge(tu,tv)
