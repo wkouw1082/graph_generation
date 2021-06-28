@@ -30,6 +30,9 @@ def preprocess_not_conditional(train_network_detail,valid_network_detail,train_d
 
 def preprocess(train_network_detail,valid_network_detail,train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
     print('start--preprocess')
+
+    complex_network = graph_process.complex_networks()
+    complex_network.make_twitter_graph_with_label()
     
     train_dfs,train_time_set,train_node_set,train_max_length,train_label = to_dfs_conditional(train_network_detail)
     valid_dfs,valid_time_set,valid_node_set,valid_max_length,valid_label = to_dfs_conditional(valid_network_detail)
@@ -37,7 +40,7 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     time_stamp_set = train_time_set | valid_time_set
     node_label_set = train_node_set | valid_node_set
     max_sequence_length = max(train_max_length,valid_max_length)
-    conditional_label_length = 2 #指定しているパラメータの数
+    conditional_label_length = condition_size #指定しているパラメータの数
     
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, conditional_label_length], "dataset/param")
 

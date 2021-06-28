@@ -189,6 +189,9 @@ def box_plot(predict, correct, trait_name, directory):
     ax.set_ylabel('%s'%(trait_name))
     plt.savefig(directory)
 
+def get_keys_from_value(dict, val):
+    return [k for k, v in dict.items() if v == val]
+
 def concat_csv(csv_paths):
     """複数のcsvファイルを結合する関数
 
