@@ -18,6 +18,8 @@ from config import *
 
 def conditional_tune(args):
 
+    device = utils.get_gpu_info()
+
     required_dirs = ["param", "dataset"]
     utils.make_dir(required_dirs)
 
@@ -46,7 +48,7 @@ def conditional_tune(args):
         # モデルの作成、重み読み込み、gpu化
         classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
         classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
-        classifier = utils.try_gpu(classifier)
+        classifier = utils.try_gpu(device,classifier)
 
         # すべてのパラメータを固定
         for param in classifier.parameters():
@@ -57,8 +59,8 @@ def conditional_tune(args):
                 [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
         valid_classifier_correct=torch.LongTensor(
                 [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
-        train_classifier_correct = utils.try_gpu(train_classifier_correct)
-        valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
+        train_classifier_correct = utils.try_gpu(device,train_classifier_correct)
+        valid_classifier_correct = utils.try_gpu(device,valid_classifier_correct)
 
     train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
     valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
@@ -66,7 +68,7 @@ def conditional_tune(args):
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
 
-    valid_dataset = utils.try_gpu(valid_dataset)
+    valid_dataset = utils.try_gpu(device,valid_dataset)
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -89,8 +91,8 @@ def conditional_tune(args):
             "rep_size" : trial.suggest_int("rep_size", 10, 256),
         }
 
-        vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
-        vae = utils.try_gpu(vae)
+        vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
+        vae = utils.try_gpu(device,vae)
         opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
         train_data_num = train_dataset.shape[0]
@@ -119,7 +121,7 @@ def conditional_tune(args):
                     print("step: [%d/%d]"%(i, train_data_num))
                 vae.train()
                 opt.zero_grad()
-                datas = utils.try_gpu(datas)
+                datas = utils.try_gpu(device,datas)
                 # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
                 mu, sigma, *result = vae(datas, timestep)
                 encoder_loss = encoder_criterion(mu, sigma)
@@ -129,7 +131,7 @@ def conditional_tune(args):
                     # loss calc
                     correct = train_label[j]
                     correct = correct[args]
-                    correct = utils.try_gpu(correct)
+                    correct = utils.try_gpu(device,correct)
                     tmp_loss = criterion(pred.transpose(2, 1), correct)
                     loss+=tmp_loss
 
@@ -161,7 +163,7 @@ def conditional_tune(args):
             for j, pred in enumerate(result):
                 # loss calc
                 correct = valid_label[j]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 valid_loss+=tmp_loss
             valid_loss_sum+=valid_loss.item()
@@ -193,6 +195,8 @@ def conditional_tune(args):
 
 def tune(args):
 
+    device = utils.get_gpu_info()
+
     required_dirs = ["param", "dataset"]
     utils.make_dir(required_dirs)
 
@@ -215,7 +219,7 @@ def tune(args):
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
 
-    valid_dataset = utils.try_gpu(valid_dataset)
+    valid_dataset = utils.try_gpu(device,valid_dataset)
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -238,8 +242,8 @@ def tune(args):
             "rep_size" : trial.suggest_int("rep_size", 10, 256),
         }
 
-        vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
-        vae = utils.try_gpu(vae)
+        vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
+        vae = utils.try_gpu(device,vae)
         opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
 
         train_data_num = train_dataset.shape[0]
@@ -268,7 +272,7 @@ def tune(args):
                     print("step: [%d/%d]"%(i, train_data_num))
                 vae.train()
                 opt.zero_grad()
-                datas = utils.try_gpu(datas)
+                datas = utils.try_gpu(device,datas)
                 # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
                 mu, sigma, *result = vae(datas, timestep)
                 encoder_loss = encoder_criterion(mu, sigma)
@@ -278,7 +282,7 @@ def tune(args):
                     # loss calc
                     correct = train_label[j]
                     correct = correct[args]
-                    correct = utils.try_gpu(correct)
+                    correct = utils.try_gpu(device,correct)
                     tmp_loss = criterion(pred.transpose(2, 1), correct)
                     loss+=tmp_loss
 
@@ -301,7 +305,7 @@ def tune(args):
             for j, pred in enumerate(result):
                 # loss calc
                 correct = valid_label[j]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 valid_loss+=tmp_loss
             valid_loss_sum+=valid_loss.item()

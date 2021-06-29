@@ -19,6 +19,8 @@ from torch.utils.data import TensorDataset
 args = utils.get_args()
 is_preprocess = args.preprocess
 
+device = utils.get_gpu_info()
+
 # recreate directory
 if utils.is_dir_existed("classifier_train_result"):
     print("delete file...")
@@ -61,7 +63,7 @@ print("conditional size: %d"%(conditional_size))
 print("--------------")
 
 classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
-classifier = utils.try_gpu(classifier)
+classifier = utils.try_gpu(device,classifier)
 opt = optim.Adam(classifier.parameters(), lr=classifier_param["lr"])
 
 train_data_num = train_dataset.shape[0]
@@ -102,7 +104,7 @@ for epoch in range(1, classifier_epochs):
             print("step: [%d/%d]"%(i, train_data_num))
         classifier.train()
         opt.zero_grad()
-        datas = utils.try_gpu(datas)
+        datas = utils.try_gpu(device,datas)
 
         result=classifier(datas)
 
@@ -111,7 +113,7 @@ for epoch in range(1, classifier_epochs):
             current_key = keys[j]
             # loss calc
             correct = train_correct[args]
-            correct = utils.try_gpu(correct)
+            correct = utils.try_gpu(device,correct)
             tmp_loss = criterion(pred.squeeze(), correct[:, j])
             loss+=tmp_loss
 
@@ -155,14 +157,14 @@ for epoch in range(1, classifier_epochs):
             print("step: [%d/%d]"%(i, valid_data_num))
         classifier.eval()
         opt.zero_grad()
-        datas = utils.try_gpu(datas)
+        datas = utils.try_gpu(device,datas)
         result = classifier(datas)
         loss=0
         for j, pred in enumerate(result):
             current_key = keys[j]
             # loss calc
             correct = valid_correct[args]
-            correct = utils.try_gpu(correct)
+            correct = utils.try_gpu(device,correct)
             tmp_loss = criterion(pred.squeeze(), correct[:, j])
             loss+=tmp_loss
 
