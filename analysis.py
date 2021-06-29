@@ -13,6 +13,8 @@ from graph_process import complex_networks
 args = utils.get_args()
 is_preprocess = args.preprocess
 
+device = utils.get_gpu_info()
+
 # recreate directory
 if utils.is_dir_existed("analysis_result"):
     print("delete file...")
@@ -59,8 +61,8 @@ train_conditional = torch.cat([train_conditional for _  in range(train_dataset.s
 train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
 
 # gpu
-train_dataset=utils.try_gpu(train_dataset)
-train_conditional=utils.try_gpu(train_conditional)
+train_dataset=utils.try_gpu(device,train_dataset)
+train_conditional=utils.try_gpu(device,train_conditional)
 
 time_size, node_size, edge_size,_ = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size
@@ -102,7 +104,7 @@ time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
 vae = model.VAE(dfs_size+conditional_size, time_size, node_size, edge_size, model_param)
 vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
 
-vae = utils.try_gpu(vae)
+vae = utils.try_gpu(device,vae)
 
 pred = vae(train_dataset)
 
@@ -128,7 +130,7 @@ for j, pred in enumerate(result):
 
 # generate&sampling(onehot)
 for i, conditional_label in enumerate(conditional_labels):
-    conditional_label = utils.try_gpu(conditional_label)
+    conditional_label = utils.try_gpu(device,conditional_label)
     result = vae.generate(500, conditional_label)
     conditional_label=get_key(conditional_label)
     for j, pred in enumerate(result):
@@ -149,7 +151,7 @@ for i, conditional_label in enumerate(conditional_labels):
 
 # generate distribution
 for i, conditional_label in enumerate(conditional_labels):
-    conditional_label = utils.try_gpu(conditional_label)
+    conditional_label = utils.try_gpu(device,conditional_label)
     result = vae.generate(500, conditional_label, is_output_sampling=False)
     conditional_label=get_key(conditional_label)
 

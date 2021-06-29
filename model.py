@@ -1,5 +1,6 @@
 import torch
 from torch import empty, nn
+from torch._C import device
 from graph_process import complex_networks
 import numpy as np
 import utils
@@ -38,7 +39,7 @@ class Encoder(nn.Module):
         return self.mu(x), self.sigma(x)
 
 class Decoder(nn.Module):
-    def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
+    def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, device, num_layer=1):
         super(Decoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         # onehot vectorではなく連続値なためサイズは+2
@@ -55,6 +56,8 @@ class Decoder(nn.Module):
         self.time_size = time_size
         self.node_label_size = node_label_size
         self.edge_label_size = edge_label_size
+
+        self.device = device
 
     def forward(self, rep, x, word_drop=0):
         """
@@ -82,7 +85,7 @@ class Decoder(nn.Module):
         # word drop
         for batch in range(x.shape[0]):
             args=random.choices([i for i in range(x.shape[1])], k=int(x.shape[1]*word_drop))
-            zero=utils.try_gpu(torch.zeros([1, 1, x.shape[2]-condition_size]))
+            zero=utils.try_gpu(self.device,torch.zeros([1, 1, x.shape[2]-condition_size]))
             x[batch,args,:-1*condition_size]=zero
 
         x = self.emb(x)
@@ -109,7 +112,7 @@ class Decoder(nn.Module):
         """
         conditional_label = conditional_label.unsqueeze(0).unsqueeze(1)
         conditional_label = torch.cat([conditional_label for _ in range(rep.shape[0])], dim=0)
-        conditional_label = utils.try_gpu(conditional_label)
+        conditional_label = utils.try_gpu(self.device,conditional_label)
 
         rep = torch.cat([rep, conditional_label], dim=2)
 
@@ -122,21 +125,21 @@ class Decoder(nn.Module):
         batch_size = x.shape[0]
 
         tus = torch.LongTensor()
-        tus = try_gpu(tus)
+        tus = try_gpu(self.device,tus)
         tvs = torch.LongTensor()
-        tvs = try_gpu(tvs)
+        tvs = try_gpu(self.device,tvs)
         lus = torch.LongTensor()
-        lus = try_gpu(lus)
+        lus = try_gpu(self.device,lus)
         lvs = torch.LongTensor()
-        lvs = try_gpu(lvs)
+        lvs = try_gpu(self.device,lvs)
         les = torch.LongTensor()
-        les = try_gpu(les)
+        les = try_gpu(self.device,les)
 
-        tus_dist=try_gpu(torch.Tensor())
-        tvs_dist=try_gpu(torch.Tensor())
-        lus_dist=try_gpu(torch.Tensor())
-        lvs_dist=try_gpu(torch.Tensor())
-        les_dist=try_gpu(torch.Tensor())
+        tus_dist=try_gpu(self.device,torch.Tensor())
+        tvs_dist=try_gpu(self.device,torch.Tensor())
+        lus_dist=try_gpu(self.device,torch.Tensor())
+        lvs_dist=try_gpu(self.device,torch.Tensor())
+        les_dist=try_gpu(self.device,torch.Tensor())
 
         for i in range(max_size):
             if i == 0:
@@ -175,7 +178,7 @@ class Decoder(nn.Module):
             lv = utils.convert2onehot(lv, self.node_label_size)
             le = utils.convert2onehot(le, self.edge_label_size)
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
-            x = try_gpu(x)
+            x = try_gpu(self.device,x)
     
             x = torch.cat((x, conditional_label),dim=2)
         if is_output_sampling:
@@ -184,7 +187,7 @@ class Decoder(nn.Module):
             return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
 
 class DecoderNonConditional(nn.Module):
-    def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, num_layer=1):
+    def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, device, num_layer=1):
         super(DecoderNonConditional, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.f_rep = nn.Linear(rep_size, input_size)
@@ -200,6 +203,8 @@ class DecoderNonConditional(nn.Module):
         self.time_size = time_size
         self.node_label_size = node_label_size
         self.edge_label_size = edge_label_size
+
+        self.device = device
 
     def forward(self, rep, x, word_drop=0):
         """
@@ -243,21 +248,21 @@ class DecoderNonConditional(nn.Module):
         batch_size = x.shape[0]
 
         tus = torch.LongTensor()
-        tus = try_gpu(tus)
+        tus = try_gpu(self.device,tus)
         tvs = torch.LongTensor()
-        tvs = try_gpu(tvs)
+        tvs = try_gpu(self.device,tvs)
         lus = torch.LongTensor()
-        lus = try_gpu(lus)
+        lus = try_gpu(self.device,lus)
         lvs = torch.LongTensor()
-        lvs = try_gpu(lvs)
+        lvs = try_gpu(self.device,lvs)
         les = torch.LongTensor()
-        les = try_gpu(les)
+        les = try_gpu(self.device,les)
 
-        tus_dist=try_gpu(torch.Tensor())
-        tvs_dist=try_gpu(torch.Tensor())
-        lus_dist=try_gpu(torch.Tensor())
-        lvs_dist=try_gpu(torch.Tensor())
-        les_dist=try_gpu(torch.Tensor())
+        tus_dist=try_gpu(self.device,torch.Tensor())
+        tvs_dist=try_gpu(self.device,torch.Tensor())
+        lus_dist=try_gpu(self.device,torch.Tensor())
+        lvs_dist=try_gpu(self.device,torch.Tensor())
+        les_dist=try_gpu(self.device,torch.Tensor())
 
         for i in range(max_size):
             if i == 0:
@@ -295,7 +300,7 @@ class DecoderNonConditional(nn.Module):
             lv = utils.convert2onehot(lv, self.node_label_size)
             le = utils.convert2onehot(le, self.edge_label_size)
             x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
-            x = try_gpu(x)
+            x = try_gpu(self.device,x)
 
         if is_output_sampling:
             return tus, tvs, lus, lvs, les
@@ -303,73 +308,75 @@ class DecoderNonConditional(nn.Module):
             return tus_dist, tvs_dist, lus_dist, lvs_dist, les_dist
 
 class VAE(nn.Module):
-    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
+    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param, device):
         super(VAE, self).__init__()
         emb_size = model_param["emb_size"]
         en_hidden_size = model_param["en_hidden_size"]
         de_hidden_size = model_param["de_hidden_size"]
         rep_size = model_param["rep_size"]
         self.rep_size = rep_size
+        self.device = device
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
-        self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
+        self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
 
     def noise_generator(self, rep_size, batch_num):
         return torch.randn(batch_num, rep_size)
 
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
-        z = transformation(mu, sigma)
+        z = transformation(mu, sigma, self.device)
         tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
     def generate(self, data_num, conditional_label, z=None, max_size=generate_max_len, is_output_sampling=True):
         if z is None:
             z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
-            z = utils.try_gpu(z)
+            z = utils.try_gpu(self.device,z)
         tu, tv, lu, lv, le =\
             self.decoder.generate(z, conditional_label, max_size, is_output_sampling)
         return tu, tv, lu, lv, le
 
     def encode(self, x):
         mu, sigma = self.encoder(x)
-        z = transformation(mu, sigma)
+        z = transformation(mu, sigma, self.device)
         return z
 
 class VAENonConditional(nn.Module):
-    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param):
+    def __init__(self, dfs_size, time_size, node_size, edge_size, model_param,device):
         super(VAENonConditional, self).__init__()
         emb_size = model_param["emb_size"]
         en_hidden_size = model_param["en_hidden_size"]
         de_hidden_size = model_param["de_hidden_size"]
         rep_size = model_param["rep_size"]
         self.rep_size = rep_size
+        self.device = device
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
-        self.decoder = DecoderNonConditional(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size)
+        self.decoder = DecoderNonConditional(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
 
     def noise_generator(self, rep_size, batch_num):
         return torch.randn(batch_num, rep_size)
 
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
-        z = transformation(mu, sigma)
+        z = transformation(mu, sigma, self.device)
         tu, tv, lu, lv, le = self.decoder(z, x)
         return mu, sigma, tu, tv, lu, lv, le
 
     def generate(self, data_num, z=None, max_size=generate_max_len, is_output_sampling=True):
         if z is None:
             z = self.noise_generator(self.rep_size, data_num).unsqueeze(1)
-            z = utils.try_gpu(z)
+            z = utils.try_gpu(self.device,z)
         tu, tv, lu, lv, le =\
             self.decoder.generate(z, max_size, is_output_sampling)
         return tu, tv, lu, lv, le
 
     def encode(self, x):
         mu, sigma = self.encoder(x)
-        z = transformation(mu, sigma)
+        z = transformation(mu, sigma, self.device)
         return z
 
-def transformation(mu, sigma):
-    return mu + torch.exp(0.5*sigma) * utils.try_gpu(torch.randn(sigma.shape))
+def transformation(mu, sigma,device):
+    return mu + torch.exp(0.5*sigma) * utils.try_gpu(device,torch.randn(sigma.shape))
 
 if __name__=="__main__":
     import numpy as np
