@@ -1,3 +1,4 @@
+from typing_extensions import runtime
 import joblib
 import graph_process
 from graph_process import graph_statistic
@@ -35,7 +36,7 @@ def convert_csv2image(csv_path):
     data = pd.read_csv(csv_path, encoding = 'UTF8')
     for param in eval_params:
         sns.histplot(data[param], kde=False)
-        plt.savefig('./visualize/' + param + '.png')
+        plt.savefig('results/'+run_time+'/visualize/' + param + '.png')
         plt.clf()
 
 def histogram_visualize(csv_path):
@@ -63,7 +64,7 @@ def histogram_visualize(csv_path):
                 plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
             sns.histplot(df[param],kde=False)
 
-        plt.savefig('./visualize/histogram/'+dir_name+'/'+ param + '.png')
+        plt.savefig('results/'+run_time+'/visualize/histogram/'+dir_name+'/'+ param + '.png')
         plt.clf()
         plt.close('all')
 
@@ -98,7 +99,7 @@ def concat_histogram_visualize(save_dir,csv_paths):
                 sns.histplot(df[param],label=label_name, kde=False, color=color)
 
         plt.legend(frameon=True)
-        plt.savefig('./visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
+        plt.savefig('results/'+run_time+'/visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
         plt.clf()
         plt.close('all')
 
@@ -123,7 +124,7 @@ def scatter_diagram_visualize(csv_path):
             x_data = df[param_v]
             y_data = df[param_u]
             sns.jointplot(x=x_data,y=y_data,data=df)
-            plt.savefig('./visualize/scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
+            plt.savefig('results/'+run_time+'/visualize/scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
             fig.clf()
             plt.close('all')
 
@@ -136,7 +137,7 @@ def concat_scatter_diagram_visualize(save_dir,csv_paths):
             df = utils.concat_csv(csv_paths)
             sns.jointplot(x=df[param_v],y=df[param_u],data=df,hue='type')
 
-            plt.savefig('./visualize/concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
+            plt.savefig('results/'+run_time+'/visualize/concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
             fig.clf()
             plt.close('all')
 
@@ -144,8 +145,8 @@ def pair_plot(csv_paths):
     fig = plt.figure()
     df = utils.concat_csv(csv_paths)
     sns.pairplot(df,data=df,hue='type')
-    plt.savefig('./visualize/pair_plot/pair_plot.pdf')
-    plt.savefig('./visualize/pair_plot/pair_plot.png')
+    plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.pdf')
+    plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.png')
     fig.clf()
     plt.close('all')
 
@@ -205,11 +206,10 @@ def log_plot():
 
 def log_log():
     cx = graph_process.complex_networks()
-
-    required_dirs = ["visualize/power_degree_line"]
+    required_dirs = ['results/'+run_time+"/visualize/power_degree_line"]
     names = ["NN_0.1","NN_0.5","NN_0.9","twitter"]
-    if os.path.isdir("visualize/power_degree_line/"):
-        shutil.rmtree("visualize/power_degree_line")
+    if os.path.isdir('results/'+run_time+"/visualize/power_degree_line/"):
+        shutil.rmtree('results/'+run_time+"/visualize/power_degree_line")
     utils.make_dir(required_dirs)
 
     for detail,name in zip([{"NN":[1,10000,[0.1]]},{"NN":[1,10000,[0.5]]},{"NN":[1,10000,[0.9]]},{"twitter":[1,10000,[0.1]]}],names):
@@ -256,13 +256,13 @@ def log_log():
         # plt.xscale('log')
         plt.yticks(fontsize=20)
         plt.xlabel('degree', fontsize=24)
-        plt.savefig("visualize/power_degree_line/" + name + ".png")
+        plt.savefig('results/'+run_time+"/visualize/power_degree_line/" + name + ".png")
         plt.clf()
 
 def generate_result2csv():
     gene_result = []
     for index in range(len(cluster_coefficient_label)):
-        gene_result.append(joblib.load('./eval_result/generated_graph_'+str(index)))
+        gene_result.append(joblib.load('results/'+run_time+'/eval/generated_graph_'+str(index)))
 
     cn = graph_process.complex_networks()
 
@@ -270,7 +270,7 @@ def generate_result2csv():
         cn.graph2csv(result, 'generated_graph_'+str(index))
 
 if __name__ == '__main__':
-    graphs = joblib.load('./eval_result/generated_graph_0')
+    graphs = joblib.load('results/'+run_time+'/eval/generated_graph_0')
     for graph in graphs:
         print(graph.number_of_nodes())
     print(len(graphs))

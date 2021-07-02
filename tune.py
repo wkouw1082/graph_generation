@@ -18,8 +18,9 @@ from config import *
 
 def conditional_tune(args):
 
-    required_dirs = ["param", "dataset"]
-    utils.make_dir(required_dirs)
+    # main.py で作成してます
+    # required_dirs = ["param", "dataset"]
+    # utils.make_dir(required_dirs)
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
@@ -187,14 +188,15 @@ def conditional_tune(args):
     print(study.best_params)
     print("--------------------------")
 
-    f = open("param/best_tune.yml", "w+")
+    f = open("results/best_tune.yml", "w+")
     f.write(yaml.dump(study.best_params))
     f.close()
 
 def tune(args):
 
-    required_dirs = ["param", "dataset"]
-    utils.make_dir(required_dirs)
+    # main.pyで作成してます
+    # required_dirs = ["param", "dataset"]
+    # utils.make_dir(required_dirs)
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
@@ -318,7 +320,7 @@ def tune(args):
     print(study.best_params)
     print("--------------------------")
 
-    f = open("param/best_tune.yml", "w+")
+    f = open("results/best_tune.yml", "w+")
     f.write(yaml.dump(study.best_params))
     f.close()
 

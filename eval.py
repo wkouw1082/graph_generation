@@ -24,16 +24,26 @@ def eval(args):
         print("- eval_result")
         shutil.rmtree("./eval_result")
 
+    # required_dirs = [
+    #         "param",
+    #         "eval_result",
+    #         "eval_result/statistic",
+    #         "eval_result/tsne",
+    #         "eval_result/dist_compare",
+    #         "eval_result/generated_normal",
+    #         "eval_result/generated_encoded",
+    #         "eval_result/reconstruct",
+    #         "dataset"]
     required_dirs = [
-            "param",
-            "eval_result",
-            "eval_result/statistic",
-            "eval_result/tsne",
-            "eval_result/dist_compare",
-            "eval_result/generated_normal",
-            "eval_result/generated_encoded",
-            "eval_result/reconstruct",
-            "dataset"]
+                "results",
+                "results/"+run_time,
+                "results/"+run_time+"/eval",
+                "results/"+run_time+"/eval/statistic",
+                "results/"+run_time+"/eval/tsne",
+                "results/"+run_time+"/eval/dist_compare",
+                "results/"+run_time+"/eval/generated_normal",
+                "results/"+run_time+"/eval/generated_encoded",
+                "results/"+run_time+"/eval/reconstruct"]
     utils.make_dir(required_dirs)
 
     train_label = joblib.load("dataset/train/label")
@@ -85,7 +95,7 @@ def eval(args):
             if gp.is_connect(graph) and is_sufficient_size(graph):
                 generated_graph.append(graph)
 
-        joblib.dump(generated_graph, './eval_result/generated_graph_'+str(index))
+        joblib.dump(generated_graph, 'results/'+run_time+'/eval/generated_graph_'+str(index))
 
     #     gs = gp.graph_statistic()
     #     dict_tmp = {"correct"+str(power_degree_label[index])+" "+str(cluster_coefficient_label[index]): {key: [] for key in eval_params}}
@@ -336,16 +346,26 @@ def non_conditional_eval(args):
         print("- eval_result")
         shutil.rmtree("./eval_result")
 
+    # required_dirs = [
+    #         "param",
+    #         "eval_result",
+    #         "eval_result/statistic",
+    #         "eval_result/tsne",
+    #         "eval_result/dist_compare",
+    #         "eval_result/generated_normal",
+    #         "eval_result/generated_encoded",
+    #         "eval_result/reconstruct",
+    #         "dataset"]
     required_dirs = [
-            "param",
-            "eval_result",
-            "eval_result/statistic",
-            "eval_result/tsne",
-            "eval_result/dist_compare",
-            "eval_result/generated_normal",
-            "eval_result/generated_encoded",
-            "eval_result/reconstruct",
-            "dataset"]
+                "results",
+                "results/"+run_time,
+                "results/"+run_time+"/eval",
+                "results/"+run_time+"/eval/statistic",
+                "results/"+run_time+"/eval/tsne",
+                "results/"+run_time+"/eval/dist_compare",
+                "results/"+run_time+"/eval/generated_normal",
+                "results/"+run_time+"/eval/generated_encoded",
+                "results/"+run_time+"/eval/reconstruct"]
     utils.make_dir(required_dirs)
 
     # train_label = joblib.load("dataset/train/label")
@@ -391,12 +411,17 @@ def non_conditional_eval(args):
             if gp.is_connect(graph) and is_sufficient_size(graph):
                 generated_graph.append(graph)
 
-        if os.path.isdir("data/result_csv/"):
-            shutil.rmtree("data/result_csv")
-        required_dirs = ["data/result_csv"]
+        # if os.path.isdir("data/result_csv/"):
+        #     shutil.rmtree("data/result_csv")
+        # required_dirs = ["data/result_csv"]
+        # utils.make_dir(required_dirs)
+        if os.path.isdir('results/' + run_time + "/eval/result_csv/"):
+            shutil.rmtree('results/' + run_time + "/eval/result_csv/")
+        required_dirs = ['results/' + run_time + "/eval/result_csv/"]
         utils.make_dir(required_dirs)
 
-    joblib.dump(generated_graph,'./data/result_graph')
+    # joblib.dump(generated_graph,'./data/result_graph')
+    joblib.dump(generated_graph,'results/' + run_time + '/eval/result_graph')
 
     # 生成グラフをcsvファイルに書き出し
     cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')

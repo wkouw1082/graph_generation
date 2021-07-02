@@ -1,3 +1,4 @@
+from typing_extensions import runtime
 import utils
 import argparse
 import preprocess as pp
@@ -27,8 +28,8 @@ def conditional_train(args):
         print("- train_result")
         shutil.rmtree("./train_result")
 
-    required_dirs = ["param", "train_result", "dataset"]
-    utils.make_dir(required_dirs)
+    # required_dirs = ["param", "train_result", "dataset"]
+    # utils.make_dir(required_dirs)
     print("start preprocess...")
 
     # preprocess
@@ -294,19 +295,19 @@ def conditional_train(args):
         print("----------------------------")
 
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "train_result/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "train_result/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "train_result/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "train_result/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "train_result/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
         train_loss_sums.append(train_loss_sum/train_data_num)
         valid_loss_sums.append(valid_loss_sum/valid_data_num)
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "train_result/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight if train loss is min
         if train_loss_sum<train_min_loss:
@@ -314,8 +315,7 @@ def conditional_train(args):
             torch.save(vae.state_dict(), "param/weight")
         print("\n")
 
-def train(parser):
-    args = parser.parse_args()
+def train(args):
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
@@ -325,8 +325,8 @@ def train(parser):
         print("- train_result")
         shutil.rmtree("./train_result")
 
-    required_dirs = ["param", "train_result", "dataset"]
-    utils.make_dir(required_dirs)
+    # required_dirs = ["param", "train_result", "dataset"]
+    # utils.make_dir(required_dirs)
     print("start preprocess...")
 
     # preprocess
@@ -515,19 +515,19 @@ def train(parser):
         print("----------------------------")
 
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "train_result/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "train_result/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "train_result/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "train_result/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "train_result/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
         train_loss_sums.append(train_loss_sum/train_data_num)
         valid_loss_sums.append(valid_loss_sum/valid_data_num)
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "train_result/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight if train loss is min
         if train_loss_sum<train_min_loss:
@@ -545,4 +545,4 @@ if __name__=='__main__':
     if args.condition:
         conditional_train(args)
     else:
-        train(parser)
+        train(args)

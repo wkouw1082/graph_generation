@@ -9,8 +9,8 @@ import shutil
 
 from config import *
 
-def main(parser):
-    args = parser.parse_args()
+def main(args):
+    # args = parser.parse_args()
     if args.preprocess:
         # 危険なのでコメントアウト
         # すでにあるディレクトリを削除して再作成
@@ -29,68 +29,67 @@ def main(parser):
         bi.generate_result2csv()
 
 
-    if os.path.isdir("visualize") is False:
-        utils.make_dir(["visualize"])
+    # if os.path.isdir("visualize") is False:
+    #     utils.make_dir(["visualize"])
 
     # args type が何も指定されていない場合は全てのtypeが指定され、指定がある場合はそのtypeのcsv pathが持ってこられる
     csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
-
     if args.scatter:
-        if os.path.isdir("visualize/scatter_diagram/"):
-            shutil.rmtree("visualize/scatter_diagram")
+        if os.path.isdir("results/"+run_time+"/visualize/scatter_diagram/"):
+            shutil.rmtree("results/"+run_time+"/visualize/scatter_diagram")
         # csvのファイルパスからdir名を持ってくる
         dir_names = [os.path.splitext(os.path.basename(csv_path))[0] for csv_path in csv_paths]
         # dir名からdirを生成
-        required_dirs = ["visualize/scatter_diagram"] + ["visualize/scatter_diagram/" + dir_name for dir_name in dir_names]
+        required_dirs = ["results/"+run_time+"/visualize/scatter_diagram"] + ["results/"+run_time+"/visualize/scatter_diagram/" + dir_name for dir_name in dir_names]
         utils.make_dir(required_dirs)
 
         for path in csv_paths:
                 bi.scatter_diagram_visualize(path)
 
     if args.histogram:
-        if os.path.isdir("visualize/histogram/"):
-            shutil.rmtree("visualize/histogram")
+        if os.path.isdir("results/"+run_time+"/visualize/histogram/"):
+            shutil.rmtree("results/"+run_time+"/visualize/histogram")
         # csvのファイルパスからdir名を持ってくる
         dir_names = [os.path.splitext(os.path.basename(path))[0] for path in csv_paths]
         # dir名からdirを生成
-        required_dirs = ["visualize/histogram"] + ["visualize/histogram/" + dir_name for dir_name in dir_names]
+        required_dirs = ["results/"+run_time+"/visualize/histogram"] + ["results/"+run_time+"/visualize/histogram/" + dir_name for dir_name in dir_names]
         utils.make_dir(required_dirs)
 
         for path in csv_paths:
             bi.histogram_visualize(path)
         
     if args.concat_scatter:
-        if os.path.isdir("visualize/concat_scatter_diagram/"):
-            shutil.rmtree("visualize/concat_scatter_diagram")
+        if os.path.isdir("results/"+run_time+"/visualize/concat_scatter_diagram/"):
+            shutil.rmtree("results/"+run_time+"/visualize/concat_scatter_diagram")
         dir_name = ''
         for index,path in enumerate(csv_paths):
             dir_name += os.path.splitext(os.path.basename(path))[0]
             if index != len(csv_paths)-1:
                 dir_name += '&'
         # dir名からdirを生成
-        required_dirs = ["visualize/concat_scatter_diagram"] + ["visualize/concat_scatter_diagram/" + dir_name]
+        required_dirs = ["results/"+run_time+"/visualize/concat_scatter_diagram"] + ["results/"+run_time+"/visualize/concat_scatter_diagram/" + dir_name]
         utils.make_dir(required_dirs)
         
         bi.concat_scatter_diagram_visualize(dir_name,csv_paths)
 
     if args.concat_histogram:
-        if os.path.isdir("visualize/concat_histogram/"):
-            shutil.rmtree("visualize/concat_histogram")
+        if os.path.isdir("results/"+run_time+"/visualize/concat_histogram/"):
+            shutil.rmtree("results/"+run_time+"/visualize/concat_histogram")
         dir_name = ''
         for index,path in enumerate(csv_paths):
             dir_name += os.path.splitext(os.path.basename(path))[0]
             if index != len(csv_paths)-1:
                 dir_name += '&'
         # dir名からdirを生成
-        required_dirs = ["visualize/concat_histogram"] + ["visualize/concat_histogram/" + dir_name]
+        required_dirs = ["results/"+run_time+"/visualize/concat_histogram"] + ["results/"+run_time+"/visualize/concat_histogram/" + dir_name]
         utils.make_dir(required_dirs)
 
         bi.concat_histogram_visualize(dir_name,csv_paths)
 
     if args.pair:
-        if os.path.isdir("visualize/pair_plot/"):
-            shutil.rmtree("visualize/pair_plot")
-        required_dirs = ["visualize/pair_plot"]
+        if os.path.isdir("results/"+run_time+"/visualize/pair_plot/"):
+            shutil.rmtree("results/"+run_time+"/visualize/pair_plot")
+        required_dirs = ["results/"+run_time+"/visualize/pair_plot"]
         utils.make_dir(required_dirs)
 
         bi.pair_plot(csv_paths)
@@ -104,5 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('--concat_scatter',action='store_true')
     parser.add_argument('--pair',action='store_true')
     parser.add_argument('--type',nargs='*')
+
+    args = parser.parse_args()
     
-    main(parser)
+    main(args)
