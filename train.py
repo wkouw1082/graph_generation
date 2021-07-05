@@ -313,6 +313,7 @@ def conditional_train(args):
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
             torch.save(vae.state_dict(), "param/weight")
+            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
         print("\n")
 
 def train(args):
@@ -533,6 +534,7 @@ def train(args):
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
             torch.save(vae.state_dict(), "param/weight")
+            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
         print("\n")
 
 if __name__=='__main__':

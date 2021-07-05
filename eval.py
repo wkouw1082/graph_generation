@@ -44,6 +44,13 @@ def eval(args):
                 "results/"+run_time+"/eval/generated_normal",
                 "results/"+run_time+"/eval/generated_encoded",
                 "results/"+run_time+"/eval/reconstruct"]
+    # 必要となるdirがすでに存在していたら、リストから削除
+    remove_dirs = []
+    for req_dir in required_dirs:
+        if os.path.exists(req_dir):
+            remove_dirs.append(req_dir)
+    for remove_dir in remove_dirs:
+        required_dirs.remove(remove_dir)
     utils.make_dir(required_dirs)
 
     train_label = joblib.load("dataset/train/label")
@@ -59,7 +66,8 @@ def eval(args):
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
-    vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
+    # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
+    vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
     vae = utils.try_gpu(vae)
     vae.eval()
 
@@ -366,6 +374,14 @@ def non_conditional_eval(args):
                 "results/"+run_time+"/eval/generated_normal",
                 "results/"+run_time+"/eval/generated_encoded",
                 "results/"+run_time+"/eval/reconstruct"]
+    # 必要となるdirがすでに存在していたら、リストから削除
+    remove_dirs = []
+    for req_dir in required_dirs:
+        if os.path.exists(req_dir):
+            remove_dirs.append(req_dir)
+    for remove_dir in remove_dirs:
+        required_dirs.remove(remove_dir)
+
     utils.make_dir(required_dirs)
 
     # train_label = joblib.load("dataset/train/label")
@@ -424,7 +440,8 @@ def non_conditional_eval(args):
     joblib.dump(generated_graph,'results/' + run_time + '/eval/result_graph')
 
     # 生成グラフをcsvファイルに書き出し
-    cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
+    # cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
+    cx.graph2csv(generated_graph, 'eval/result_csv/twitter_result')
                     
     # display result
     # with open('eval_result/statistic/log.txt', 'w') as f:

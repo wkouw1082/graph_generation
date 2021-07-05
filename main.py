@@ -7,13 +7,11 @@ import eval
 import visualize
 from config import *
 
-
-def main(args, args_visual):
+def main(args):
     """実行したいプログラムを引数で指定して、実行する関数
 
     Args:
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ
-        args_visual (argparse.ArgumentParser().parse_args()): visualize.pyのプロパティ
     """
     # preprocee が必要か、既に終了したかを意味するフラグを作成
     if args.preprocess is False:
@@ -59,7 +57,7 @@ def main(args, args_visual):
 
     # visualize
     if args.visualize:
-        visualize.main(args, args_visual)
+        visualize.main(args)
         if is_finished_preprocess is False:
             is_finished_preprocess = True
             args.preprocess = False
@@ -76,16 +74,13 @@ if __name__ == "__main__":
     parser.add_argument('--eval',      action='store_true')
     parser.add_argument('--visualize', action='store_true')
 
-    parser_visual = argparse.ArgumentParser(description='グラフのデータを可視化するプログラム')
-    parser_visual.add_argument('--preprocess',action='store_true')
-    parser_visual.add_argument('--histogram',action='store_true')
-    parser_visual.add_argument('--scatter',action='store_true')
-    parser_visual.add_argument('--concat_histogram',action='store_true')
-    parser_visual.add_argument('--concat_scatter',action='store_true')
-    parser_visual.add_argument('--pair',action='store_true')
-    parser_visual.add_argument('--type',nargs='*')
+    parser.add_argument('--histogram', action='store_true')
+    parser.add_argument('--scatter',   action='store_true')
+    parser.add_argument('--concat_histogram',action='store_true')
+    parser.add_argument('--concat_scatter',action='store_true')
+    parser.add_argument('--pair',      action='store_true')
+    parser.add_argument('--type',      nargs='*')
 
     args = parser.parse_args()
-    args_visual = parser_visual.parse_args()
 
-    main(args, args_visual)
+    main(args)

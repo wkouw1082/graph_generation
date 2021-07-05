@@ -214,3 +214,37 @@ def concat_csv(csv_paths):
         df_concat = pd.concat([df_concat,df_add])
 
     return df_concat
+
+def get_latest_dir_name(path="./results"):
+    """最新の時刻名のディレクトリを取得する関数
+
+    Parameters
+    ----------
+    path    :   str
+                名前が時刻で記述されているdir or fileが格納されているdirのパス
+    
+    Returns
+    -------
+    latest_folder   :   str
+                        最新時刻のdir or fileの名前
+    """
+    folders = os.listdir(path)
+    sorted_folders = sorted(folders, reverse=True)
+    print('ディレクトリ    : ', path)
+    print('ディレクトリ一覧: ', sorted_folders)
+
+    # フォルダ一覧から最新の日付文字列のフォルダを選択する
+    import re
+    latest_folder = ''
+    for folder in sorted_folders:
+        if re.findall(r'^[0-9]', folder):
+            latest_folder = folder
+            break
+        else:
+            print(folder)
+    if latest_folder == '':
+        print('[ERROR] コピー対象のフォルダが見つかりませんでした')
+        #exit()
+        raise
+
+    return latest_folder

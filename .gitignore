@@ -12,7 +12,7 @@ log
 evallog
 tunelog
 .vscode
-# /visualize/*
+/visualize/*
 requirementsbk.txt
 *.pyc
 result_graph_*
