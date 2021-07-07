@@ -1,4 +1,5 @@
 import argparse
+import yaml
 
 import utils
 import tune
@@ -9,6 +10,7 @@ from config import *
 
 def main(args):
     """実行したいプログラムを引数で指定して、実行する関数
+       現在、全部実行することが推奨
 
     Args:
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ

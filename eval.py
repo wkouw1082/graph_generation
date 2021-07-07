@@ -63,6 +63,12 @@ def eval(args):
     print("edge size: %d"%(edge_size))
     print("--------------")
 
+    # model_param load
+    import yaml
+    with open('results/best_tune.yml', 'r') as yml:
+        model_param = yaml.load(yml) 
+    # print(f"model_param = {model_param}")
+
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
@@ -393,6 +399,12 @@ def non_conditional_eval(args):
     print("node size: %d"%(node_size))
     print("edge size: %d"%(edge_size))
     print("--------------")
+
+    # model_param load
+    import yaml
+    with open('results/best_tune.yml', 'r') as yml:
+        model_param = yaml.load(yml) 
+    # print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 

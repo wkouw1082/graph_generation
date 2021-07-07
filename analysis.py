@@ -97,6 +97,12 @@ for i, args in enumerate(same_conditional_args):
         plt.savefig("analysis_result/correct_dist/%s_%s.png"%(conditional_label, key))
         plt.close()
 
+# model_param load
+    import yaml
+    with open('results/best_tune.yml', 'r') as yml:
+        model_param = yaml.load(yml) 
+    # print(f"model_param = {model_param}")
+
 # resultの可視化
 time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
 vae = model.VAE(dfs_size+conditional_size, time_size, node_size, edge_size, model_param)

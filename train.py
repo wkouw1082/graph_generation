@@ -83,6 +83,12 @@ def conditional_train(args):
     print("conditional size: %d"%(conditional_size))
     print("--------------")
 
+    # model_param load
+    import yaml
+    with open('results/best_tune.yml', 'r') as yml:
+        model_param = yaml.load(yml) 
+    # print(f"model_param = {model_param}")
+
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
     vae = utils.try_gpu(vae)
     opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
@@ -352,6 +358,12 @@ def train(args):
     print("node size: %d"%(node_size))
     print("edge size: %d"%(edge_size))
     print("--------------")
+    
+    # model_param load
+    import yaml
+    with open('results/best_tune.yml', 'r') as yml:
+        model_param = yaml.load(yml) 
+    # print(f"model_param = {model_param}")
 
     vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
     vae = utils.try_gpu(vae)
