@@ -1,6 +1,7 @@
 import torch
 from torch import empty, nn
-from torch._C import device
+import dgl
+from dgl.nn import SAGEConv
 from graph_process import complex_networks
 import numpy as np
 import utils
@@ -23,6 +24,8 @@ class Classifier(nn.Module):
         x = x[:, -1, :].unsqueeze(1)
         return self.softmax(self.degree(x)), self.softmax(self.cluster(x))
 
+# 数種類用意して使うものだけコメントアウトを外す
+# NormalなLSTM
 class Encoder(nn.Module):
     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):
         super(Encoder, self).__init__()
@@ -37,6 +40,18 @@ class Encoder(nn.Module):
         x, (h,c) = self.lstm(x)
         x = x[:, -1, :].unsqueeze(1)
         return self.mu(x), self.sigma(x)
+
+# GCNを使ったencoder
+# class Encoder(nn.Module):
+#     def __init__(self, input_size, hidden_size, rep_size):
+#         super(Encoder, self).__init__()
+#         self.gcn = SAGEConv(input_size, hidden_size, 'lstm')
+#         self.mu = nn.Linear(hidden_size, rep_size)
+#         self.sigma = nn.Linear(hidden_size, rep_size)
+
+#     def forward(self, x, feat):
+#         x = self.gcn(x, feat)
+#         return self.mu(x), self.sigma(x)
 
 class Decoder(nn.Module):
     def __init__(self, rep_size, input_size, emb_size, hidden_size, time_size, node_label_size, edge_label_size, device, num_layer=1):
