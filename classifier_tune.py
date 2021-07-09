@@ -27,6 +27,8 @@ if is_preprocess:
     utils.make_dir(required_dirs)
     pp.preprocess(train_generate_detail, valid_generate_detail)
 
+device = utils.get_gpu_info()
+
 # data load
 train_dataset = joblib.load("dataset/train/onehot")
 train_label = joblib.load("dataset/train/label") 
@@ -43,10 +45,10 @@ valid_correct=torch.LongTensor(
 time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
 dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
 
-train_dataset = utils.try_gpu(train_dataset)
-valid_dataset = utils.try_gpu(valid_dataset)
-train_correct = utils.try_gpu(train_correct)
-valid_correct = utils.try_gpu(valid_correct)
+train_dataset = utils.try_gpu(device,train_dataset)
+valid_dataset = utils.try_gpu(device,valid_dataset)
+train_correct = utils.try_gpu(device,train_correct)
+valid_correct = utils.try_gpu(device,valid_correct)
 
 print("--------------")
 print("time size: %d"%(time_size))
@@ -66,7 +68,7 @@ def tuning_trial(trial):
 
     #vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
     classifier=model.Classifier(dfs_size-conditional_size, model_param["emb_size"], model_param["hidden_size"])
-    classifier = utils.try_gpu(classifier)
+    classifier = utils.try_gpu(device,classifier)
     opt = optim.Adam(classifier.parameters(), lr=lr)
 
     train_data_num = train_dataset.shape[0]
@@ -89,7 +91,7 @@ def tuning_trial(trial):
                 print("step: [%d/%d]"%(i, train_data_num))
             classifier.train()
             opt.zero_grad()
-            datas = utils.try_gpu(datas)
+            datas = utils.try_gpu(device,datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             #mu, sigma, *result = vae(datas)
             degree, cluster=classifier(datas)

@@ -91,6 +91,21 @@ twitter_valid_path = './data/twitter_eval'
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
 
+
 # config.pyを呼び出しているプログラムを実行した時間(と思われる)
 from datetime import datetime
 run_time = '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
+
+# gpuの情報用
+DEFAULT_ATTRIBUTES = (
+    'index',
+    'uuid',
+    'name',
+    'timestamp',
+    'memory.total',
+    'memory.free',
+    'memory.used',
+    'utilization.gpu',
+    'utilization.memory'
+)
+

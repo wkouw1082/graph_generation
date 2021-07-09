@@ -22,6 +22,8 @@ def conditional_train(args):
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
+    device = utils.get_gpu_info()
+
     # recreate directory
     if utils.is_dir_existed("train_result"):
         print("delete file...")
@@ -55,7 +57,7 @@ def conditional_train(args):
         # モデルの作成、重み読み込み、gpu化
         classifier=model.Classifier(dfs_size-conditional_size, classifier_param["emb_size"], classifier_param["hidden_size"])
         classifier.load_state_dict(torch.load("param/classifier_weight", map_location="cpu"))
-        classifier = utils.try_gpu(classifier)
+        classifier = utils.try_gpu(device,classifier)
 
         # すべてのパラメータを固定
         for param in classifier.parameters():
@@ -66,8 +68,8 @@ def conditional_train(args):
                 [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in train_conditional])
         valid_classifier_correct=torch.LongTensor(
                 [[torch.argmax(tensor[:, :3],dim=1), torch.argmax(tensor[:, 3:],dim=1)] for tensor in valid_conditional])
-        train_classifier_correct = utils.try_gpu(train_classifier_correct)
-        valid_classifier_correct = utils.try_gpu(valid_classifier_correct)
+        train_classifier_correct = utils.try_gpu(device,train_classifier_correct)
+        valid_classifier_correct = utils.try_gpu(device,valid_classifier_correct)
 
     train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
     valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
@@ -89,8 +91,9 @@ def conditional_train(args):
         model_param = yaml.load(yml) 
     # print(f"model_param = {model_param}")
 
-    vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
-    vae = utils.try_gpu(vae)
+    vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
+    vae = utils.try_gpu(device,vae)
+
     opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
 
 
@@ -137,7 +140,7 @@ def conditional_train(args):
                 print("step: [%d/%d]"%(i, train_data_num))
             vae.train()
             opt.zero_grad()
-            datas = utils.try_gpu(datas)
+            datas = utils.try_gpu(device,datas)
 
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             #mu, sigma, *result = vae(datas, timestep)
@@ -150,7 +153,7 @@ def conditional_train(args):
                 # loss calc
                 correct = train_label[j]
                 correct = correct[args]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss
 
@@ -228,7 +231,7 @@ def conditional_train(args):
                 print("step: [%d/%d]"%(i, valid_data_num))
             vae.eval()
             opt.zero_grad()
-            datas = utils.try_gpu(datas)
+            datas = utils.try_gpu(device,datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             mu, sigma, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
@@ -239,7 +242,7 @@ def conditional_train(args):
                 # loss calc
                 correct = valid_label[j]
                 correct = correct[args]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss.item()
 
@@ -315,16 +318,18 @@ def conditional_train(args):
                 {"train": train_loss_sums, "valid": valid_loss_sums},
                 "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
-        # output weight if train loss is min
-        if train_loss_sum<train_min_loss:
-            train_min_loss = train_loss_sum
-            torch.save(vae.state_dict(), "param/weight")
+        # output weight each 1000 epochs
+        if epoch % 1000 == 0:
+            torch.save(vae.state_dict(), "param/weight_"+epoch)
             torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+
         print("\n")
 
 def train(args):
     is_preprocess = args.preprocess
     is_classifier = args.classifier
+
+    device = utils.get_gpu_info()
 
     # recreate directory
     if utils.is_dir_existed("train_result"):
@@ -365,8 +370,8 @@ def train(args):
         model_param = yaml.load(yml) 
     # print(f"model_param = {model_param}")
 
-    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
-    vae = utils.try_gpu(vae)
+    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
+    vae = utils.try_gpu(device,vae)
     opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
 
 
@@ -411,7 +416,7 @@ def train(args):
                 print("step: [%d/%d]"%(i, train_data_num))
             vae.train()
             opt.zero_grad()
-            datas = utils.try_gpu(datas)
+            datas = utils.try_gpu(device,datas)
 
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             #mu, sigma, *result = vae(datas, timestep)
@@ -424,7 +429,7 @@ def train(args):
                 # loss calc
                 correct = train_label[j]
                 correct = correct[args]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss
 
@@ -479,7 +484,7 @@ def train(args):
                 print("step: [%d/%d]"%(i, valid_data_num))
             vae.eval()
             opt.zero_grad()
-            datas = utils.try_gpu(datas)
+            datas = utils.try_gpu(device,datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             mu, sigma, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
@@ -490,7 +495,7 @@ def train(args):
                 # loss calc
                 correct = valid_label[j]
                 correct = correct[args]
-                correct = utils.try_gpu(correct)
+                correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
                 loss+=tmp_loss.item()
 

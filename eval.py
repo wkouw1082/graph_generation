@@ -18,6 +18,8 @@ import torch
 def eval(args):
     is_preprocess = args.preprocess
 
+    device = utils.get_gpu_info()
+
     # recreate directory
     if utils.is_dir_existed("eval_result"):
         print("delete file...")
@@ -71,10 +73,11 @@ def eval(args):
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
-    vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param)
+    vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
     vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
-    vae = utils.try_gpu(vae)
+    vae = utils.try_gpu(device,vae)
+
     vae.eval()
 
     keys = ["tu", "tv", "lu", "lv", "le"]
@@ -191,7 +194,7 @@ def eval(args):
     # train_conditional = joblib.load("dataset/train/conditional")
     # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
     # train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
-    # train_dataset = utils.try_gpu(train_dataset)
+    # train_dataset = utils.try_gpu(device,train_dataset)
 
     # # conditionalのlabelと同じラベルの引数のget
     # tmp=train_conditional.squeeze()
@@ -213,7 +216,7 @@ def eval(args):
     #     mu, sigma, *reconstruct_result = vae(train_dataset[args], 0.0)
     #     # generate
     #     z=vae.encode(train_dataset[args])
-    #     generated_result=vae.generate(1000, utils.try_gpu(conditional_vecs[i][0]), z=z)
+    #     generated_result=vae.generate(1000, utils.try_gpu(device,conditional_vecs[i][0]), z=z)
 
     #     # graphに変換
     #     # reconstruct
@@ -317,7 +320,7 @@ def eval(args):
     #     z = vae.encode(train_dataset[args])
     #     # conditional vecをcat
     #     tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
-    #     catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    #     catconditional=utils.try_gpu(device,torch.cat([tmp for _ in range(len(args))], dim=0))
     #     z=torch.cat([z, catconditional], dim=2)
     #     # save
     #     result[traitkey]=z.cpu().detach().numpy()
@@ -325,7 +328,7 @@ def eval(args):
     #     # noiseにもcat
     #     noise=vae.noise_generator(
     #             model_param["rep_size"], len(args)).unsqueeze(1)
-    #     noise=utils.try_gpu(noise)
+    #     noise=utils.try_gpu(device,noise)
     #     noise=torch.cat([noise, catconditional], dim=2)
     #     result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
     # utils.tsne(result, "eval_result/tsne/condition_cat_tsne1.png")
@@ -337,7 +340,7 @@ def eval(args):
     #     z = vae.encode(train_dataset[args])
     #     # conditional vecをcat
     #     tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
-    #     catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    #     catconditional=utils.try_gpu(device,torch.cat([tmp for _ in range(len(args))], dim=0))
     #     z=torch.cat([z, catconditional], dim=2)
     #     # save
     #     result[traitkey]=z.cpu().detach().numpy()
@@ -345,7 +348,7 @@ def eval(args):
     #     # noiseにもcat
     #     noise=vae.noise_generator(
     #             model_param["rep_size"], len(args)).unsqueeze(1)
-    #     noise=utils.try_gpu(noise)
+    #     noise=utils.try_gpu(device,noise)
     #     noise=torch.cat([noise, catconditional], dim=2)
     #     #result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
     # utils.tsne(result, "eval_result/tsne/condition_cat_tsne.png")
@@ -353,6 +356,8 @@ def eval(args):
 
 def non_conditional_eval(args):
     is_preprocess = args.preprocess
+
+    device = utils.get_gpu_info()
 
     # recreate directory
     if utils.is_dir_existed("eval_result"):
@@ -408,9 +413,9 @@ def non_conditional_eval(args):
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
-    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param)
+    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-    vae = utils.try_gpu(vae)
+    vae = utils.try_gpu(device,vae)
     vae.eval()
 
     keys = ["tu", "tv", "lu", "lv", "le"]
@@ -508,7 +513,7 @@ def non_conditional_eval(args):
     # train_conditional = joblib.load("dataset/train/conditional")
     # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
     # train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
-    # train_dataset = utils.try_gpu(train_dataset)
+    # train_dataset = utils.try_gpu(device,train_dataset)
 
     # # conditionalのlabelと同じラベルの引数のget
     # tmp=train_conditional.squeeze()
@@ -530,7 +535,7 @@ def non_conditional_eval(args):
     #     mu, sigma, *reconstruct_result = vae(train_dataset[args], 0.0)
     #     # generate
     #     z=vae.encode(train_dataset[args])
-    #     generated_result=vae.generate(1000, utils.try_gpu(conditional_vecs[i][0]), z=z)
+    #     generated_result=vae.generate(1000, utils.try_gpu(device,conditional_vecs[i][0]), z=z)
 
     #     # graphに変換
     #     # reconstruct
@@ -634,7 +639,7 @@ def non_conditional_eval(args):
     #     z = vae.encode(train_dataset[args])
     #     # conditional vecをcat
     #     tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
-    #     catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    #     catconditional=utils.try_gpu(device,torch.cat([tmp for _ in range(len(args))], dim=0))
     #     z=torch.cat([z, catconditional], dim=2)
     #     # save
     #     result[traitkey]=z.cpu().detach().numpy()
@@ -642,7 +647,7 @@ def non_conditional_eval(args):
     #     # noiseにもcat
     #     noise=vae.noise_generator(
     #             model_param["rep_size"], len(args)).unsqueeze(1)
-    #     noise=utils.try_gpu(noise)
+    #     noise=utils.try_gpu(device,noise)
     #     noise=torch.cat([noise, catconditional], dim=2)
     #     result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
     # utils.tsne(result, "eval_result/tsne/condition_cat_tsne1.png")
@@ -654,7 +659,7 @@ def non_conditional_eval(args):
     #     z = vae.encode(train_dataset[args])
     #     # conditional vecをcat
     #     tmp=conditional_vecs[i][0].unsqueeze(0).unsqueeze(0)
-    #     catconditional=utils.try_gpu(torch.cat([tmp for _ in range(len(args))], dim=0))
+    #     catconditional=utils.try_gpu(device,torch.cat([tmp for _ in range(len(args))], dim=0))
     #     z=torch.cat([z, catconditional], dim=2)
     #     # save
     #     result[traitkey]=z.cpu().detach().numpy()
@@ -662,7 +667,7 @@ def non_conditional_eval(args):
     #     # noiseにもcat
     #     noise=vae.noise_generator(
     #             model_param["rep_size"], len(args)).unsqueeze(1)
-    #     noise=utils.try_gpu(noise)
+    #     noise=utils.try_gpu(device,noise)
     #     noise=torch.cat([noise, catconditional], dim=2)
     #     #result["N(0, I) cat %s"%(traitkey)]=noise.cpu().detach().numpy()
     # utils.tsne(result, "eval_result/tsne/condition_cat_tsne.png")

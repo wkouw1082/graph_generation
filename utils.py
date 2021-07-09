@@ -11,6 +11,7 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 import torch
+import subprocess
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -24,10 +25,10 @@ def get_args():
 def cpu(x):
     return x.cpu().detach().numpy()
 
-def try_gpu(obj):
+def try_gpu(device,obj):
     import torch
     if torch.cuda.is_available():
-        return obj.cuda(device=0)
+        return obj.cuda(device)
     return obj
 
 def convert2onehot(vec, dim):
@@ -215,6 +216,7 @@ def concat_csv(csv_paths):
 
     return df_concat
 
+
 def get_latest_dir_name(path="./results"):
     """最新の時刻名のディレクトリを取得する関数
 
@@ -248,3 +250,30 @@ def get_latest_dir_name(path="./results"):
         raise
 
     return latest_folder
+
+def get_gpu_info(nvidia_smi_path='nvidia-smi', keys=DEFAULT_ATTRIBUTES, no_units=True):
+    if torch.cuda.is_available():
+        nu_opt = '' if not no_units else ',nounits'
+        cmd = '%s --query-gpu=%s --format=csv,noheader%s' % (nvidia_smi_path, ','.join(keys), nu_opt)
+        output = subprocess.check_output(cmd, shell=True)
+        lines = output.decode().split('\n')
+        lines = [ line.strip() for line in lines if line.strip() != '' ]
+
+        gpu_info =  [{ k: v for k, v in zip(keys, line.split(', ')) } for line in lines]
+
+        min_gpu_index = 0
+        min_gpu_memory_used = 100
+        for gpu in gpu_info:
+            gpu_index = gpu['index']
+            gpu_memory = int(gpu['utilization.gpu'])
+            if min_gpu_memory_used >= gpu_memory:
+                min_gpu_memory_used = gpu_memory
+                min_gpu_index = gpu_index
+
+        return int(min_gpu_index)
+    else:
+        return 'cpu'
+
+if __name__=='__main__':
+    print(get_gpu_info())
+
