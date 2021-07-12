@@ -52,6 +52,54 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     get_onehot_and_list(train_dfs,time_dict,node_dict,max_sequence_length,train_label,train_directory)
     get_onehot_and_list(valid_dfs,time_dict,node_dict,max_sequence_length,valid_label,valid_directory)
 
+def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
+    print('start--preprocess')
+
+    if condition:
+        complex_network = graph_process.complex_networks()
+        complex_network.make_twitter_graph_with_label()
+        
+        # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
+        train_dfs,train_time_set,train_node_set,train_max_length,train_label = to_dfs_conditional(train_network_detail)
+        valid_dfs,valid_time_set,valid_node_set,valid_max_length,valid_label = to_dfs_conditional(valid_network_detail)
+
+        time_stamp_set = train_time_set | valid_time_set
+        node_label_set = train_node_set | valid_node_set
+        max_sequence_length = max(train_max_length,valid_max_length)
+        conditional_label_length = condition_size #指定しているパラメータの数
+        
+        joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, conditional_label_length], "dataset/param")
+
+        time_dict = {time:index for index, time in enumerate(time_stamp_set)}
+        node_dict = {node:index for index, node in enumerate(node_label_set)}
+
+        del time_stamp_set, node_label_set
+
+        get_gcn_and_label(train_dfs,time_dict,node_dict,max_sequence_length,train_directory, train_label)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory, valid_label)
+
+    else:
+        complex_network = graph_process.complex_networks()
+        complex_network.make_twitter_graph_with_label()
+        
+        # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
+        train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
+        valid_dfs,valid_time_set,valid_node_set,valid_max_length = to_dfs(valid_network_detail)
+
+        time_stamp_set = train_time_set | valid_time_set
+        node_label_set = train_node_set | valid_node_set
+        max_sequence_length = max(train_max_length,valid_max_length)
+        
+        joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
+
+        time_dict = {time:index for index, time in enumerate(time_stamp_set)}
+        node_dict = {node:index for index, node in enumerate(node_label_set)}
+
+        del time_stamp_set, node_label_set
+
+        get_gcn_and_label(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory)
+
 def get_onehot_and_list_no_conditional(dfs_code,time_dict,node_dict,max_sequence_length,directory):
 
     time_end_num = len(time_dict.keys())
@@ -157,10 +205,28 @@ def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,label_s
     joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
     joblib.dump(label_set,directory+'conditional')
 
+def get_gcn_and_label(graphs,max_sequence_length,directory,label_set=None):
+
+    t_u_list = []
+    t_v_list = []
+    n_u_list = []
+    n_v_list = []
+    e_list = []
+    t_u_list = torch.LongTensor(utils.padding(t_u_list,max_sequence_length,ignore_label))
+    t_v_list = torch.LongTensor(utils.padding(t_v_list,max_sequence_length,ignore_label))
+    n_u_list = torch.LongTensor(utils.padding(n_u_list,max_sequence_length,ignore_label))
+    n_v_list = torch.LongTensor(utils.padding(n_v_list,max_sequence_length,ignore_label))
+    e_list = torch.LongTensor(utils.padding(e_list,max_sequence_length,ignore_label))
+
+    # 本来はonehotではないけどt他のデータがonehotなので整合性を取るために名前だけonehotに
+    joblib.dump(graphs, directory+'onehot')
+    joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
+    if label_set:
+        joblib.dump(label_set,directory+'conditional')
 
 def to_dfs(detail):
     complex_network = graph_process.complex_networks()
-    datasets = complex_network.create_dataset(detail)
+    datasets, _ = complex_network.create_seq_conditional_dataset(detail)
 
     dfs_code = list()
     time_stamp_set = set()
