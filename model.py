@@ -41,6 +41,54 @@ class Encoder(nn.Module):
         x = x[:, -1, :].unsqueeze(1)
         return self.mu(x), self.sigma(x)
 
+# # 2層 LSTM
+# class Encoder(nn.Module):
+#     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=2):
+#         super(Encoder, self).__init__()
+#         self.emb = nn.Linear(input_size, emb_size)
+#         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
+#         self.mu = nn.Linear(hidden_size, rep_size)
+#         self.sigma = nn.Linear(hidden_size, rep_size)
+
+#     def forward(self, x):
+#         x = self.emb(x)
+#         # x = torch.cat((x,label),dim=2)
+#         x, (h,c) = self.lstm(x)
+#         x = x[:, -1, :].unsqueeze(1)
+#         return self.mu(x), self.sigma(x)
+
+# bidirectional 1層 LSTM
+# class Encoder(nn.Module):
+#     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=1):
+#         super(Encoder, self).__init__()
+#         self.emb = nn.Linear(input_size, emb_size)
+#         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True, bidirectional=True)
+#         self.mu = nn.Linear(hidden_size, rep_size)
+#         self.sigma = nn.Linear(hidden_size, rep_size)
+
+#     def forward(self, x):
+#         x = self.emb(x)
+#         # x = torch.cat((x,label),dim=2)
+#         x, (h,c) = self.lstm(x)
+#         x = x[:, -1, :].unsqueeze(1)
+#         return self.mu(x), self.sigma(x)
+
+# bidirectional 2層 LSTM
+# class Encoder(nn.Module):
+#     def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=2):
+#         super(Encoder, self).__init__()
+#         self.emb = nn.Linear(input_size, emb_size)
+#         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True, bidirectional=True)
+#         self.mu = nn.Linear(hidden_size, rep_size)
+#         self.sigma = nn.Linear(hidden_size, rep_size)
+
+#     def forward(self, x):
+#         x = self.emb(x)
+#         # x = torch.cat((x,label),dim=2)
+#         x, (h,c) = self.lstm(x)
+#         x = x[:, -1, :].unsqueeze(1)
+#         return self.mu(x), self.sigma(x)
+
 # GCNを使ったencoder
 # class Encoder(nn.Module):
 #     def __init__(self, input_size, hidden_size, rep_size):
