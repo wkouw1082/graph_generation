@@ -4,6 +4,7 @@ from networkx.readwrite import json_graph
 import numpy as np
 import networkx as nx
 import torch
+import dgl
 from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
 import networkx.algorithms.community as nx_comm
@@ -302,6 +303,23 @@ class complex_networks():
 
         joblib.dump([train_data, train_labels], twitter_train_path)
         joblib.dump([valid_data, valid_labels], twitter_valid_path)
+
+    def make_twitter_gcn_dataset(self):
+        text_datas = utils.get_directory_paths(twitter_path)
+        graph_datas = text2graph(text_datas)
+        gcn_graphs = self.gcn_dataset(graph_datas)
+        return gcn_graphs
+
+    def gcn_dataset(self, graphs):
+        graph_list = []
+        node_feats = torch.Tensor()
+        for graph in graphs:
+            for node in graph.nodes():
+                node_feats = torch.cat((node_feats,graph.degree(node)),dim=1)
+            graph.ndata['feat'] = node_feats
+            graph_list.append(dgl.from_networkx(graph_list))
+
+        return graph_list
 
     def pickup_twitter_data(self):
         text_datas = utils.get_directory_paths(twitter_path)
