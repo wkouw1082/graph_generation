@@ -1,4 +1,6 @@
 from typing_extensions import runtime
+
+from matplotlib.pyplot import winter
 import utils
 import argparse
 import preprocess as pp
@@ -17,8 +19,11 @@ from torch import nn
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
+from torch.utils.tensorboard import SummaryWriter
 
 def conditional_train(args):
+    writer = SummaryWriter(log_dir="./logs")
+
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
@@ -127,7 +132,7 @@ def conditional_train(args):
 
     print("start conditional train...")
 
-    for epoch in range(1, epochs):
+    for epoch in range(1, epochs+1):
         print("Epoch: [%d/%d]:"%(epoch, epochs))
 
         # train
@@ -196,6 +201,7 @@ def conditional_train(args):
 
             loss.backward()
             train_loss_sum+=loss.item()
+            del loss
             opt.step()
 
             torch.nn.utils.clip_grad_norm_(vae.parameters(), model_param["clip_th"])
@@ -217,6 +223,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
+        writer.add_scalar("train/train_loss", loss, epoch)
 
         # memory free
         del current_train_loss, current_train_acc
@@ -302,6 +309,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
+        writer.add_scalar("train/vallid_loss", loss, epoch)
 
         # output loss/acc transition
         utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
@@ -319,11 +327,14 @@ def conditional_train(args):
                 "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight each 1000 epochs
-        if epoch % 1000 == 0:
+        # if epoch % 1000 == 0:
+        if epoch % 200 == 0:
             torch.save(vae.state_dict(), "param/weight_"+epoch)
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
 
         print("\n")
+    
+    writer.close()
 
 def train(args):
     is_preprocess = args.preprocess
@@ -403,7 +414,7 @@ def train(args):
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
 
-    for epoch in range(1, epochs):
+    for epoch in range(1, epochs+1):
         print("Epoch: [%d/%d]:"%(epoch, epochs))
 
         # train

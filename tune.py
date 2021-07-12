@@ -1,14 +1,16 @@
 from ast import parse
+from numpy.core.fromnumeric import shape
 import optuna
 import yaml
 import shutil
 import joblib
 
 import torch
-from torch import nn
+from torch import nn, reshape, tensor
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
+from torch.utils.tensorboard import SummaryWriter
 
 import preprocess as pp
 import model
@@ -17,6 +19,7 @@ import self_loss
 from config import *
 
 def conditional_tune(args):
+    writer = SummaryWriter(log_dir="./logs")
 
     device = utils.get_gpu_info()
 
@@ -64,10 +67,26 @@ def conditional_tune(args):
 
     train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
     valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
+    
+    # train_conditinalとvalid_conditionalのshapeをdatasetとcatできるように変更
+    buffer = torch.zeros(train_dataset.shape[0], train_dataset.shape[1], 1)
+    for i in range(buffer.shape[0]):
+        for j in range(buffer.shape[1]):
+            buffer[i][j][0] = train_conditional[i][j]
+    train_conditional = torch.clone(buffer)
+    buffer = torch.zeros(valid_dataset.shape[0], valid_dataset.shape[1], 1)
+    for i in range(buffer.shape[0]):
+        for j in range(buffer.shape[1]):
+            buffer[i][j][0] = valid_conditional[i][j]
+    valid_conditional = torch.clone(buffer)
+    # print(f"valid_dataset = {valid_dataset.shape}")
+    # print(f"vlaid_conditional = {valid_conditional.shape}")
+    del  buffer
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
 
+    # train_dataset = utils.try_gpu(device,train_dataset)
     valid_dataset = utils.try_gpu(device,valid_dataset)
 
     print("--------------")
@@ -111,8 +130,9 @@ def conditional_tune(args):
         if is_classifier:
             keys+=["classifier"]
 
-        for epoch in range(1, epochs):
+        for epoch in range(1, epochs+1):
             print("Epoch: [%d/%d]:"%(epoch, epochs))
+            print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
             # train
             loss_sum = 0
@@ -147,6 +167,8 @@ def conditional_tune(args):
                 timestep+=1
                 loss.backward()
                 loss_sum+=loss.item()
+                # Back Propagationの後は、計算グラフを削除
+                del loss
                 opt.step()
 
                 torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
@@ -154,6 +176,7 @@ def conditional_tune(args):
             if train_min_loss>loss_sum:
                 train_min_loss = loss_sum
             print("train loss: %lf"%(loss_sum))
+            writer.add_scalar("tune/train_loss", loss_sum, epoch)
 
             valid_loss_sum = 0
             vae.eval()
@@ -180,6 +203,13 @@ def conditional_tune(args):
             if valid_min_loss>valid_loss_sum:
                 valid_min_loss = valid_loss_sum
             print(" valid loss: %lf"%(valid_loss_sum))
+            writer.add_scalar("tune/valid_loss", valid_loss_sum, epoch)
+
+        # myPCのためにいろいろ消してみる
+        del vae, opt, train_dl
+        torch.cuda.empty_cache()
+        print(torch.cuda.memory_summary(device=None, abbreviated=False))
+
         return train_min_loss
 
     study = optuna.create_study()
@@ -192,6 +222,7 @@ def conditional_tune(args):
     f = open("results/best_tune.yml", "w+")
     f.write(yaml.dump(study.best_params))
     f.close()
+    writer.close()
 
 def tune(args):
 
