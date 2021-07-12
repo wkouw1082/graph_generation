@@ -132,7 +132,7 @@ def conditional_tune(args):
 
         for epoch in range(1, epochs+1):
             print("Epoch: [%d/%d]:"%(epoch, epochs))
-            print(torch.cuda.memory_summary(device=None, abbreviated=False))
+            # print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
             # train
             loss_sum = 0
