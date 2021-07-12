@@ -168,7 +168,7 @@ def conditional_tune(args):
                 loss.backward()
                 loss_sum+=loss.item()
                 # Back Propagationの後は、計算グラフを削除
-                del loss
+                #del loss
                 opt.step()
 
                 torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
@@ -206,9 +206,9 @@ def conditional_tune(args):
             writer.add_scalar("tune/valid_loss", valid_loss_sum, epoch)
 
         # myPCのためにいろいろ消してみる
-        del vae, opt, train_dl
-        torch.cuda.empty_cache()
-        print(torch.cuda.memory_summary(device=None, abbreviated=False))
+        # del vae, opt, train_dl
+        #torch.cuda.empty_cache()
+        #print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
         return train_min_loss
 
