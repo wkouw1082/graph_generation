@@ -1,0 +1,8224 @@
+Using backend: pytorch
+
+
+
+
+
+
+generate file in current dir...
++ results/2021-07-18 02:58:37
+
+
+generate file in current dir...
++ results/2021-07-18 02:58:37/train
+
+
+generate file in current dir...
++ results/2021-07-18 02:58:37/eval
+
+
+generate file in current dir...
++ results/2021-07-18 02:58:37/visualize
+
+
+
+
+
+
+generate file in current dir...
++ dataset
+
+
+generate file in current dir...
++ dataset/train
+
+
+generate file in current dir...
++ dataset/valid
+
+
+start--preprocess
+generate train data ...
+  0%|          | 0/1800 [00:00<?, ?it/s]  3%|▎         | 51/1800 [00:00<00:03, 508.87it/s]  7%|▋         | 126/1800 [00:00<00:02, 562.75it/s] 11%|█         | 202/1800 [00:00<00:02, 609.43it/s] 16%|█▌        | 282/1800 [00:00<00:02, 655.76it/s] 20%|█▉        | 358/1800 [00:00<00:02, 682.98it/s] 24%|██▍       | 432/1800 [00:00<00:01, 696.80it/s] 28%|██▊       | 508/1800 [00:00<00:01, 713.84it/s] 32%|███▏      | 583/1800 [00:00<00:01, 722.91it/s] 37%|███▋      | 660/1800 [00:00<00:01, 733.82it/s] 41%|████      | 735/1800 [00:01<00:01, 736.78it/s] 45%|████▌     | 812/1800 [00:01<00:01, 744.01it/s] 49%|████▉     | 886/1800 [00:01<00:01, 741.90it/s] 53%|█████▎    | 960/1800 [00:01<00:01, 736.53it/s] 57%|█████▋    | 1034/1800 [00:01<00:01, 734.74it/s] 62%|██████▏   | 1111/1800 [00:01<00:00, 742.44it/s] 66%|██████▌   | 1186/1800 [00:01<00:00, 744.37it/s] 70%|███████   | 1263/1800 [00:01<00:00, 751.73it/s] 74%|███████▍  | 1339/1800 [00:01<00:00, 751.49it/s] 79%|███████▊  | 1417/1800 [00:01<00:00, 758.49it/s] 83%|████████▎ | 1493/1800 [00:02<00:00, 756.00it/s] 87%|████████▋ | 1572/1800 [00:02<00:00, 764.58it/s] 92%|█████████▏| 1649/1800 [00:02<00:00, 760.34it/s] 96%|█████████▌| 1726/1800 [00:02<00:00, 759.04it/s]100%|██████████| 1800/1800 [00:02<00:00, 743.55it/s]
+generate valid data ...
+  0%|          | 0/200 [00:00<?, ?it/s] 38%|███▊      | 76/200 [00:00<00:00, 751.48it/s] 77%|███████▋  | 154/200 [00:00<00:00, 757.62it/s]100%|██████████| 200/200 [00:00<00:00, 753.44it/s]
+--------------
+time size: 101
+node size: 44
+edge size: 2
+--------------
+[I 2021-07-18 02:59:21,626] Using an existing study with name 'condition_tune_twitter' instead of creating a new one.
+Epoch: [1/1000]:
+step: [100/1800]
+train loss: 6991286.539062
+ valid loss: 773160.437500
+Epoch: [2/1000]:
+step: [100/1800]
+train loss: 6906665.074219
+ valid loss: 767146.875000
+Epoch: [3/1000]:
+step: [100/1800]
+train loss: 6864237.855469
+ valid loss: 765787.312500
+Epoch: [4/1000]:
+step: [100/1800]
+train loss: 6855352.472656
+ valid loss: 765017.875000
+Epoch: [5/1000]:
+step: [100/1800]
+train loss: 6851303.820312
+ valid loss: 764833.375000
+Epoch: [6/1000]:
+step: [100/1800]
+train loss: 6844115.527344
+ valid loss: 763727.312500
+Epoch: [7/1000]:
+step: [100/1800]
+train loss: 6839093.898438
+ valid loss: 763473.062500
+Epoch: [8/1000]:
+step: [100/1800]
+train loss: 6834007.375000
+ valid loss: 762249.562500
+Epoch: [9/1000]:
+step: [100/1800]
+train loss: 6825944.597656
+ valid loss: 761759.125000
+Epoch: [10/1000]:
+step: [100/1800]
+train loss: 6822223.304688
+ valid loss: 761471.375000
+Epoch: [11/1000]:
+step: [100/1800]
+train loss: 6782758.355469
+ valid loss: 755501.187500
+Epoch: [12/1000]:
+step: [100/1800]
+train loss: 6762961.242188
+ valid loss: 754094.437500
+Epoch: [13/1000]:
+step: [100/1800]
+train loss: 6738466.597656
+ valid loss: 750547.937500
+Epoch: [14/1000]:
+step: [100/1800]
+train loss: 6689360.023438
+ valid loss: 743559.062500
+Epoch: [15/1000]:
+step: [100/1800]
+train loss: 6652808.250000
+ valid loss: 741404.875000
+Epoch: [16/1000]:
+step: [100/1800]
+train loss: 6637738.636719
+ valid loss: 740625.937500
+Epoch: [17/1000]:
+step: [100/1800]
+train loss: 6632322.656250
+ valid loss: 740224.375000
+Epoch: [18/1000]:
+step: [100/1800]
+train loss: 6626311.820312
+ valid loss: 739188.812500
+Epoch: [19/1000]:
+step: [100/1800]
+train loss: 6620137.292969
+ valid loss: 738820.812500
+Epoch: [20/1000]:
+step: [100/1800]
+train loss: 6613235.296875
+ valid loss: 737830.312500
+Epoch: [21/1000]:
+step: [100/1800]
+train loss: 6606100.757812
+ valid loss: 736740.125000
+Epoch: [22/1000]:
+step: [100/1800]
+train loss: 6599593.269531
+ valid loss: 736321.625000
+Epoch: [23/1000]:
+step: [100/1800]
+train loss: 6596805.179688
+ valid loss: 736154.875000
+Epoch: [24/1000]:
+step: [100/1800]
+train loss: 6595264.968750
+ valid loss: 735676.437500
+Epoch: [25/1000]:
+step: [100/1800]
+train loss: 6591160.296875
+ valid loss: 735279.062500
+Epoch: [26/1000]:
+step: [100/1800]
+train loss: 6586951.441406
+ valid loss: 735072.187500
+Epoch: [27/1000]:
+step: [100/1800]
+train loss: 6583824.621094
+ valid loss: 734543.937500
+Epoch: [28/1000]:
+step: [100/1800]
+train loss: 6576389.468750
+ valid loss: 733697.375000
+Epoch: [29/1000]:
+step: [100/1800]
+train loss: 6566435.449219
+ valid loss: 732397.312500
+Epoch: [30/1000]:
+step: [100/1800]
+train loss: 6561639.292969
+ valid loss: 732003.250000
+Epoch: [31/1000]:
+step: [100/1800]
+train loss: 6558419.980469
+ valid loss: 731743.937500
+Epoch: [32/1000]:
+step: [100/1800]
+train loss: 6554779.761719
+ valid loss: 731317.312500
+Epoch: [33/1000]:
+step: [100/1800]
+train loss: 6552840.179688
+ valid loss: 731238.125000
+Epoch: [34/1000]:
+step: [100/1800]
+train loss: 6551193.781250
+ valid loss: 731019.500000
+Epoch: [35/1000]:
+step: [100/1800]
+train loss: 6548444.734375
+ valid loss: 730571.750000
+Epoch: [36/1000]:
+step: [100/1800]
+train loss: 6545876.457031
+ valid loss: 730432.062500
+Epoch: [37/1000]:
+step: [100/1800]
+train loss: 6543879.058594
+ valid loss: 730234.125000
+Epoch: [38/1000]:
+step: [100/1800]
+train loss: 6542540.636719
+ valid loss: 730157.687500
+Epoch: [39/1000]:
+step: [100/1800]
+train loss: 6540377.515625
+ valid loss: 729721.312500
+Epoch: [40/1000]:
+step: [100/1800]
+train loss: 6537442.214844
+ valid loss: 729404.687500
+Epoch: [41/1000]:
+step: [100/1800]
+train loss: 6533280.804688
+ valid loss: 728946.312500
+Epoch: [42/1000]:
+step: [100/1800]
+train loss: 6530492.867188
+ valid loss: 728746.812500
+Epoch: [43/1000]:
+step: [100/1800]
+train loss: 6528739.664062
+ valid loss: 728488.437500
+Epoch: [44/1000]:
+step: [100/1800]
+train loss: 6524799.410156
+ valid loss: 728088.000000
+Epoch: [45/1000]:
+step: [100/1800]
+train loss: 6523059.480469
+ valid loss: 727966.937500
+Epoch: [46/1000]:
+step: [100/1800]
+train loss: 6520301.492188
+ valid loss: 727466.062500
+Epoch: [47/1000]:
+step: [100/1800]
+train loss: 6517374.265625
+ valid loss: 727251.375000
+Epoch: [48/1000]:
+step: [100/1800]
+train loss: 6515578.500000
+ valid loss: 727157.187500
+Epoch: [49/1000]:
+step: [100/1800]
+train loss: 6514940.046875
+ valid loss: 727071.000000
+Epoch: [50/1000]:
+step: [100/1800]
+train loss: 6513976.691406
+ valid loss: 727005.312500
+Epoch: [51/1000]:
+step: [100/1800]
+train loss: 6508848.109375
+ valid loss: 726048.312500
+Epoch: [52/1000]:
+step: [100/1800]
+train loss: 6505372.574219
+ valid loss: 725814.187500
+Epoch: [53/1000]:
+step: [100/1800]
+train loss: 6502675.531250
+ valid loss: 725587.312500
+Epoch: [54/1000]:
+step: [100/1800]
+train loss: 6499145.851562
+ valid loss: 725185.062500
+Epoch: [55/1000]:
+step: [100/1800]
+train loss: 6497613.375000
+ valid loss: 724998.312500
+Epoch: [56/1000]:
+step: [100/1800]
+train loss: 6495558.726562
+ valid loss: 724778.937500
+Epoch: [57/1000]:
+step: [100/1800]
+train loss: 6494052.648438
+ valid loss: 724772.750000
+Epoch: [58/1000]:
+step: [100/1800]
+train loss: 6493057.167969
+ valid loss: 724653.062500
+Epoch: [59/1000]:
+step: [100/1800]
+train loss: 6490347.136719
+ valid loss: 724255.250000
+Epoch: [60/1000]:
+step: [100/1800]
+train loss: 6488147.152344
+ valid loss: 724148.875000
+Epoch: [61/1000]:
+step: [100/1800]
+train loss: 6486955.742188
+ valid loss: 724061.062500
+Epoch: [62/1000]:
+step: [100/1800]
+train loss: 6485076.484375
+ valid loss: 723668.250000
+Epoch: [63/1000]:
+step: [100/1800]
+train loss: 6482708.378906
+ valid loss: 723456.562500
+Epoch: [64/1000]:
+step: [100/1800]
+train loss: 6480974.515625
+ valid loss: 723383.437500
+Epoch: [65/1000]:
+step: [100/1800]
+train loss: 6479869.687500
+ valid loss: 723214.125000
+Epoch: [66/1000]:
+step: [100/1800]
+train loss: 6478691.710938
+ valid loss: 723132.562500
+Epoch: [67/1000]:
+step: [100/1800]
+train loss: 6475764.265625
+ valid loss: 722642.437500
+Epoch: [68/1000]:
+step: [100/1800]
+train loss: 6473231.394531
+ valid loss: 722510.562500
+Epoch: [69/1000]:
+step: [100/1800]
+train loss: 6472389.125000
+ valid loss: 722352.625000
+Epoch: [70/1000]:
+step: [100/1800]
+train loss: 6469994.519531
+ valid loss: 721985.875000
+Epoch: [71/1000]:
+step: [100/1800]
+train loss: 6466946.832031
+ valid loss: 721693.937500
+Epoch: [72/1000]:
+step: [100/1800]
+train loss: 6465877.351562
+ valid loss: 721627.937500
+Epoch: [73/1000]:
+step: [100/1800]
+train loss: 6464735.777344
+ valid loss: 721509.625000
+Epoch: [74/1000]:
+step: [100/1800]
+train loss: 6462891.359375
+ valid loss: 721271.187500
+Epoch: [75/1000]:
+step: [100/1800]
+train loss: 6458927.910156
+ valid loss: 720416.312500
+Epoch: [76/1000]:
+step: [100/1800]
+train loss: 6454255.957031
+ valid loss: 720123.875000
+Epoch: [77/1000]:
+step: [100/1800]
+train loss: 6451329.824219
+ valid loss: 719789.937500
+Epoch: [78/1000]:
+step: [100/1800]
+train loss: 6449667.843750
+ valid loss: 719705.625000
+Epoch: [79/1000]:
+step: [100/1800]
+train loss: 6448436.972656
+ valid loss: 719151.312500
+Epoch: [80/1000]:
+step: [100/1800]
+train loss: 6443261.148438
+ valid loss: 718895.937500
+Epoch: [81/1000]:
+step: [100/1800]
+train loss: 6441418.535156
+ valid loss: 718574.375000
+Epoch: [82/1000]:
+step: [100/1800]
+train loss: 6438740.000000
+ valid loss: 718329.812500
+Epoch: [83/1000]:
+step: [100/1800]
+train loss: 6436269.699219
+ valid loss: 717797.437500
+Epoch: [84/1000]:
+step: [100/1800]
+train loss: 6431072.820312
+ valid loss: 717495.000000
+Epoch: [85/1000]:
+step: [100/1800]
+train loss: 6429206.757812
+ valid loss: 717280.375000
+Epoch: [86/1000]:
+step: [100/1800]
+train loss: 6427041.304688
+ valid loss: 716906.937500
+Epoch: [87/1000]:
+step: [100/1800]
+train loss: 6424233.078125
+ valid loss: 716664.812500
+Epoch: [88/1000]:
+step: [100/1800]
+train loss: 6421843.777344
+ valid loss: 716497.437500
+Epoch: [89/1000]:
+step: [100/1800]
+train loss: 6420834.597656
+ valid loss: 716342.437500
+Epoch: [90/1000]:
+step: [100/1800]
+train loss: 6418926.582031
+ valid loss: 716278.875000
+Epoch: [91/1000]:
+step: [100/1800]
+train loss: 6417356.562500
+ valid loss: 715617.812500
+Epoch: [92/1000]:
+step: [100/1800]
+train loss: 6413001.929688
+ valid loss: 715542.062500
+Epoch: [93/1000]:
+step: [100/1800]
+train loss: 6411687.707031
+ valid loss: 715545.250000
+Epoch: [94/1000]:
+step: [100/1800]
+train loss: 6410448.257812
+ valid loss: 714893.250000
+Epoch: [95/1000]:
+step: [100/1800]
+train loss: 6404281.976562
+ valid loss: 714382.250000
+Epoch: [96/1000]:
+step: [100/1800]
+train loss: 6401415.625000
+ valid loss: 714147.437500
+Epoch: [97/1000]:
+step: [100/1800]
+train loss: 6399544.230469
+ valid loss: 714069.687500
+Epoch: [98/1000]:
+step: [100/1800]
+train loss: 6396727.910156
+ valid loss: 713478.125000
+Epoch: [99/1000]:
+step: [100/1800]
+train loss: 6394206.187500
+ valid loss: 713456.000000
+Epoch: [100/1000]:
+step: [100/1800]
+train loss: 6393046.527344
+ valid loss: 713401.312500
+Epoch: [101/1000]:
+step: [100/1800]
+train loss: 6390137.328125
+ valid loss: 712844.687500
+Epoch: [102/1000]:
+step: [100/1800]
+train loss: 6387084.097656
+ valid loss: 712625.937500
+Epoch: [103/1000]:
+step: [100/1800]
+train loss: 6385841.054688
+ valid loss: 712530.562500
+Epoch: [104/1000]:
+step: [100/1800]
+train loss: 6383148.242188
+ valid loss: 712237.812500
+Epoch: [105/1000]:
+step: [100/1800]
+train loss: 6380231.003906
+ valid loss: 711699.062500
+Epoch: [106/1000]:
+step: [100/1800]
+train loss: 6375439.652344
+ valid loss: 711014.687500
+Epoch: [107/1000]:
+step: [100/1800]
+train loss: 6368528.050781
+ valid loss: 710295.562500
+Epoch: [108/1000]:
+step: [100/1800]
+train loss: 6361629.476562
+ valid loss: 709601.062500
+Epoch: [109/1000]:
+step: [100/1800]
+train loss: 6357036.125000
+ valid loss: 709297.500000
+Epoch: [110/1000]:
+step: [100/1800]
+train loss: 6355620.621094
+ valid loss: 709212.812500
+Epoch: [111/1000]:
+step: [100/1800]
+train loss: 6354811.011719
+ valid loss: 709211.062500
+Epoch: [112/1000]:
+step: [100/1800]
+train loss: 6354360.484375
+ valid loss: 709071.437500
+Epoch: [113/1000]:
+step: [100/1800]
+train loss: 6352051.371094
+ valid loss: 708886.562500
+Epoch: [114/1000]:
+step: [100/1800]
+train loss: 6350563.156250
+ valid loss: 708556.812500
+Epoch: [115/1000]:
+step: [100/1800]
+train loss: 6348225.574219
+ valid loss: 708532.812500
+Epoch: [116/1000]:
+step: [100/1800]
+train loss: 6347240.699219
+ valid loss: 708354.812500
+Epoch: [117/1000]:
+step: [100/1800]
+train loss: 6344540.972656
+ valid loss: 708039.812500
+Epoch: [118/1000]:
+step: [100/1800]
+train loss: 6343236.355469
+ valid loss: 707977.187500
+Epoch: [119/1000]:
+step: [100/1800]
+train loss: 6342454.246094
+ valid loss: 707916.687500
+Epoch: [120/1000]:
+step: [100/1800]
+train loss: 6341813.585938
+ valid loss: 707846.187500
+Epoch: [121/1000]:
+step: [100/1800]
+train loss: 6340110.593750
+ valid loss: 707544.875000
+Epoch: [122/1000]:
+step: [100/1800]
+train loss: 6338657.792969
+ valid loss: 707561.187500
+Epoch: [123/1000]:
+step: [100/1800]
+train loss: 6338449.824219
+ valid loss: 707492.500000
+Epoch: [124/1000]:
+step: [100/1800]
+train loss: 6336720.687500
+ valid loss: 707161.687500
+Epoch: [125/1000]:
+step: [100/1800]
+train loss: 6334196.933594
+ valid loss: 706929.750000
+Epoch: [126/1000]:
+step: [100/1800]
+train loss: 6331916.246094
+ valid loss: 706724.687500
+Epoch: [127/1000]:
+step: [100/1800]
+train loss: 6329903.207031
+ valid loss: 706533.687500
+Epoch: [128/1000]:
+step: [100/1800]
+train loss: 6327461.878906
+ valid loss: 706074.437500
+Epoch: [129/1000]:
+step: [100/1800]
+train loss: 6323750.660156
+ valid loss: 705609.750000
+Epoch: [130/1000]:
+step: [100/1800]
+train loss: 6321371.277344
+ valid loss: 705584.500000
+Epoch: [131/1000]:
+step: [100/1800]
+train loss: 6320596.003906
+ valid loss: 705541.187500
+Epoch: [132/1000]:
+step: [100/1800]
+train loss: 6319885.406250
+ valid loss: 705444.750000
+Epoch: [133/1000]:
+step: [100/1800]
+train loss: 6318385.945312
+ valid loss: 705162.187500
+Epoch: [134/1000]:
+step: [100/1800]
+train loss: 6316752.140625
+ valid loss: 705168.625000
+Epoch: [135/1000]:
+step: [100/1800]
+train loss: 6314375.726562
+ valid loss: 704805.125000
+Epoch: [136/1000]:
+step: [100/1800]
+train loss: 6312640.808594
+ valid loss: 704777.812500
+Epoch: [137/1000]:
+step: [100/1800]
+train loss: 6311745.343750
+ valid loss: 704740.500000
+Epoch: [138/1000]:
+step: [100/1800]
+train loss: 6311278.398438
+ valid loss: 704458.062500
+Epoch: [139/1000]:
+step: [100/1800]
+train loss: 6306074.101562
+ valid loss: 703698.812500
+Epoch: [140/1000]:
+step: [100/1800]
+train loss: 6303990.511719
+ valid loss: 703648.125000
+Epoch: [141/1000]:
+step: [100/1800]
+train loss: 6302703.085938
+ valid loss: 703595.687500
+Epoch: [142/1000]:
+step: [100/1800]
+train loss: 6301933.070312
+ valid loss: 703574.687500
+Epoch: [143/1000]:
+step: [100/1800]
+train loss: 6301609.078125
+ valid loss: 703554.437500
+Epoch: [144/1000]:
+step: [100/1800]
+train loss: 6300933.253906
+ valid loss: 703468.750000
+Epoch: [145/1000]:
+step: [100/1800]
+train loss: 6299978.226562
+ valid loss: 703288.687500
+Epoch: [146/1000]:
+step: [100/1800]
+train loss: 6298210.343750
+ valid loss: 703231.562500
+Epoch: [147/1000]:
+step: [100/1800]
+train loss: 6297805.886719
+ valid loss: 703095.125000
+Epoch: [148/1000]:
+step: [100/1800]
+train loss: 6296641.707031
+ valid loss: 703006.062500
+Epoch: [149/1000]:
+step: [100/1800]
+train loss: 6295641.710938
+ valid loss: 702870.875000
+Epoch: [150/1000]:
+step: [100/1800]
+train loss: 6292659.113281
+ valid loss: 702744.875000
+Epoch: [151/1000]:
+step: [100/1800]
+train loss: 6291897.976562
+ valid loss: 702689.562500
+Epoch: [152/1000]:
+step: [100/1800]
+train loss: 6291111.839844
+ valid loss: 702649.687500
+Epoch: [153/1000]:
+step: [100/1800]
+train loss: 6290935.269531
+ valid loss: 702568.625000
+Epoch: [154/1000]:
+step: [100/1800]
+train loss: 6290301.761719
+ valid loss: 702302.187500
+Epoch: [155/1000]:
+step: [100/1800]
+train loss: 6286897.980469
+ valid loss: 701995.750000
+Epoch: [156/1000]:
+step: [100/1800]
+train loss: 6285533.011719
+ valid loss: 701842.937500
+Epoch: [157/1000]:
+step: [100/1800]
+train loss: 6283500.589844
+ valid loss: 701652.062500
+Epoch: [158/1000]:
+step: [100/1800]
+train loss: 6281548.214844
+ valid loss: 701372.812500
+Epoch: [159/1000]:
+step: [100/1800]
+train loss: 6280013.285156
+ valid loss: 701374.562500
+Epoch: [160/1000]:
+step: [100/1800]
+train loss: 6278707.707031
+ valid loss: 700908.437500
+Epoch: [161/1000]:
+step: [100/1800]
+train loss: 6275122.472656
+ valid loss: 700852.687500
+Epoch: [162/1000]:
+step: [100/1800]
+train loss: 6274302.468750
+ valid loss: 700661.750000
+Epoch: [163/1000]:
+step: [100/1800]
+train loss: 6272961.937500
+ valid loss: 700694.500000
+Epoch: [164/1000]:
+step: [100/1800]
+train loss: 6271209.656250
+ valid loss: 700345.687500
+Epoch: [165/1000]:
+step: [100/1800]
+train loss: 6269716.316406
+ valid loss: 700383.875000
+Epoch: [166/1000]:
+step: [100/1800]
+train loss: 6269236.781250
+ valid loss: 700370.937500
+Epoch: [167/1000]:
+step: [100/1800]
+train loss: 6268778.562500
+ valid loss: 700313.687500
+Epoch: [168/1000]:
+step: [100/1800]
+train loss: 6268762.390625
+ valid loss: 700313.125000
+Epoch: [169/1000]:
+step: [100/1800]
+train loss: 6268128.613281
+ valid loss: 700264.062500
+Epoch: [170/1000]:
+step: [100/1800]
+train loss: 6268286.929688
+ valid loss: 700239.625000
+Epoch: [171/1000]:
+step: [100/1800]
+train loss: 6268064.175781
+ valid loss: 700327.062500
+Epoch: [172/1000]:
+step: [100/1800]
+train loss: 6266699.335938
+ valid loss: 700148.562500
+Epoch: [173/1000]:
+step: [100/1800]
+train loss: 6266215.960938
+ valid loss: 700111.187500
+Epoch: [174/1000]:
+step: [100/1800]
+train loss: 6265981.445312
+ valid loss: 700123.062500
+Epoch: [175/1000]:
+step: [100/1800]
+train loss: 6265648.656250
+ valid loss: 700181.687500
+Epoch: [176/1000]:
+step: [100/1800]
+train loss: 6265425.441406
+ valid loss: 700069.312500
+Epoch: [177/1000]:
+step: [100/1800]
+train loss: 6264765.949219
+ valid loss: 700120.750000
+Epoch: [178/1000]:
+step: [100/1800]
+train loss: 6264350.925781
+ valid loss: 699946.250000
+Epoch: [179/1000]:
+step: [100/1800]
+train loss: 6263411.082031
+ valid loss: 699815.687500
+Epoch: [180/1000]:
+step: [100/1800]
+train loss: 6261791.804688
+ valid loss: 699773.312500
+Epoch: [181/1000]:
+step: [100/1800]
+train loss: 6261820.761719
+ valid loss: 699790.875000
+Epoch: [182/1000]:
+step: [100/1800]
+train loss: 6261525.027344
+ valid loss: 699733.875000
+Epoch: [183/1000]:
+step: [100/1800]
+train loss: 6260006.820312
+ valid loss: 699356.625000
+Epoch: [184/1000]:
+step: [100/1800]
+train loss: 6257501.066406
+ valid loss: 699322.812500
+Epoch: [185/1000]:
+step: [100/1800]
+train loss: 6257390.855469
+ valid loss: 699388.437500
+Epoch: [186/1000]:
+step: [100/1800]
+train loss: 6256797.222656
+ valid loss: 699301.062500
+Epoch: [187/1000]:
+step: [100/1800]
+train loss: 6256819.203125
+ valid loss: 699333.750000
+Epoch: [188/1000]:
+step: [100/1800]
+train loss: 6256327.273438
+ valid loss: 699299.625000
+Epoch: [189/1000]:
+step: [100/1800]
+train loss: 6256367.703125
+ valid loss: 699251.312500
+Epoch: [190/1000]:
+step: [100/1800]
+train loss: 6256213.437500
+ valid loss: 699358.125000
+Epoch: [191/1000]:
+step: [100/1800]
+train loss: 6255801.511719
+ valid loss: 699343.937500
+Epoch: [192/1000]:
+step: [100/1800]
+train loss: 6255594.210938
+ valid loss: 699289.562500
+Epoch: [193/1000]:
+step: [100/1800]
+train loss: 6255543.957031
+ valid loss: 699321.062500
+Epoch: [194/1000]:
+step: [100/1800]
+train loss: 6255359.394531
+ valid loss: 699246.875000
+Epoch: [195/1000]:
+step: [100/1800]
+train loss: 6254964.996094
+ valid loss: 699262.375000
+Epoch: [196/1000]:
+step: [100/1800]
+train loss: 6254823.750000
+ valid loss: 699305.625000
+Epoch: [197/1000]:
+step: [100/1800]
+train loss: 6252862.785156
+ valid loss: 698925.937500
+Epoch: [198/1000]:
+step: [100/1800]
+train loss: 6251292.316406
+ valid loss: 698967.687500
+Epoch: [199/1000]:
+step: [100/1800]
+train loss: 6250713.898438
+ valid loss: 698808.375000
+Epoch: [200/1000]:
+step: [100/1800]
+train loss: 6249429.253906
+ valid loss: 698785.937500
+Epoch: [201/1000]:
+step: [100/1800]
+train loss: 6249451.421875
+ valid loss: 698731.750000
+Epoch: [202/1000]:
+step: [100/1800]
+train loss: 6249440.992188
+ valid loss: 698713.062500
+Epoch: [203/1000]:
+step: [100/1800]
+train loss: 6249163.839844
+ valid loss: 698747.250000
+Epoch: [204/1000]:
+step: [100/1800]
+train loss: 6249092.375000
+ valid loss: 698781.437500
+Epoch: [205/1000]:
+step: [100/1800]
+train loss: 6248967.054688
+ valid loss: 698713.500000
+Epoch: [206/1000]:
+step: [100/1800]
+train loss: 6248307.816406
+ valid loss: 698687.500000
+Epoch: [207/1000]:
+step: [100/1800]
+train loss: 6248350.152344
+ valid loss: 698688.500000
+Epoch: [208/1000]:
+step: [100/1800]
+train loss: 6247975.011719
+ valid loss: 698664.500000
+Epoch: [209/1000]:
+step: [100/1800]
+train loss: 6247972.664062
+ valid loss: 698697.812500
+Epoch: [210/1000]:
+step: [100/1800]
+train loss: 6247834.003906
+ valid loss: 698696.562500
+Epoch: [211/1000]:
+step: [100/1800]
+train loss: 6247559.566406
+ valid loss: 698747.062500
+Epoch: [212/1000]:
+step: [100/1800]
+train loss: 6247671.273438
+ valid loss: 698717.312500
+Epoch: [213/1000]:
+step: [100/1800]
+train loss: 6247220.152344
+ valid loss: 698663.875000
+Epoch: [214/1000]:
+step: [100/1800]
+train loss: 6247101.644531
+ valid loss: 698616.437500
+Epoch: [215/1000]:
+step: [100/1800]
+train loss: 6247040.347656
+ valid loss: 698626.937500
+Epoch: [216/1000]:
+step: [100/1800]
+train loss: 6246656.035156
+ valid loss: 698694.000000
+Epoch: [217/1000]:
+step: [100/1800]
+train loss: 6245868.914062
+ valid loss: 698495.500000
+Epoch: [218/1000]:
+step: [100/1800]
+train loss: 6245314.917969
+ valid loss: 698531.000000
+Epoch: [219/1000]:
+step: [100/1800]
+train loss: 6244989.722656
+ valid loss: 698435.125000
+Epoch: [220/1000]:
+step: [100/1800]
+train loss: 6244886.296875
+ valid loss: 698455.750000
+Epoch: [221/1000]:
+step: [100/1800]
+train loss: 6244896.773438
+ valid loss: 698373.812500
+Epoch: [222/1000]:
+step: [100/1800]
+train loss: 6244477.058594
+ valid loss: 698439.687500
+Epoch: [223/1000]:
+step: [100/1800]
+train loss: 6244364.906250
+ valid loss: 698416.000000
+Epoch: [224/1000]:
+step: [100/1800]
+train loss: 6244132.757812
+ valid loss: 698463.062500
+Epoch: [225/1000]:
+step: [100/1800]
+train loss: 6243769.621094
+ valid loss: 698516.500000
+Epoch: [226/1000]:
+step: [100/1800]
+train loss: 6243871.929688
+ valid loss: 698364.500000
+Epoch: [227/1000]:
+step: [100/1800]
+train loss: 6243924.984375
+ valid loss: 698412.562500
+Epoch: [228/1000]:
+step: [100/1800]
+train loss: 6243832.519531
+ valid loss: 698401.437500
+Epoch: [229/1000]:
+step: [100/1800]
+train loss: 6243624.390625
+ valid loss: 698357.875000
+Epoch: [230/1000]:
+step: [100/1800]
+train loss: 6243350.753906
+ valid loss: 698447.937500
+Epoch: [231/1000]:
+step: [100/1800]
+train loss: 6242918.023438
+ valid loss: 698377.375000
+Epoch: [232/1000]:
+step: [100/1800]
+train loss: 6243152.121094
+ valid loss: 698371.812500
+Epoch: [233/1000]:
+step: [100/1800]
+train loss: 6242658.714844
+ valid loss: 698313.187500
+Epoch: [234/1000]:
+step: [100/1800]
+train loss: 6242750.597656
+ valid loss: 698333.187500
+Epoch: [235/1000]:
+step: [100/1800]
+train loss: 6242627.207031
+ valid loss: 698360.312500
+Epoch: [236/1000]:
+step: [100/1800]
+train loss: 6242572.367188
+ valid loss: 698333.125000
+Epoch: [237/1000]:
+step: [100/1800]
+train loss: 6242302.531250
+ valid loss: 698337.937500
+Epoch: [238/1000]:
+step: [100/1800]
+train loss: 6241691.886719
+ valid loss: 698313.250000
+Epoch: [239/1000]:
+step: [100/1800]
+train loss: 6242008.890625
+ valid loss: 698374.125000
+Epoch: [240/1000]:
+step: [100/1800]
+train loss: 6241408.125000
+ valid loss: 698356.812500
+Epoch: [241/1000]:
+step: [100/1800]
+train loss: 6241603.113281
+ valid loss: 698373.437500
+Epoch: [242/1000]:
+step: [100/1800]
+train loss: 6241356.429688
+ valid loss: 698355.875000
+Epoch: [243/1000]:
+step: [100/1800]
+train loss: 6241382.281250
+ valid loss: 698312.937500
+Epoch: [244/1000]:
+step: [100/1800]
+train loss: 6240825.886719
+ valid loss: 698331.000000
+Epoch: [245/1000]:
+step: [100/1800]
+train loss: 6241010.210938
+ valid loss: 697873.062500
+Epoch: [246/1000]:
+step: [100/1800]
+train loss: 6237471.921875
+ valid loss: 697922.875000
+Epoch: [247/1000]:
+step: [100/1800]
+train loss: 6237040.054688
+ valid loss: 697841.562500
+Epoch: [248/1000]:
+step: [100/1800]
+train loss: 6237106.800781
+ valid loss: 697760.250000
+Epoch: [249/1000]:
+step: [100/1800]
+train loss: 6236208.078125
+ valid loss: 697832.500000
+Epoch: [250/1000]:
+step: [100/1800]
+train loss: 6236374.289062
+ valid loss: 697841.375000
+Epoch: [251/1000]:
+step: [100/1800]
+train loss: 6236074.777344
+ valid loss: 697804.125000
+Epoch: [252/1000]:
+step: [100/1800]
+train loss: 6236207.632812
+ valid loss: 697795.250000
+Epoch: [253/1000]:
+step: [100/1800]
+train loss: 6235998.894531
+ valid loss: 697849.750000
+Epoch: [254/1000]:
+step: [100/1800]
+train loss: 6236010.855469
+ valid loss: 697765.500000
+Epoch: [255/1000]:
+step: [100/1800]
+train loss: 6236046.125000
+ valid loss: 697825.562500
+Epoch: [256/1000]:
+step: [100/1800]
+train loss: 6235511.343750
+ valid loss: 697836.937500
+Epoch: [257/1000]:
+step: [100/1800]
+train loss: 6235213.261719
+ valid loss: 697779.750000
+Epoch: [258/1000]:
+step: [100/1800]
+train loss: 6235464.171875
+ valid loss: 697839.187500
+Epoch: [259/1000]:
+step: [100/1800]
+train loss: 6235130.062500
+ valid loss: 697743.125000
+Epoch: [260/1000]:
+step: [100/1800]
+train loss: 6235497.644531
+ valid loss: 697822.500000
+Epoch: [261/1000]:
+step: [100/1800]
+train loss: 6235287.351562
+ valid loss: 697739.562500
+Epoch: [262/1000]:
+step: [100/1800]
+train loss: 6235112.566406
+ valid loss: 697832.062500
+Epoch: [263/1000]:
+step: [100/1800]
+train loss: 6234772.410156
+ valid loss: 697731.312500
+Epoch: [264/1000]:
+step: [100/1800]
+train loss: 6234714.625000
+ valid loss: 697703.750000
+Epoch: [265/1000]:
+step: [100/1800]
+train loss: 6234675.199219
+ valid loss: 697819.812500
+Epoch: [266/1000]:
+step: [100/1800]
+train loss: 6234342.808594
+ valid loss: 697837.500000
+Epoch: [267/1000]:
+step: [100/1800]
+train loss: 6234298.421875
+ valid loss: 697748.750000
+Epoch: [268/1000]:
+step: [100/1800]
+train loss: 6234417.957031
+ valid loss: 697801.437500
+Epoch: [269/1000]:
+step: [100/1800]
+train loss: 6234030.507812
+ valid loss: 697782.625000
+Epoch: [270/1000]:
+step: [100/1800]
+train loss: 6233957.152344
+ valid loss: 697837.625000
+Epoch: [271/1000]:
+step: [100/1800]
+train loss: 6233941.972656
+ valid loss: 697737.125000
+Epoch: [272/1000]:
+step: [100/1800]
+train loss: 6234092.617188
+ valid loss: 697780.875000
+Epoch: [273/1000]:
+step: [100/1800]
+train loss: 6233873.980469
+ valid loss: 697759.375000
+Epoch: [274/1000]:
+step: [100/1800]
+train loss: 6233556.339844
+ valid loss: 697724.375000
+Epoch: [275/1000]:
+step: [100/1800]
+train loss: 6233570.386719
+ valid loss: 697686.312500
+Epoch: [276/1000]:
+step: [100/1800]
+train loss: 6231330.335938
+ valid loss: 697501.625000
+Epoch: [277/1000]:
+step: [100/1800]
+train loss: 6231383.894531
+ valid loss: 697543.000000
+Epoch: [278/1000]:
+step: [100/1800]
+train loss: 6230970.609375
+ valid loss: 697469.875000
+Epoch: [279/1000]:
+step: [100/1800]
+train loss: 6230845.277344
+ valid loss: 697489.437500
+Epoch: [280/1000]:
+step: [100/1800]
+train loss: 6230772.875000
+ valid loss: 697456.625000
+Epoch: [281/1000]:
+step: [100/1800]
+train loss: 6230671.546875
+ valid loss: 697469.937500
+Epoch: [282/1000]:
+step: [100/1800]
+train loss: 6230671.773438
+ valid loss: 697501.812500
+Epoch: [283/1000]:
+step: [100/1800]
+train loss: 6230236.914062
+ valid loss: 697507.625000
+Epoch: [284/1000]:
+step: [100/1800]
+train loss: 6230219.921875
+ valid loss: 697467.937500
+Epoch: [285/1000]:
+step: [100/1800]
+train loss: 6230503.398438
+ valid loss: 697585.375000
+Epoch: [286/1000]:
+step: [100/1800]
+train loss: 6230845.253906
+ valid loss: 697477.375000
+Epoch: [287/1000]:
+step: [100/1800]
+train loss: 6230005.949219
+ valid loss: 697505.375000
+Epoch: [288/1000]:
+step: [100/1800]
+train loss: 6230311.515625
+ valid loss: 697542.687500
+Epoch: [289/1000]:
+step: [100/1800]
+train loss: 6230329.496094
+ valid loss: 697514.687500
+Epoch: [290/1000]:
+step: [100/1800]
+train loss: 6230132.500000
+ valid loss: 697623.062500
+Epoch: [291/1000]:
+step: [100/1800]
+train loss: 6229695.363281
+ valid loss: 697488.437500
+Epoch: [292/1000]:
+step: [100/1800]
+train loss: 6230040.382812
+ valid loss: 697493.187500
+Epoch: [293/1000]:
+step: [100/1800]
+train loss: 6230123.976562
+ valid loss: 697474.625000
+Epoch: [294/1000]:
+step: [100/1800]
+train loss: 6230068.078125
+ valid loss: 697497.812500
+Epoch: [295/1000]:
+step: [100/1800]
+train loss: 6229902.054688
+ valid loss: 697461.312500
+Epoch: [296/1000]:
+step: [100/1800]
+train loss: 6229017.324219
+ valid loss: 697105.812500
+Epoch: [297/1000]:
+step: [100/1800]
+train loss: 6226690.367188
+ valid loss: 697169.500000
+Epoch: [298/1000]:
+step: [100/1800]
+train loss: 6226772.468750
+ valid loss: 697116.750000
+Epoch: [299/1000]:
+step: [100/1800]
+train loss: 6226412.644531
+ valid loss: 697171.812500
+Epoch: [300/1000]:
+step: [100/1800]
+train loss: 6226176.648438
+ valid loss: 697140.625000
+Epoch: [301/1000]:
+step: [100/1800]
+train loss: 6226244.640625
+ valid loss: 697156.437500
+Epoch: [302/1000]:
+step: [100/1800]
+train loss: 6226084.871094
+ valid loss: 697097.875000
+Epoch: [303/1000]:
+step: [100/1800]
+train loss: 6226203.753906
+ valid loss: 697100.937500
+Epoch: [304/1000]:
+step: [100/1800]
+train loss: 6226095.597656
+ valid loss: 697141.000000
+Epoch: [305/1000]:
+step: [100/1800]
+train loss: 6226057.242188
+ valid loss: 697102.750000
+Epoch: [306/1000]:
+step: [100/1800]
+train loss: 6225727.445312
+ valid loss: 697140.187500
+Epoch: [307/1000]:
+step: [100/1800]
+train loss: 6225547.617188
+ valid loss: 697039.937500
+Epoch: [308/1000]:
+step: [100/1800]
+train loss: 6225815.312500
+ valid loss: 697096.312500
+Epoch: [309/1000]:
+step: [100/1800]
+train loss: 6225559.691406
+ valid loss: 697076.812500
+Epoch: [310/1000]:
+step: [100/1800]
+train loss: 6225267.839844
+ valid loss: 697146.625000
+Epoch: [311/1000]:
+step: [100/1800]
+train loss: 6224924.726562
+ valid loss: 697133.250000
+Epoch: [312/1000]:
+step: [100/1800]
+train loss: 6225285.265625
+ valid loss: 697130.750000
+Epoch: [313/1000]:
+step: [100/1800]
+train loss: 6225482.796875
+ valid loss: 697027.062500
+Epoch: [314/1000]:
+step: [100/1800]
+train loss: 6225826.027344
+ valid loss: 697100.875000
+Epoch: [315/1000]:
+step: [100/1800]
+train loss: 6225489.625000
+ valid loss: 697071.000000
+Epoch: [316/1000]:
+step: [100/1800]
+train loss: 6224915.097656
+ valid loss: 697021.812500
+Epoch: [317/1000]:
+step: [100/1800]
+train loss: 6225107.417969
+ valid loss: 697078.125000
+Epoch: [318/1000]:
+step: [100/1800]
+train loss: 6224994.140625
+ valid loss: 697063.437500
+Epoch: [319/1000]:
+step: [100/1800]
+train loss: 6224822.882812
+ valid loss: 697118.937500
+Epoch: [320/1000]:
+step: [100/1800]
+train loss: 6224969.046875
+ valid loss: 697117.000000
+Epoch: [321/1000]:
+step: [100/1800]
+train loss: 6224428.953125
+ valid loss: 697074.875000
+Epoch: [322/1000]:
+step: [100/1800]
+train loss: 6224586.785156
+ valid loss: 697100.500000
+Epoch: [323/1000]:
+step: [100/1800]
+train loss: 6224655.359375
+ valid loss: 697168.812500
+Epoch: [324/1000]:
+step: [100/1800]
+train loss: 6224853.593750
+ valid loss: 697169.062500
+Epoch: [325/1000]:
+step: [100/1800]
+train loss: 6224680.363281
+ valid loss: 697116.937500
+Epoch: [326/1000]:
+step: [100/1800]
+train loss: 6224390.632812
+ valid loss: 697147.437500
+Epoch: [327/1000]:
+step: [100/1800]
+train loss: 6224425.902344
+ valid loss: 697162.375000
+Epoch: [328/1000]:
+step: [100/1800]
+train loss: 6224240.238281
+ valid loss: 697081.125000
+Epoch: [329/1000]:
+step: [100/1800]
+train loss: 6223986.949219
+ valid loss: 697141.812500
+Epoch: [330/1000]:
+step: [100/1800]
+train loss: 6224167.871094
+ valid loss: 697083.812500
+Epoch: [331/1000]:
+step: [100/1800]
+train loss: 6224021.460938
+ valid loss: 697087.000000
+Epoch: [332/1000]:
+step: [100/1800]
+train loss: 6224050.507812
+ valid loss: 697095.625000
+Epoch: [333/1000]:
+step: [100/1800]
+train loss: 6224074.562500
+ valid loss: 697111.500000
+Epoch: [334/1000]:
+step: [100/1800]
+train loss: 6223640.925781
+ valid loss: 697161.437500
+Epoch: [335/1000]:
+step: [100/1800]
+train loss: 6223783.101562
+ valid loss: 697045.375000
+Epoch: [336/1000]:
+step: [100/1800]
+train loss: 6223828.773438
+ valid loss: 697164.500000
+Epoch: [337/1000]:
+step: [100/1800]
+train loss: 6223533.160156
+ valid loss: 697138.000000
+Epoch: [338/1000]:
+step: [100/1800]
+train loss: 6223862.847656
+ valid loss: 697160.625000
+Epoch: [339/1000]:
+step: [100/1800]
+train loss: 6223599.847656
+ valid loss: 697116.187500
+Epoch: [340/1000]:
+step: [100/1800]
+train loss: 6223887.449219
+ valid loss: 697101.062500
+Epoch: [341/1000]:
+step: [100/1800]
+train loss: 6223430.187500
+ valid loss: 697090.375000
+Epoch: [342/1000]:
+step: [100/1800]
+train loss: 6223365.105469
+ valid loss: 697127.062500
+Epoch: [343/1000]:
+step: [100/1800]
+train loss: 6223835.003906
+ valid loss: 697154.812500
+Epoch: [344/1000]:
+step: [100/1800]
+train loss: 6223799.335938
+ valid loss: 697125.062500
+Epoch: [345/1000]:
+step: [100/1800]
+train loss: 6223131.402344
+ valid loss: 697085.250000
+Epoch: [346/1000]:
+step: [100/1800]
+train loss: 6222689.035156
+ valid loss: 697129.437500
+Epoch: [347/1000]:
+step: [100/1800]
+train loss: 6223045.792969
+ valid loss: 697118.000000
+Epoch: [348/1000]:
+step: [100/1800]
+train loss: 6223090.136719
+ valid loss: 697092.375000
+Epoch: [349/1000]:
+step: [100/1800]
+train loss: 6222995.449219
+ valid loss: 697053.687500
+Epoch: [350/1000]:
+step: [100/1800]
+train loss: 6223287.046875
+ valid loss: 697109.125000
+Epoch: [351/1000]:
+step: [100/1800]
+train loss: 6222741.636719
+ valid loss: 697111.500000
+Epoch: [352/1000]:
+step: [100/1800]
+train loss: 6222756.492188
+ valid loss: 697121.250000
+Epoch: [353/1000]:
+step: [100/1800]
+train loss: 6222943.246094
+ valid loss: 697111.687500
+Epoch: [354/1000]:
+step: [100/1800]
+train loss: 6222754.269531
+ valid loss: 697183.875000
+Epoch: [355/1000]:
+step: [100/1800]
+train loss: 6222433.171875
+ valid loss: 697126.000000
+Epoch: [356/1000]:
+step: [100/1800]
+train loss: 6223014.359375
+ valid loss: 697047.000000
+Epoch: [357/1000]:
+step: [100/1800]
+train loss: 6223244.074219
+ valid loss: 697152.062500
+Epoch: [358/1000]:
+step: [100/1800]
+train loss: 6222485.605469
+ valid loss: 697132.000000
+Epoch: [359/1000]:
+step: [100/1800]
+train loss: 6222589.945312
+ valid loss: 697105.562500
+Epoch: [360/1000]:
+step: [100/1800]
+train loss: 6222480.597656
+ valid loss: 697185.625000
+Epoch: [361/1000]:
+step: [100/1800]
+train loss: 6222556.281250
+ valid loss: 697096.000000
+Epoch: [362/1000]:
+step: [100/1800]
+train loss: 6222611.605469
+ valid loss: 697138.250000
+Epoch: [363/1000]:
+step: [100/1800]
+train loss: 6222411.812500
+ valid loss: 697208.125000
+Epoch: [364/1000]:
+step: [100/1800]
+train loss: 6222732.855469
+ valid loss: 697175.562500
+Epoch: [365/1000]:
+step: [100/1800]
+train loss: 6220218.773438
+ valid loss: 696739.250000
+Epoch: [366/1000]:
+step: [100/1800]
+train loss: 6219015.621094
+ valid loss: 696766.000000
+Epoch: [367/1000]:
+step: [100/1800]
+train loss: 6218844.078125
+ valid loss: 696739.062500
+Epoch: [368/1000]:
+step: [100/1800]
+train loss: 6218629.089844
+ valid loss: 696798.562500
+Epoch: [369/1000]:
+step: [100/1800]
+train loss: 6219368.957031
+ valid loss: 696772.375000
+Epoch: [370/1000]:
+step: [100/1800]
+train loss: 6218598.210938
+ valid loss: 696746.937500
+Epoch: [371/1000]:
+step: [100/1800]
+train loss: 6218667.496094
+ valid loss: 696791.000000
+Epoch: [372/1000]:
+step: [100/1800]
+train loss: 6218789.050781
+ valid loss: 696776.437500
+Epoch: [373/1000]:
+step: [100/1800]
+train loss: 6219073.917969
+ valid loss: 696840.312500
+Epoch: [374/1000]:
+step: [100/1800]
+train loss: 6218042.718750
+ valid loss: 696468.125000
+Epoch: [375/1000]:
+step: [100/1800]
+train loss: 6215360.613281
+ valid loss: 696412.375000
+Epoch: [376/1000]:
+step: [100/1800]
+train loss: 6215275.273438
+ valid loss: 696364.937500
+Epoch: [377/1000]:
+step: [100/1800]
+train loss: 6215057.464844
+ valid loss: 696328.875000
+Epoch: [378/1000]:
+step: [100/1800]
+train loss: 6215028.976562
+ valid loss: 696380.562500
+Epoch: [379/1000]:
+step: [100/1800]
+train loss: 6215007.734375
+ valid loss: 696292.625000
+Epoch: [380/1000]:
+step: [100/1800]
+train loss: 6214980.527344
+ valid loss: 696398.750000
+Epoch: [381/1000]:
+step: [100/1800]
+train loss: 6214975.425781
+ valid loss: 696383.500000
+Epoch: [382/1000]:
+step: [100/1800]
+train loss: 6215244.003906
+ valid loss: 696407.875000
+Epoch: [383/1000]:
+step: [100/1800]
+train loss: 6214627.609375
+ valid loss: 696389.937500
+Epoch: [384/1000]:
+step: [100/1800]
+train loss: 6214860.402344
+ valid loss: 696412.250000
+Epoch: [385/1000]:
+step: [100/1800]
+train loss: 6214831.500000
+ valid loss: 696400.000000
+Epoch: [386/1000]:
+step: [100/1800]
+train loss: 6214920.648438
+ valid loss: 696372.187500
+Epoch: [387/1000]:
+step: [100/1800]
+train loss: 6214814.417969
+ valid loss: 696374.750000
+Epoch: [388/1000]:
+step: [100/1800]
+train loss: 6214421.875000
+ valid loss: 696398.250000
+Epoch: [389/1000]:
+step: [100/1800]
+train loss: 6214757.871094
+ valid loss: 696445.125000
+Epoch: [390/1000]:
+step: [100/1800]
+train loss: 6214525.621094
+ valid loss: 696392.812500
+Epoch: [391/1000]:
+step: [100/1800]
+train loss: 6214592.968750
+ valid loss: 696360.562500
+Epoch: [392/1000]:
+step: [100/1800]
+train loss: 6214747.746094
+ valid loss: 696360.937500
+Epoch: [393/1000]:
+step: [100/1800]
+train loss: 6214410.003906
+ valid loss: 696455.875000
+Epoch: [394/1000]:
+step: [100/1800]
+train loss: 6214660.738281
+ valid loss: 696381.875000
+Epoch: [395/1000]:
+step: [100/1800]
+train loss: 6213965.429688
+ valid loss: 696289.250000
+Epoch: [396/1000]:
+step: [100/1800]
+train loss: 6213634.296875
+ valid loss: 696206.500000
+Epoch: [397/1000]:
+step: [100/1800]
+train loss: 6213402.812500
+ valid loss: 696242.812500
+Epoch: [398/1000]:
+step: [100/1800]
+train loss: 6213602.988281
+ valid loss: 696255.812500
+Epoch: [399/1000]:
+step: [100/1800]
+train loss: 6213905.335938
+ valid loss: 696247.750000
+Epoch: [400/1000]:
+step: [100/1800]
+train loss: 6213100.316406
+ valid loss: 696227.250000
+Epoch: [401/1000]:
+step: [100/1800]
+train loss: 6213283.230469
+ valid loss: 696298.312500
+Epoch: [402/1000]:
+step: [100/1800]
+train loss: 6213151.468750
+ valid loss: 696259.250000
+Epoch: [403/1000]:
+step: [100/1800]
+train loss: 6213687.964844
+ valid loss: 696237.062500
+Epoch: [404/1000]:
+step: [100/1800]
+train loss: 6213064.503906
+ valid loss: 696245.687500
+Epoch: [405/1000]:
+step: [100/1800]
+train loss: 6212864.980469
+ valid loss: 696193.375000
+Epoch: [406/1000]:
+step: [100/1800]
+train loss: 6213166.000000
+ valid loss: 696309.125000
+Epoch: [407/1000]:
+step: [100/1800]
+train loss: 6213111.109375
+ valid loss: 696211.625000
+Epoch: [408/1000]:
+step: [100/1800]
+train loss: 6212984.714844
+ valid loss: 696277.937500
+Epoch: [409/1000]:
+step: [100/1800]
+train loss: 6212936.343750
+ valid loss: 696219.875000
+Epoch: [410/1000]:
+step: [100/1800]
+train loss: 6213043.882812
+ valid loss: 696270.875000
+Epoch: [411/1000]:
+step: [100/1800]
+train loss: 6213500.714844
+ valid loss: 696259.687500
+Epoch: [412/1000]:
+step: [100/1800]
+train loss: 6212802.980469
+ valid loss: 696283.062500
+Epoch: [413/1000]:
+step: [100/1800]
+train loss: 6212780.210938
+ valid loss: 696294.687500
+Epoch: [414/1000]:
+step: [100/1800]
+train loss: 6212606.199219
+ valid loss: 696262.062500
+Epoch: [415/1000]:
+step: [100/1800]
+train loss: 6212930.710938
+ valid loss: 696190.750000
+Epoch: [416/1000]:
+step: [100/1800]
+train loss: 6212730.433594
+ valid loss: 696272.500000
+Epoch: [417/1000]:
+step: [100/1800]
+train loss: 6212721.437500
+ valid loss: 696281.000000
+Epoch: [418/1000]:
+step: [100/1800]
+train loss: 6212475.691406
+ valid loss: 696255.625000
+Epoch: [419/1000]:
+step: [100/1800]
+train loss: 6213033.363281
+ valid loss: 696228.750000
+Epoch: [420/1000]:
+step: [100/1800]
+train loss: 6212824.195312
+ valid loss: 696349.312500
+Epoch: [421/1000]:
+step: [100/1800]
+train loss: 6212938.558594
+ valid loss: 696245.687500
+Epoch: [422/1000]:
+step: [100/1800]
+train loss: 6212637.269531
+ valid loss: 696270.750000
+Epoch: [423/1000]:
+step: [100/1800]
+train loss: 6212669.871094
+ valid loss: 696224.062500
+Epoch: [424/1000]:
+step: [100/1800]
+train loss: 6212489.691406
+ valid loss: 696229.562500
+Epoch: [425/1000]:
+step: [100/1800]
+train loss: 6212853.140625
+ valid loss: 696299.125000
+Epoch: [426/1000]:
+step: [100/1800]
+train loss: 6212773.328125
+ valid loss: 696314.375000
+Epoch: [427/1000]:
+step: [100/1800]
+train loss: 6212513.507812
+ valid loss: 696176.750000
+Epoch: [428/1000]:
+step: [100/1800]
+train loss: 6212446.007812
+ valid loss: 696217.312500
+Epoch: [429/1000]:
+step: [100/1800]
+train loss: 6212705.832031
+ valid loss: 696237.562500
+Epoch: [430/1000]:
+step: [100/1800]
+train loss: 6210833.148438
+ valid loss: 695769.625000
+Epoch: [431/1000]:
+step: [100/1800]
+train loss: 6208964.644531
+ valid loss: 695850.000000
+Epoch: [432/1000]:
+step: [100/1800]
+train loss: 6208553.886719
+ valid loss: 695824.375000
+Epoch: [433/1000]:
+step: [100/1800]
+train loss: 6208982.285156
+ valid loss: 695829.000000
+Epoch: [434/1000]:
+step: [100/1800]
+train loss: 6208512.484375
+ valid loss: 695818.625000
+Epoch: [435/1000]:
+step: [100/1800]
+train loss: 6208250.472656
+ valid loss: 695788.000000
+Epoch: [436/1000]:
+step: [100/1800]
+train loss: 6208213.425781
+ valid loss: 695872.375000
+Epoch: [437/1000]:
+step: [100/1800]
+train loss: 6208439.359375
+ valid loss: 695799.500000
+Epoch: [438/1000]:
+step: [100/1800]
+train loss: 6208301.792969
+ valid loss: 695887.687500
+Epoch: [439/1000]:
+step: [100/1800]
+train loss: 6208526.554688
+ valid loss: 695813.687500
+Epoch: [440/1000]:
+step: [100/1800]
+train loss: 6207866.765625
+ valid loss: 695780.750000
+Epoch: [441/1000]:
+step: [100/1800]
+train loss: 6208071.238281
+ valid loss: 695768.500000
+Epoch: [442/1000]:
+step: [100/1800]
+train loss: 6208537.808594
+ valid loss: 695837.750000
+Epoch: [443/1000]:
+step: [100/1800]
+train loss: 6208533.003906
+ valid loss: 695857.125000
+Epoch: [444/1000]:
+step: [100/1800]
+train loss: 6208322.355469
+ valid loss: 695864.375000
+Epoch: [445/1000]:
+step: [100/1800]
+train loss: 6208632.011719
+ valid loss: 695871.875000
+Epoch: [446/1000]:
+step: [100/1800]
+train loss: 6208745.386719
+ valid loss: 695966.500000
+Epoch: [447/1000]:
+step: [100/1800]
+train loss: 6208967.730469
+ valid loss: 695872.562500
+Epoch: [448/1000]:
+step: [100/1800]
+train loss: 6208947.070312
+ valid loss: 695845.250000
+Epoch: [449/1000]:
+step: [100/1800]
+train loss: 6207969.308594
+ valid loss: 695865.687500
+Epoch: [450/1000]:
+step: [100/1800]
+train loss: 6208224.937500
+ valid loss: 695770.062500
+Epoch: [451/1000]:
+step: [100/1800]
+train loss: 6207862.121094
+ valid loss: 695823.937500
+Epoch: [452/1000]:
+step: [100/1800]
+train loss: 6208212.179688
+ valid loss: 695910.000000
+Epoch: [453/1000]:
+step: [100/1800]
+train loss: 6208766.238281
+ valid loss: 695958.000000
+Epoch: [454/1000]:
+step: [100/1800]
+train loss: 6208937.933594
+ valid loss: 695842.250000
+Epoch: [455/1000]:
+step: [100/1800]
+train loss: 6208430.964844
+ valid loss: 695872.187500
+Epoch: [456/1000]:
+step: [100/1800]
+train loss: 6207840.742188
+ valid loss: 695435.437500
+Epoch: [457/1000]:
+step: [100/1800]
+train loss: 6205545.964844
+ valid loss: 695421.562500
+Epoch: [458/1000]:
+step: [100/1800]
+train loss: 6205742.906250
+ valid loss: 695483.375000
+Epoch: [459/1000]:
+step: [100/1800]
+train loss: 6205212.351562
+ valid loss: 695491.812500
+Epoch: [460/1000]:
+step: [100/1800]
+train loss: 6204785.539062
+ valid loss: 695422.937500
+Epoch: [461/1000]:
+step: [100/1800]
+train loss: 6205453.519531
+ valid loss: 695484.187500
+Epoch: [462/1000]:
+step: [100/1800]
+train loss: 6205107.847656
+ valid loss: 695403.000000
+Epoch: [463/1000]:
+step: [100/1800]
+train loss: 6204936.730469
+ valid loss: 695386.562500
+Epoch: [464/1000]:
+step: [100/1800]
+train loss: 6205630.578125
+ valid loss: 695482.375000
+Epoch: [465/1000]:
+step: [100/1800]
+train loss: 6205183.398438
+ valid loss: 695424.187500
+Epoch: [466/1000]:
+step: [100/1800]
+train loss: 6204750.488281
+ valid loss: 695479.625000
+Epoch: [467/1000]:
+step: [100/1800]
+train loss: 6204463.871094
+ valid loss: 695303.937500
+Epoch: [468/1000]:
+step: [100/1800]
+train loss: 6204849.281250
+ valid loss: 695512.562500
+Epoch: [469/1000]:
+step: [100/1800]
+train loss: 6204638.648438
+ valid loss: 695406.062500
+Epoch: [470/1000]:
+step: [100/1800]
+train loss: 6204175.164062
+ valid loss: 695337.437500
+Epoch: [471/1000]:
+step: [100/1800]
+train loss: 6204462.894531
+ valid loss: 695501.250000
+Epoch: [472/1000]:
+step: [100/1800]
+train loss: 6204216.796875
+ valid loss: 695460.562500
+Epoch: [473/1000]:
+step: [100/1800]
+train loss: 6205131.066406
+ valid loss: 695393.812500
+Epoch: [474/1000]:
+step: [100/1800]
+train loss: 6204868.054688
+ valid loss: 695495.187500
+Epoch: [475/1000]:
+step: [100/1800]
+train loss: 6204768.007812
+ valid loss: 695400.250000
+Epoch: [476/1000]:
+step: [100/1800]
+train loss: 6204361.078125
+ valid loss: 695414.437500
+Epoch: [477/1000]:
+step: [100/1800]
+train loss: 6204610.570312
+ valid loss: 695520.875000
+Epoch: [478/1000]:
+step: [100/1800]
+train loss: 6204317.027344
+ valid loss: 695392.000000
+Epoch: [479/1000]:
+step: [100/1800]
+train loss: 6204472.613281
+ valid loss: 695463.875000
+Epoch: [480/1000]:
+step: [100/1800]
+train loss: 6204827.125000
+ valid loss: 695408.375000
+Epoch: [481/1000]:
+step: [100/1800]
+train loss: 6204724.390625
+ valid loss: 695404.437500
+Epoch: [482/1000]:
+step: [100/1800]
+train loss: 6204470.839844
+ valid loss: 695479.312500
+Epoch: [483/1000]:
+step: [100/1800]
+train loss: 6204738.113281
+ valid loss: 695484.500000
+Epoch: [484/1000]:
+step: [100/1800]
+train loss: 6204072.937500
+ valid loss: 695420.562500
+Epoch: [485/1000]:
+step: [100/1800]
+train loss: 6204713.769531
+ valid loss: 695463.312500
+Epoch: [486/1000]:
+step: [100/1800]
+train loss: 6204269.347656
+ valid loss: 695496.687500
+Epoch: [487/1000]:
+step: [100/1800]
+train loss: 6204682.781250
+ valid loss: 695444.125000
+Epoch: [488/1000]:
+step: [100/1800]
+train loss: 6204153.710938
+ valid loss: 695519.062500
+Epoch: [489/1000]:
+step: [100/1800]
+train loss: 6203982.035156
+ valid loss: 695401.250000
+Epoch: [490/1000]:
+step: [100/1800]
+train loss: 6203756.523438
+ valid loss: 695459.312500
+Epoch: [491/1000]:
+step: [100/1800]
+train loss: 6204242.054688
+ valid loss: 695403.000000
+Epoch: [492/1000]:
+step: [100/1800]
+train loss: 6204109.195312
+ valid loss: 695441.687500
+Epoch: [493/1000]:
+step: [100/1800]
+train loss: 6203876.554688
+ valid loss: 695371.562500
+Epoch: [494/1000]:
+step: [100/1800]
+train loss: 6204394.089844
+ valid loss: 695491.687500
+Epoch: [495/1000]:
+step: [100/1800]
+train loss: 6204393.093750
+ valid loss: 695478.562500
+Epoch: [496/1000]:
+step: [100/1800]
+train loss: 6204230.398438
+ valid loss: 695523.062500
+Epoch: [497/1000]:
+step: [100/1800]
+train loss: 6204497.933594
+ valid loss: 695418.062500
+Epoch: [498/1000]:
+step: [100/1800]
+train loss: 6204422.488281
+ valid loss: 695423.000000
+Epoch: [499/1000]:
+step: [100/1800]
+train loss: 6204322.695312
+ valid loss: 695496.125000
+Epoch: [500/1000]:
+step: [100/1800]
+train loss: 6203996.039062
+ valid loss: 695414.437500
+Epoch: [501/1000]:
+step: [100/1800]
+train loss: 6204559.296875
+ valid loss: 695562.375000
+Epoch: [502/1000]:
+step: [100/1800]
+train loss: 6204469.800781
+ valid loss: 695456.250000
+Epoch: [503/1000]:
+step: [100/1800]
+train loss: 6204181.105469
+ valid loss: 695506.062500
+Epoch: [504/1000]:
+step: [100/1800]
+train loss: 6203873.136719
+ valid loss: 695475.562500
+Epoch: [505/1000]:
+step: [100/1800]
+train loss: 6203516.667969
+ valid loss: 695425.812500
+Epoch: [506/1000]:
+step: [100/1800]
+train loss: 6203743.156250
+ valid loss: 695427.500000
+Epoch: [507/1000]:
+step: [100/1800]
+train loss: 6203798.906250
+ valid loss: 695384.312500
+Epoch: [508/1000]:
+step: [100/1800]
+train loss: 6203973.699219
+ valid loss: 695410.312500
+Epoch: [509/1000]:
+step: [100/1800]
+train loss: 6204240.960938
+ valid loss: 695409.187500
+Epoch: [510/1000]:
+step: [100/1800]
+train loss: 6203856.121094
+ valid loss: 695509.187500
+Epoch: [511/1000]:
+step: [100/1800]
+train loss: 6203557.335938
+ valid loss: 695526.375000
+Epoch: [512/1000]:
+step: [100/1800]
+train loss: 6204069.289062
+ valid loss: 695427.750000
+Epoch: [513/1000]:
+step: [100/1800]
+train loss: 6204638.347656
+ valid loss: 695454.312500
+Epoch: [514/1000]:
+step: [100/1800]
+train loss: 6204079.222656
+ valid loss: 695470.750000
+Epoch: [515/1000]:
+step: [100/1800]
+train loss: 6204144.078125
+ valid loss: 695453.125000
+Epoch: [516/1000]:
+step: [100/1800]
+train loss: 6203702.503906
+ valid loss: 695524.500000
+Epoch: [517/1000]:
+step: [100/1800]
+train loss: 6204084.949219
+ valid loss: 695303.500000
+Epoch: [518/1000]:
+step: [100/1800]
+train loss: 6201338.242188
+ valid loss: 695146.875000
+Epoch: [519/1000]:
+step: [100/1800]
+train loss: 6201227.316406
+ valid loss: 695186.750000
+Epoch: [520/1000]:
+step: [100/1800]
+train loss: 6200744.117188
+ valid loss: 695167.187500
+Epoch: [521/1000]:
+step: [100/1800]
+train loss: 6201404.058594
+ valid loss: 695070.562500
+Epoch: [522/1000]:
+step: [100/1800]
+train loss: 6201137.445312
+ valid loss: 695130.812500
+Epoch: [523/1000]:
+step: [100/1800]
+train loss: 6200833.250000
+ valid loss: 695143.500000
+Epoch: [524/1000]:
+step: [100/1800]
+train loss: 6201377.082031
+ valid loss: 695153.000000
+Epoch: [525/1000]:
+step: [100/1800]
+train loss: 6201361.269531
+ valid loss: 695170.562500
+Epoch: [526/1000]:
+step: [100/1800]
+train loss: 6201268.308594
+ valid loss: 695225.937500
+Epoch: [527/1000]:
+step: [100/1800]
+train loss: 6200672.027344
+ valid loss: 695142.062500
+Epoch: [528/1000]:
+step: [100/1800]
+train loss: 6200933.320312
+ valid loss: 695169.250000
+Epoch: [529/1000]:
+step: [100/1800]
+train loss: 6200451.871094
+ valid loss: 695106.625000
+Epoch: [530/1000]:
+step: [100/1800]
+train loss: 6201091.914062
+ valid loss: 695141.625000
+Epoch: [531/1000]:
+step: [100/1800]
+train loss: 6201140.492188
+ valid loss: 695216.062500
+Epoch: [532/1000]:
+step: [100/1800]
+train loss: 6201642.156250
+ valid loss: 695154.375000
+Epoch: [533/1000]:
+step: [100/1800]
+train loss: 6201325.644531
+ valid loss: 695139.187500
+Epoch: [534/1000]:
+step: [100/1800]
+train loss: 6201046.269531
+ valid loss: 695161.125000
+Epoch: [535/1000]:
+step: [100/1800]
+train loss: 6200835.511719
+ valid loss: 695101.562500
+Epoch: [536/1000]:
+step: [100/1800]
+train loss: 6200809.941406
+ valid loss: 695133.875000
+Epoch: [537/1000]:
+step: [100/1800]
+train loss: 6200885.460938
+ valid loss: 695147.187500
+Epoch: [538/1000]:
+step: [100/1800]
+train loss: 6200713.140625
+ valid loss: 695114.937500
+Epoch: [539/1000]:
+step: [100/1800]
+train loss: 6200445.492188
+ valid loss: 695126.750000
+Epoch: [540/1000]:
+step: [100/1800]
+train loss: 6200446.960938
+ valid loss: 695158.562500
+Epoch: [541/1000]:
+step: [100/1800]
+train loss: 6200364.390625
+ valid loss: 695114.375000
+Epoch: [542/1000]:
+step: [100/1800]
+train loss: 6200322.757812
+ valid loss: 695113.687500
+Epoch: [543/1000]:
+step: [100/1800]
+train loss: 6200244.941406
+ valid loss: 695083.750000
+Epoch: [544/1000]:
+step: [100/1800]
+train loss: 6200493.371094
+ valid loss: 695129.375000
+Epoch: [545/1000]:
+step: [100/1800]
+train loss: 6199879.847656
+ valid loss: 695127.375000
+Epoch: [546/1000]:
+step: [100/1800]
+train loss: 6199736.886719
+ valid loss: 695114.312500
+Epoch: [547/1000]:
+step: [100/1800]
+train loss: 6199807.968750
+ valid loss: 695150.625000
+Epoch: [548/1000]:
+step: [100/1800]
+train loss: 6199802.382812
+ valid loss: 695154.312500
+Epoch: [549/1000]:
+step: [100/1800]
+train loss: 6199624.781250
+ valid loss: 695134.437500
+Epoch: [550/1000]:
+step: [100/1800]
+train loss: 6200044.382812
+ valid loss: 695147.500000
+Epoch: [551/1000]:
+step: [100/1800]
+train loss: 6200379.214844
+ valid loss: 695196.500000
+Epoch: [552/1000]:
+step: [100/1800]
+train loss: 6200175.242188
+ valid loss: 695175.437500
+Epoch: [553/1000]:
+step: [100/1800]
+train loss: 6199973.632812
+ valid loss: 695100.562500
+Epoch: [554/1000]:
+step: [100/1800]
+train loss: 6199571.984375
+ valid loss: 694897.812500
+Epoch: [555/1000]:
+step: [100/1800]
+train loss: 6197402.820312
+ valid loss: 694679.000000
+Epoch: [556/1000]:
+step: [100/1800]
+train loss: 6197735.632812
+ valid loss: 694820.812500
+Epoch: [557/1000]:
+step: [100/1800]
+train loss: 6196713.722656
+ valid loss: 694727.437500
+Epoch: [558/1000]:
+step: [100/1800]
+train loss: 6196805.195312
+ valid loss: 694794.125000
+Epoch: [559/1000]:
+step: [100/1800]
+train loss: 6196319.933594
+ valid loss: 694738.125000
+Epoch: [560/1000]:
+step: [100/1800]
+train loss: 6196695.218750
+ valid loss: 694715.812500
+Epoch: [561/1000]:
+step: [100/1800]
+train loss: 6196615.410156
+ valid loss: 694664.687500
+Epoch: [562/1000]:
+step: [100/1800]
+train loss: 6196723.113281
+ valid loss: 694774.062500
+Epoch: [563/1000]:
+step: [100/1800]
+train loss: 6196514.027344
+ valid loss: 694665.187500
+Epoch: [564/1000]:
+step: [100/1800]
+train loss: 6196250.859375
+ valid loss: 694788.562500
+Epoch: [565/1000]:
+step: [100/1800]
+train loss: 6196034.687500
+ valid loss: 694731.062500
+Epoch: [566/1000]:
+step: [100/1800]
+train loss: 6197705.496094
+ valid loss: 694752.062500
+Epoch: [567/1000]:
+step: [100/1800]
+train loss: 6196635.613281
+ valid loss: 694745.875000
+Epoch: [568/1000]:
+step: [100/1800]
+train loss: 6196335.496094
+ valid loss: 695239.187500
+Epoch: [569/1000]:
+step: [100/1800]
+train loss: 6197922.894531
+ valid loss: 694817.125000
+Epoch: [570/1000]:
+step: [100/1800]
+train loss: 6197249.878906
+ valid loss: 694780.250000
+Epoch: [571/1000]:
+step: [100/1800]
+train loss: 6196591.433594
+ valid loss: 694712.812500
+Epoch: [572/1000]:
+step: [100/1800]
+train loss: 6196391.511719
+ valid loss: 694698.500000
+Epoch: [573/1000]:
+step: [100/1800]
+train loss: 6196275.101562
+ valid loss: 694657.500000
+Epoch: [574/1000]:
+step: [100/1800]
+train loss: 6196522.050781
+ valid loss: 694713.625000
+Epoch: [575/1000]:
+step: [100/1800]
+train loss: 6196717.375000
+ valid loss: 694741.687500
+Epoch: [576/1000]:
+step: [100/1800]
+train loss: 6197158.882812
+ valid loss: 694764.812500
+Epoch: [577/1000]:
+step: [100/1800]
+train loss: 6196759.695312
+ valid loss: 694719.687500
+Epoch: [578/1000]:
+step: [100/1800]
+train loss: 6195636.382812
+ valid loss: 694298.875000
+Epoch: [579/1000]:
+step: [100/1800]
+train loss: 6193810.910156
+ valid loss: 694355.125000
+Epoch: [580/1000]:
+step: [100/1800]
+train loss: 6193106.675781
+ valid loss: 694281.062500
+Epoch: [581/1000]:
+step: [100/1800]
+train loss: 6193226.726562
+ valid loss: 694290.500000
+Epoch: [582/1000]:
+step: [100/1800]
+train loss: 6193451.210938
+ valid loss: 694332.500000
+Epoch: [583/1000]:
+step: [100/1800]
+train loss: 6193145.613281
+ valid loss: 694309.250000
+Epoch: [584/1000]:
+step: [100/1800]
+train loss: 6193048.304688
+ valid loss: 694368.062500
+Epoch: [585/1000]:
+step: [100/1800]
+train loss: 6193284.214844
+ valid loss: 694323.500000
+Epoch: [586/1000]:
+step: [100/1800]
+train loss: 6193390.714844
+ valid loss: 694312.937500
+Epoch: [587/1000]:
+step: [100/1800]
+train loss: 6193876.136719
+ valid loss: 694329.125000
+Epoch: [588/1000]:
+step: [100/1800]
+train loss: 6193774.152344
+ valid loss: 694358.500000
+Epoch: [589/1000]:
+step: [100/1800]
+train loss: 6193411.335938
+ valid loss: 694355.500000
+Epoch: [590/1000]:
+step: [100/1800]
+train loss: 6193194.785156
+ valid loss: 694255.812500
+Epoch: [591/1000]:
+step: [100/1800]
+train loss: 6193509.085938
+ valid loss: 694343.250000
+Epoch: [592/1000]:
+step: [100/1800]
+train loss: 6192876.855469
+ valid loss: 694351.687500
+Epoch: [593/1000]:
+step: [100/1800]
+train loss: 6192844.234375
+ valid loss: 694346.062500
+Epoch: [594/1000]:
+step: [100/1800]
+train loss: 6193301.222656
+ valid loss: 694223.750000
+Epoch: [595/1000]:
+step: [100/1800]
+train loss: 6193840.605469
+ valid loss: 694324.687500
+Epoch: [596/1000]:
+step: [100/1800]
+train loss: 6193736.460938
+ valid loss: 694448.875000
+Epoch: [597/1000]:
+step: [100/1800]
+train loss: 6193877.667969
+ valid loss: 694341.250000
+Epoch: [598/1000]:
+step: [100/1800]
+train loss: 6193343.578125
+ valid loss: 694348.812500
+Epoch: [599/1000]:
+step: [100/1800]
+train loss: 6193615.886719
+ valid loss: 694394.937500
+Epoch: [600/1000]:
+step: [100/1800]
+train loss: 6192817.343750
+ valid loss: 694319.437500
+Epoch: [601/1000]:
+step: [100/1800]
+train loss: 6193119.816406
+ valid loss: 694354.625000
+Epoch: [602/1000]:
+step: [100/1800]
+train loss: 6193116.460938
+ valid loss: 694343.000000
+Epoch: [603/1000]:
+step: [100/1800]
+train loss: 6193120.132812
+ valid loss: 694292.687500
+Epoch: [604/1000]:
+step: [100/1800]
+train loss: 6193561.796875
+ valid loss: 694276.125000
+Epoch: [605/1000]:
+step: [100/1800]
+train loss: 6193681.730469
+ valid loss: 694403.937500
+Epoch: [606/1000]:
+step: [100/1800]
+train loss: 6193559.210938
+ valid loss: 694358.250000
+Epoch: [607/1000]:
+step: [100/1800]
+train loss: 6193328.886719
+ valid loss: 694256.187500
+Epoch: [608/1000]:
+step: [100/1800]
+train loss: 6192875.222656
+ valid loss: 694244.062500
+Epoch: [609/1000]:
+step: [100/1800]
+train loss: 6193372.925781
+ valid loss: 694285.812500
+Epoch: [610/1000]:
+step: [100/1800]
+train loss: 6193474.210938
+ valid loss: 694282.500000
+Epoch: [611/1000]:
+step: [100/1800]
+train loss: 6193083.910156
+ valid loss: 694326.812500
+Epoch: [612/1000]:
+step: [100/1800]
+train loss: 6192889.312500
+ valid loss: 694337.937500
+Epoch: [613/1000]:
+step: [100/1800]
+train loss: 6193257.734375
+ valid loss: 694329.312500
+Epoch: [614/1000]:
+step: [100/1800]
+train loss: 6193322.234375
+ valid loss: 694315.062500
+Epoch: [615/1000]:
+step: [100/1800]
+train loss: 6193428.207031
+ valid loss: 694334.375000
+Epoch: [616/1000]:
+step: [100/1800]
+train loss: 6193061.957031
+ valid loss: 694266.562500
+Epoch: [617/1000]:
+step: [100/1800]
+train loss: 6193499.679688
+ valid loss: 694272.375000
+Epoch: [618/1000]:
+step: [100/1800]
+train loss: 6192800.722656
+ valid loss: 694293.062500
+Epoch: [619/1000]:
+step: [100/1800]
+train loss: 6192815.976562
+ valid loss: 694305.125000
+Epoch: [620/1000]:
+step: [100/1800]
+train loss: 6193212.964844
+ valid loss: 694237.812500
+Epoch: [621/1000]:
+step: [100/1800]
+train loss: 6192678.382812
+ valid loss: 694225.812500
+Epoch: [622/1000]:
+step: [100/1800]
+train loss: 6193069.042969
+ valid loss: 694330.062500
+Epoch: [623/1000]:
+step: [100/1800]
+train loss: 6192863.000000
+ valid loss: 694293.562500
+Epoch: [624/1000]:
+step: [100/1800]
+train loss: 6192936.890625
+ valid loss: 694344.062500
+Epoch: [625/1000]:
+step: [100/1800]
+train loss: 6193169.902344
+ valid loss: 694220.562500
+Epoch: [626/1000]:
+step: [100/1800]
+train loss: 6193160.691406
+ valid loss: 694310.625000
+Epoch: [627/1000]:
+step: [100/1800]
+train loss: 6193795.351562
+ valid loss: 694256.125000
+Epoch: [628/1000]:
+step: [100/1800]
+train loss: 6193195.812500
+ valid loss: 694215.625000
+Epoch: [629/1000]:
+step: [100/1800]
+train loss: 6192782.382812
+ valid loss: 694168.687500
+Epoch: [630/1000]:
+step: [100/1800]
+train loss: 6193158.082031
+ valid loss: 694262.687500
+Epoch: [631/1000]:
+step: [100/1800]
+train loss: 6193005.390625
+ valid loss: 694244.937500
+Epoch: [632/1000]:
+step: [100/1800]
+train loss: 6192446.062500
+ valid loss: 694304.875000
+Epoch: [633/1000]:
+step: [100/1800]
+train loss: 6193556.437500
+ valid loss: 694320.812500
+Epoch: [634/1000]:
+step: [100/1800]
+train loss: 6193335.285156
+ valid loss: 694280.625000
+Epoch: [635/1000]:
+step: [100/1800]
+train loss: 6193506.488281
+ valid loss: 694257.312500
+Epoch: [636/1000]:
+step: [100/1800]
+train loss: 6193123.023438
+ valid loss: 694333.937500
+Epoch: [637/1000]:
+step: [100/1800]
+train loss: 6192971.417969
+ valid loss: 694295.562500
+Epoch: [638/1000]:
+step: [100/1800]
+train loss: 6193455.984375
+ valid loss: 694246.250000
+Epoch: [639/1000]:
+step: [100/1800]
+train loss: 6193082.566406
+ valid loss: 694290.312500
+Epoch: [640/1000]:
+step: [100/1800]
+train loss: 6194512.992188
+ valid loss: 694177.187500
+Epoch: [641/1000]:
+step: [100/1800]
+train loss: 6194067.164062
+ valid loss: 694273.250000
+Epoch: [642/1000]:
+step: [100/1800]
+train loss: 6194094.996094
+ valid loss: 694250.562500
+Epoch: [643/1000]:
+step: [100/1800]
+train loss: 6193493.714844
+ valid loss: 694285.000000
+Epoch: [644/1000]:
+step: [100/1800]
+train loss: 6193080.097656
+ valid loss: 694258.500000
+Epoch: [645/1000]:
+step: [100/1800]
+train loss: 6192610.312500
+ valid loss: 694261.312500
+Epoch: [646/1000]:
+step: [100/1800]
+train loss: 6192963.511719
+ valid loss: 694319.750000
+Epoch: [647/1000]:
+step: [100/1800]
+train loss: 6193182.843750
+ valid loss: 694195.437500
+Epoch: [648/1000]:
+step: [100/1800]
+train loss: 6192950.996094
+ valid loss: 694258.812500
+Epoch: [649/1000]:
+step: [100/1800]
+train loss: 6192816.699219
+ valid loss: 694338.812500
+Epoch: [650/1000]:
+step: [100/1800]
+train loss: 6192832.773438
+ valid loss: 694327.312500
+Epoch: [651/1000]:
+step: [100/1800]
+train loss: 6192327.757812
+ valid loss: 694374.250000
+Epoch: [652/1000]:
+step: [100/1800]
+train loss: 6192828.117188
+ valid loss: 694326.750000
+Epoch: [653/1000]:
+step: [100/1800]
+train loss: 6192638.847656
+ valid loss: 694313.437500
+Epoch: [654/1000]:
+step: [100/1800]
+train loss: 6192647.972656
+ valid loss: 694187.437500
+Epoch: [655/1000]:
+step: [100/1800]
+train loss: 6192729.085938
+ valid loss: 694270.437500
+Epoch: [656/1000]:
+step: [100/1800]
+train loss: 6192937.335938
+ valid loss: 694284.125000
+Epoch: [657/1000]:
+step: [100/1800]
+train loss: 6192821.015625
+ valid loss: 694302.750000
+Epoch: [658/1000]:
+step: [100/1800]
+train loss: 6192672.660156
+ valid loss: 694263.062500
+Epoch: [659/1000]:
+step: [100/1800]
+train loss: 6192648.613281
+ valid loss: 694419.437500
+Epoch: [660/1000]:
+step: [100/1800]
+train loss: 6192379.878906
+ valid loss: 694300.625000
+Epoch: [661/1000]:
+step: [100/1800]
+train loss: 6192454.453125
+ valid loss: 694249.062500
+Epoch: [662/1000]:
+step: [100/1800]
+train loss: 6192274.820312
+ valid loss: 694268.687500
+Epoch: [663/1000]:
+step: [100/1800]
+train loss: 6193145.960938
+ valid loss: 694334.562500
+Epoch: [664/1000]:
+step: [100/1800]
+train loss: 6192841.015625
+ valid loss: 694299.562500
+Epoch: [665/1000]:
+step: [100/1800]
+train loss: 6193062.238281
+ valid loss: 694383.875000
+Epoch: [666/1000]:
+step: [100/1800]
+train loss: 6193325.613281
+ valid loss: 694214.625000
+Epoch: [667/1000]:
+step: [100/1800]
+train loss: 6192920.945312
+ valid loss: 694317.500000
+Epoch: [668/1000]:
+step: [100/1800]
+train loss: 6193317.011719
+ valid loss: 694231.812500
+Epoch: [669/1000]:
+step: [100/1800]
+train loss: 6192998.304688
+ valid loss: 694288.625000
+Epoch: [670/1000]:
+step: [100/1800]
+train loss: 6193318.875000
+ valid loss: 694325.500000
+Epoch: [671/1000]:
+step: [100/1800]
+train loss: 6192803.742188
+ valid loss: 694323.937500
+Epoch: [672/1000]:
+step: [100/1800]
+train loss: 6192617.234375
+ valid loss: 694371.812500
+Epoch: [673/1000]:
+step: [100/1800]
+train loss: 6193322.218750
+ valid loss: 694359.250000
+Epoch: [674/1000]:
+step: [100/1800]
+train loss: 6192895.851562
+ valid loss: 694354.062500
+Epoch: [675/1000]:
+step: [100/1800]
+train loss: 6192713.433594
+ valid loss: 694331.000000
+Epoch: [676/1000]:
+step: [100/1800]
+train loss: 6192620.480469
+ valid loss: 694328.375000
+Epoch: [677/1000]:
+step: [100/1800]
+train loss: 6193697.691406
+ valid loss: 694390.000000
+Epoch: [678/1000]:
+step: [100/1800]
+train loss: 6193491.363281
+ valid loss: 694305.000000
+Epoch: [679/1000]:
+step: [100/1800]
+train loss: 6192998.859375
+ valid loss: 694252.750000
+Epoch: [680/1000]:
+step: [100/1800]
+train loss: 6193090.433594
+ valid loss: 694281.125000
+Epoch: [681/1000]:
+step: [100/1800]
+train loss: 6193268.785156
+ valid loss: 694303.500000
+Epoch: [682/1000]:
+step: [100/1800]
+train loss: 6192752.414062
+ valid loss: 694322.437500
+Epoch: [683/1000]:
+step: [100/1800]
+train loss: 6192805.410156
+ valid loss: 694221.437500
+Epoch: [684/1000]:
+step: [100/1800]
+train loss: 6194340.281250
+ valid loss: 694310.187500
+Epoch: [685/1000]:
+step: [100/1800]
+train loss: 6192946.933594
+ valid loss: 694295.000000
+Epoch: [686/1000]:
+step: [100/1800]
+train loss: 6192744.042969
+ valid loss: 694299.000000
+Epoch: [687/1000]:
+step: [100/1800]
+train loss: 6193017.859375
+ valid loss: 694278.375000
+Epoch: [688/1000]:
+step: [100/1800]
+train loss: 6192812.542969
+ valid loss: 694312.687500
+Epoch: [689/1000]:
+step: [100/1800]
+train loss: 6192941.355469
+ valid loss: 694290.500000
+Epoch: [690/1000]:
+step: [100/1800]
+train loss: 6192433.531250
+ valid loss: 694397.812500
+Epoch: [691/1000]:
+step: [100/1800]
+train loss: 6192495.246094
+ valid loss: 694285.312500
+Epoch: [692/1000]:
+step: [100/1800]
+train loss: 6192497.691406
+ valid loss: 694301.312500
+Epoch: [693/1000]:
+step: [100/1800]
+train loss: 6193758.984375
+ valid loss: 694303.000000
+Epoch: [694/1000]:
+step: [100/1800]
+train loss: 6193542.042969
+ valid loss: 694335.500000
+Epoch: [695/1000]:
+step: [100/1800]
+train loss: 6193422.886719
+ valid loss: 694309.375000
+Epoch: [696/1000]:
+step: [100/1800]
+train loss: 6193136.070312
+ valid loss: 694248.062500
+Epoch: [697/1000]:
+step: [100/1800]
+train loss: 6192741.292969
+ valid loss: 694354.062500
+Epoch: [698/1000]:
+step: [100/1800]
+train loss: 6192758.480469
+ valid loss: 694297.062500
+Epoch: [699/1000]:
+step: [100/1800]
+train loss: 6192416.144531
+ valid loss: 694331.187500
+Epoch: [700/1000]:
+step: [100/1800]
+train loss: 6192532.050781
+ valid loss: 694216.625000
+Epoch: [701/1000]:
+step: [100/1800]
+train loss: 6192464.738281
+ valid loss: 694276.437500
+Epoch: [702/1000]:
+step: [100/1800]
+train loss: 6192429.070312
+ valid loss: 694384.062500
+Epoch: [703/1000]:
+step: [100/1800]
+train loss: 6192340.441406
+ valid loss: 694316.750000
+Epoch: [704/1000]:
+step: [100/1800]
+train loss: 6192555.406250
+ valid loss: 694355.875000
+Epoch: [705/1000]:
+step: [100/1800]
+train loss: 6192516.054688
+ valid loss: 694414.875000
+Epoch: [706/1000]:
+step: [100/1800]
+train loss: 6192535.031250
+ valid loss: 694272.000000
+Epoch: [707/1000]:
+step: [100/1800]
+train loss: 6192258.593750
+ valid loss: 694310.375000
+Epoch: [708/1000]:
+step: [100/1800]
+train loss: 6192846.609375
+ valid loss: 694341.437500
+Epoch: [709/1000]:
+step: [100/1800]
+train loss: 6192681.562500
+ valid loss: 694331.250000
+Epoch: [710/1000]:
+step: [100/1800]
+train loss: 6193638.429688
+ valid loss: 694114.125000
+Epoch: [711/1000]:
+step: [100/1800]
+train loss: 6191480.082031
+ valid loss: 693962.750000
+Epoch: [712/1000]:
+step: [100/1800]
+train loss: 6190235.972656
+ valid loss: 693984.437500
+Epoch: [713/1000]:
+step: [100/1800]
+train loss: 6190104.125000
+ valid loss: 693965.875000
+Epoch: [714/1000]:
+step: [100/1800]
+train loss: 6190241.011719
+ valid loss: 693966.375000
+Epoch: [715/1000]:
+step: [100/1800]
+train loss: 6190306.664062
+ valid loss: 693951.187500
+Epoch: [716/1000]:
+step: [100/1800]
+train loss: 6190322.101562
+ valid loss: 693898.812500
+Epoch: [717/1000]:
+step: [100/1800]
+train loss: 6189877.347656
+ valid loss: 693947.875000
+Epoch: [718/1000]:
+step: [100/1800]
+train loss: 6189998.070312
+ valid loss: 693956.062500
+Epoch: [719/1000]:
+step: [100/1800]
+train loss: 6189692.136719
+ valid loss: 693889.687500
+Epoch: [720/1000]:
+step: [100/1800]
+train loss: 6190135.074219
+ valid loss: 693974.875000
+Epoch: [721/1000]:
+step: [100/1800]
+train loss: 6189454.433594
+ valid loss: 693933.500000
+Epoch: [722/1000]:
+step: [100/1800]
+train loss: 6189715.078125
+ valid loss: 693931.750000
+Epoch: [723/1000]:
+step: [100/1800]
+train loss: 6190130.019531
+ valid loss: 693985.500000
+Epoch: [724/1000]:
+step: [100/1800]
+train loss: 6191007.339844
+ valid loss: 693929.937500
+Epoch: [725/1000]:
+step: [100/1800]
+train loss: 6190325.718750
+ valid loss: 693892.375000
+Epoch: [726/1000]:
+step: [100/1800]
+train loss: 6190776.160156
+ valid loss: 693900.187500
+Epoch: [727/1000]:
+step: [100/1800]
+train loss: 6190472.054688
+ valid loss: 693913.812500
+Epoch: [728/1000]:
+step: [100/1800]
+train loss: 6190625.421875
+ valid loss: 694031.375000
+Epoch: [729/1000]:
+step: [100/1800]
+train loss: 6190420.292969
+ valid loss: 693915.250000
+Epoch: [730/1000]:
+step: [100/1800]
+train loss: 6190355.769531
+ valid loss: 694027.937500
+Epoch: [731/1000]:
+step: [100/1800]
+train loss: 6190409.285156
+ valid loss: 693928.312500
+Epoch: [732/1000]:
+step: [100/1800]
+train loss: 6189824.289062
+ valid loss: 693918.500000
+Epoch: [733/1000]:
+step: [100/1800]
+train loss: 6190822.156250
+ valid loss: 694023.250000
+Epoch: [734/1000]:
+step: [100/1800]
+train loss: 6191946.820312
+ valid loss: 694025.875000
+Epoch: [735/1000]:
+step: [100/1800]
+train loss: 6190761.453125
+ valid loss: 693993.187500
+Epoch: [736/1000]:
+step: [100/1800]
+train loss: 6190325.191406
+ valid loss: 693955.312500
+Epoch: [737/1000]:
+step: [100/1800]
+train loss: 6190161.320312
+ valid loss: 694014.250000
+Epoch: [738/1000]:
+step: [100/1800]
+train loss: 6189832.062500
+ valid loss: 693913.062500
+Epoch: [739/1000]:
+step: [100/1800]
+train loss: 6190133.750000
+ valid loss: 694003.437500
+Epoch: [740/1000]:
+step: [100/1800]
+train loss: 6190574.761719
+ valid loss: 693977.937500
+Epoch: [741/1000]:
+step: [100/1800]
+train loss: 6190704.523438
+ valid loss: 693932.562500
+Epoch: [742/1000]:
+step: [100/1800]
+train loss: 6190825.457031
+ valid loss: 693966.625000
+Epoch: [743/1000]:
+step: [100/1800]
+train loss: 6191424.902344
+ valid loss: 694027.500000
+Epoch: [744/1000]:
+step: [100/1800]
+train loss: 6191340.136719
+ valid loss: 693986.937500
+Epoch: [745/1000]:
+step: [100/1800]
+train loss: 6192204.355469
+ valid loss: 693903.812500
+Epoch: [746/1000]:
+step: [100/1800]
+train loss: 6191253.925781
+ valid loss: 693956.750000
+Epoch: [747/1000]:
+step: [100/1800]
+train loss: 6190677.242188
+ valid loss: 693965.437500
+Epoch: [748/1000]:
+step: [100/1800]
+train loss: 6190335.222656
+ valid loss: 693943.187500
+Epoch: [749/1000]:
+step: [100/1800]
+train loss: 6190371.531250
+ valid loss: 693891.000000
+Epoch: [750/1000]:
+step: [100/1800]
+train loss: 6190195.101562
+ valid loss: 693966.687500
+Epoch: [751/1000]:
+step: [100/1800]
+train loss: 6190223.832031
+ valid loss: 693846.812500
+Epoch: [752/1000]:
+step: [100/1800]
+train loss: 6190097.839844
+ valid loss: 693885.250000
+Epoch: [753/1000]:
+step: [100/1800]
+train loss: 6190085.070312
+ valid loss: 693912.125000
+Epoch: [754/1000]:
+step: [100/1800]
+train loss: 6189911.816406
+ valid loss: 693882.187500
+Epoch: [755/1000]:
+step: [100/1800]
+train loss: 6190236.085938
+ valid loss: 693910.312500
+Epoch: [756/1000]:
+step: [100/1800]
+train loss: 6190262.351562
+ valid loss: 693956.937500
+Epoch: [757/1000]:
+step: [100/1800]
+train loss: 6189982.246094
+ valid loss: 693877.375000
+Epoch: [758/1000]:
+step: [100/1800]
+train loss: 6189490.386719
+ valid loss: 693854.937500
+Epoch: [759/1000]:
+step: [100/1800]
+train loss: 6189922.992188
+ valid loss: 694017.250000
+Epoch: [760/1000]:
+step: [100/1800]
+train loss: 6189930.097656
+ valid loss: 693984.250000
+Epoch: [761/1000]:
+step: [100/1800]
+train loss: 6189585.097656
+ valid loss: 693939.375000
+Epoch: [762/1000]:
+step: [100/1800]
+train loss: 6189733.687500
+ valid loss: 693843.812500
+Epoch: [763/1000]:
+step: [100/1800]
+train loss: 6188706.773438
+ valid loss: 693604.125000
+Epoch: [764/1000]:
+step: [100/1800]
+train loss: 6187100.941406
+ valid loss: 693597.687500
+Epoch: [765/1000]:
+step: [100/1800]
+train loss: 6187437.511719
+ valid loss: 693563.750000
+Epoch: [766/1000]:
+step: [100/1800]
+train loss: 6187618.296875
+ valid loss: 693630.312500
+Epoch: [767/1000]:
+step: [100/1800]
+train loss: 6187558.457031
+ valid loss: 693619.000000
+Epoch: [768/1000]:
+step: [100/1800]
+train loss: 6187061.378906
+ valid loss: 693482.750000
+Epoch: [769/1000]:
+step: [100/1800]
+train loss: 6187071.050781
+ valid loss: 693600.187500
+Epoch: [770/1000]:
+step: [100/1800]
+train loss: 6186797.546875
+ valid loss: 693572.750000
+Epoch: [771/1000]:
+step: [100/1800]
+train loss: 6186982.652344
+ valid loss: 693595.125000
+Epoch: [772/1000]:
+step: [100/1800]
+train loss: 6187219.863281
+ valid loss: 693618.875000
+Epoch: [773/1000]:
+step: [100/1800]
+train loss: 6189008.804688
+ valid loss: 693561.312500
+Epoch: [774/1000]:
+step: [100/1800]
+train loss: 6189990.597656
+ valid loss: 693746.625000
+Epoch: [775/1000]:
+step: [100/1800]
+train loss: 6189034.261719
+ valid loss: 693631.812500
+Epoch: [776/1000]:
+step: [100/1800]
+train loss: 6188124.613281
+ valid loss: 693660.375000
+Epoch: [777/1000]:
+step: [100/1800]
+train loss: 6187929.347656
+ valid loss: 693596.250000
+Epoch: [778/1000]:
+step: [100/1800]
+train loss: 6187405.605469
+ valid loss: 693459.437500
+Epoch: [779/1000]:
+step: [100/1800]
+train loss: 6187160.828125
+ valid loss: 693511.250000
+Epoch: [780/1000]:
+step: [100/1800]
+train loss: 6187193.289062
+ valid loss: 693449.437500
+Epoch: [781/1000]:
+step: [100/1800]
+train loss: 6187361.164062
+ valid loss: 693555.437500
+Epoch: [782/1000]:
+step: [100/1800]
+train loss: 6187540.523438
+ valid loss: 693599.062500
+Epoch: [783/1000]:
+step: [100/1800]
+train loss: 6187239.675781
+ valid loss: 693606.812500
+Epoch: [784/1000]:
+step: [100/1800]
+train loss: 6187423.316406
+ valid loss: 693529.937500
+Epoch: [785/1000]:
+step: [100/1800]
+train loss: 6187215.808594
+ valid loss: 693568.187500
+Epoch: [786/1000]:
+step: [100/1800]
+train loss: 6186900.722656
+ valid loss: 693611.750000
+Epoch: [787/1000]:
+step: [100/1800]
+train loss: 6186626.273438
+ valid loss: 693515.875000
+Epoch: [788/1000]:
+step: [100/1800]
+train loss: 6186594.171875
+ valid loss: 693574.375000
+Epoch: [789/1000]:
+step: [100/1800]
+train loss: 6186520.097656
+ valid loss: 693496.125000
+Epoch: [790/1000]:
+step: [100/1800]
+train loss: 6186603.621094
+ valid loss: 693538.187500
+Epoch: [791/1000]:
+step: [100/1800]
+train loss: 6187015.214844
+ valid loss: 693562.187500
+Epoch: [792/1000]:
+step: [100/1800]
+train loss: 6186740.628906
+ valid loss: 693622.250000
+Epoch: [793/1000]:
+step: [100/1800]
+train loss: 6187039.871094
+ valid loss: 693615.875000
+Epoch: [794/1000]:
+step: [100/1800]
+train loss: 6187158.832031
+ valid loss: 693699.000000
+Epoch: [795/1000]:
+step: [100/1800]
+train loss: 6187246.621094
+ valid loss: 693652.562500
+Epoch: [796/1000]:
+step: [100/1800]
+train loss: 6187268.453125
+ valid loss: 693612.000000
+Epoch: [797/1000]:
+step: [100/1800]
+train loss: 6187718.609375
+ valid loss: 693642.375000
+Epoch: [798/1000]:
+step: [100/1800]
+train loss: 6187843.500000
+ valid loss: 693646.500000
+Epoch: [799/1000]:
+step: [100/1800]
+train loss: 6187662.628906
+ valid loss: 693608.187500
+Epoch: [800/1000]:
+step: [100/1800]
+train loss: 6189533.316406
+ valid loss: 693625.375000
+Epoch: [801/1000]:
+step: [100/1800]
+train loss: 6187820.261719
+ valid loss: 693671.000000
+Epoch: [802/1000]:
+step: [100/1800]
+train loss: 6187383.191406
+ valid loss: 693654.062500
+Epoch: [803/1000]:
+step: [100/1800]
+train loss: 6188229.789062
+ valid loss: 693601.500000
+Epoch: [804/1000]:
+step: [100/1800]
+train loss: 6187464.414062
+ valid loss: 693701.312500
+Epoch: [805/1000]:
+step: [100/1800]
+train loss: 6187268.125000
+ valid loss: 693597.625000
+Epoch: [806/1000]:
+step: [100/1800]
+train loss: 6188291.835938
+ valid loss: 693666.500000
+Epoch: [807/1000]:
+step: [100/1800]
+train loss: 6188069.375000
+ valid loss: 693591.437500
+Epoch: [808/1000]:
+step: [100/1800]
+train loss: 6189748.585938
+ valid loss: 693940.250000
+Epoch: [809/1000]:
+step: [100/1800]
+train loss: 6192728.093750
+ valid loss: 694099.375000
+Epoch: [810/1000]:
+step: [100/1800]
+train loss: 6192046.253906
+ valid loss: 694234.937500
+Epoch: [811/1000]:
+step: [100/1800]
+train loss: 6192630.835938
+ valid loss: 693940.375000
+Epoch: [812/1000]:
+step: [100/1800]
+train loss: 6190548.765625
+ valid loss: 693809.437500
+Epoch: [813/1000]:
+step: [100/1800]
+train loss: 6191113.640625
+ valid loss: 693671.812500
+Epoch: [814/1000]:
+step: [100/1800]
+train loss: 6189654.132812
+ valid loss: 693759.750000
+Epoch: [815/1000]:
+step: [100/1800]
+train loss: 6188739.593750
+ valid loss: 693858.375000
+Epoch: [816/1000]:
+step: [100/1800]
+train loss: 6189273.425781
+ valid loss: 693731.937500
+Epoch: [817/1000]:
+step: [100/1800]
+train loss: 6188334.906250
+ valid loss: 693656.750000
+Epoch: [818/1000]:
+step: [100/1800]
+train loss: 6187828.265625
+ valid loss: 693656.250000
+Epoch: [819/1000]:
+step: [100/1800]
+train loss: 6187288.316406
+ valid loss: 693552.562500
+Epoch: [820/1000]:
+step: [100/1800]
+train loss: 6187051.355469
+ valid loss: 693586.875000
+Epoch: [821/1000]:
+step: [100/1800]
+train loss: 6188008.195312
+ valid loss: 693515.125000
+Epoch: [822/1000]:
+step: [100/1800]
+train loss: 6187748.492188
+ valid loss: 693533.562500
+Epoch: [823/1000]:
+step: [100/1800]
+train loss: 6187689.082031
+ valid loss: 693588.562500
+Epoch: [824/1000]:
+step: [100/1800]
+train loss: 6188547.617188
+ valid loss: 693792.500000
+Epoch: [825/1000]:
+step: [100/1800]
+train loss: 6189172.769531
+ valid loss: 693731.062500
+Epoch: [826/1000]:
+step: [100/1800]
+train loss: 6192515.894531
+ valid loss: 694067.625000
+Epoch: [827/1000]:
+step: [100/1800]
+train loss: 6190940.816406
+ valid loss: 693670.187500
+Epoch: [828/1000]:
+step: [100/1800]
+train loss: 6188643.203125
+ valid loss: 693646.375000
+Epoch: [829/1000]:
+step: [100/1800]
+train loss: 6187856.316406
+ valid loss: 693599.437500
+Epoch: [830/1000]:
+step: [100/1800]
+train loss: 6187443.316406
+ valid loss: 693754.062500
+Epoch: [831/1000]:
+step: [100/1800]
+train loss: 6188293.582031
+ valid loss: 693699.625000
+Epoch: [832/1000]:
+step: [100/1800]
+train loss: 6187399.386719
+ valid loss: 693632.187500
+Epoch: [833/1000]:
+step: [100/1800]
+train loss: 6187253.203125
+ valid loss: 693578.187500
+Epoch: [834/1000]:
+step: [100/1800]
+train loss: 6187179.929688
+ valid loss: 693605.687500
+Epoch: [835/1000]:
+step: [100/1800]
+train loss: 6188495.402344
+ valid loss: 693817.062500
+Epoch: [836/1000]:
+step: [100/1800]
+train loss: 6189046.101562
+ valid loss: 693714.062500
+Epoch: [837/1000]:
+step: [100/1800]
+train loss: 6189369.902344
+ valid loss: 693741.000000
+Epoch: [838/1000]:
+step: [100/1800]
+train loss: 6188082.046875
+ valid loss: 693541.312500
+Epoch: [839/1000]:
+step: [100/1800]
+train loss: 6188910.628906
+ valid loss: 693782.375000
+Epoch: [840/1000]:
+step: [100/1800]
+train loss: 6189046.511719
+ valid loss: 693651.500000
+Epoch: [841/1000]:
+step: [100/1800]
+train loss: 6189876.359375
+ valid loss: 693936.687500
+Epoch: [842/1000]:
+step: [100/1800]
+train loss: 6189684.964844
+ valid loss: 693718.562500
+Epoch: [843/1000]:
+step: [100/1800]
+train loss: 6191063.265625
+ valid loss: 694105.750000
+Epoch: [844/1000]:
+step: [100/1800]
+train loss: 6190795.089844
+ valid loss: 693690.687500
+Epoch: [845/1000]:
+step: [100/1800]
+train loss: 6190005.582031
+ valid loss: 693702.812500
+Epoch: [846/1000]:
+step: [100/1800]
+train loss: 6189382.082031
+ valid loss: 693741.187500
+Epoch: [847/1000]:
+step: [100/1800]
+train loss: 6190849.800781
+ valid loss: 694135.750000
+Epoch: [848/1000]:
+step: [100/1800]
+train loss: 6191369.496094
+ valid loss: 693927.312500
+Epoch: [849/1000]:
+step: [100/1800]
+train loss: 6189824.273438
+ valid loss: 693747.687500
+Epoch: [850/1000]:
+step: [100/1800]
+train loss: 6189509.781250
+ valid loss: 693668.000000
+Epoch: [851/1000]:
+step: [100/1800]
+train loss: 6188427.746094
+ valid loss: 693749.312500
+Epoch: [852/1000]:
+step: [100/1800]
+train loss: 6189824.992188
+ valid loss: 693734.125000
+Epoch: [853/1000]:
+step: [100/1800]
+train loss: 6187942.968750
+ valid loss: 693619.562500
+Epoch: [854/1000]:
+step: [100/1800]
+train loss: 6188883.628906
+ valid loss: 693655.875000
+Epoch: [855/1000]:
+step: [100/1800]
+train loss: 6188862.546875
+ valid loss: 693673.125000
+Epoch: [856/1000]:
+step: [100/1800]
+train loss: 6188630.015625
+ valid loss: 693675.687500
+Epoch: [857/1000]:
+step: [100/1800]
+train loss: 6188129.773438
+ valid loss: 693576.937500
+Epoch: [858/1000]:
+step: [100/1800]
+train loss: 6188401.085938
+ valid loss: 693689.812500
+Epoch: [859/1000]:
+step: [100/1800]
+train loss: 6188455.968750
+ valid loss: 693565.437500
+Epoch: [860/1000]:
+step: [100/1800]
+train loss: 6188284.039062
+ valid loss: 693652.812500
+Epoch: [861/1000]:
+step: [100/1800]
+train loss: 6188303.417969
+ valid loss: 693604.062500
+Epoch: [862/1000]:
+step: [100/1800]
+train loss: 6187752.812500
+ valid loss: 693582.000000
+Epoch: [863/1000]:
+step: [100/1800]
+train loss: 6187565.835938
+ valid loss: 693554.125000
+Epoch: [864/1000]:
+step: [100/1800]
+train loss: 6187977.820312
+ valid loss: 693629.875000
+Epoch: [865/1000]:
+step: [100/1800]
+train loss: 6188164.304688
+ valid loss: 693589.687500
+Epoch: [866/1000]:
+step: [100/1800]
+train loss: 6187783.167969
+ valid loss: 693608.312500
+Epoch: [867/1000]:
+step: [100/1800]
+train loss: 6188053.882812
+ valid loss: 693623.750000
+Epoch: [868/1000]:
+step: [100/1800]
+train loss: 6188713.816406
+ valid loss: 693553.062500
+Epoch: [869/1000]:
+step: [100/1800]
+train loss: 6188944.246094
+ valid loss: 693633.937500
+Epoch: [870/1000]:
+step: [100/1800]
+train loss: 6192617.957031
+ valid loss: 693982.312500
+Epoch: [871/1000]:
+step: [100/1800]
+train loss: 6193264.457031
+ valid loss: 693917.250000
+Epoch: [872/1000]:
+step: [100/1800]
+train loss: 6191079.117188
+ valid loss: 693789.375000
+Epoch: [873/1000]:
+step: [100/1800]
+train loss: 6189501.851562
+ valid loss: 693622.562500
+Epoch: [874/1000]:
+step: [100/1800]
+train loss: 6188716.332031
+ valid loss: 693596.187500
+Epoch: [875/1000]:
+step: [100/1800]
+train loss: 6188461.734375
+ valid loss: 693613.812500
+Epoch: [876/1000]:
+step: [100/1800]
+train loss: 6188247.562500
+ valid loss: 693616.187500
+Epoch: [877/1000]:
+step: [100/1800]
+train loss: 6188502.929688
+ valid loss: 693595.437500
+Epoch: [878/1000]:
+step: [100/1800]
+train loss: 6187893.089844
+ valid loss: 693599.937500
+Epoch: [879/1000]:
+step: [100/1800]
+train loss: 6187724.519531
+ valid loss: 693658.812500
+Epoch: [880/1000]:
+step: [100/1800]
+train loss: 6188305.824219
+ valid loss: 693628.062500
+Epoch: [881/1000]:
+step: [100/1800]
+train loss: 6188109.113281
+ valid loss: 693651.687500
+Epoch: [882/1000]:
+step: [100/1800]
+train loss: 6188783.589844
+ valid loss: 693657.375000
+Epoch: [883/1000]:
+step: [100/1800]
+train loss: 6187550.375000
+ valid loss: 693574.937500
+Epoch: [884/1000]:
+step: [100/1800]
+train loss: 6187534.707031
+ valid loss: 693577.500000
+Epoch: [885/1000]:
+step: [100/1800]
+train loss: 6188010.179688
+ valid loss: 693517.000000
+Epoch: [886/1000]:
+step: [100/1800]
+train loss: 6187935.996094
+ valid loss: 693540.812500
+Epoch: [887/1000]:
+step: [100/1800]
+train loss: 6187929.550781
+ valid loss: 693546.875000
+Epoch: [888/1000]:
+step: [100/1800]
+train loss: 6188044.636719
+ valid loss: 693585.500000
+Epoch: [889/1000]:
+step: [100/1800]
+train loss: 6189972.660156
+ valid loss: 694010.375000
+Epoch: [890/1000]:
+step: [100/1800]
+train loss: 6192294.742188
+ valid loss: 693704.375000
+Epoch: [891/1000]:
+step: [100/1800]
+train loss: 6191211.765625
+ valid loss: 693920.375000
+Epoch: [892/1000]:
+step: [100/1800]
+train loss: 6191867.226562
+ valid loss: 694165.875000
+Epoch: [893/1000]:
+step: [100/1800]
+train loss: 6192560.937500
+ valid loss: 693868.312500
+Epoch: [894/1000]:
+step: [100/1800]
+train loss: 6191636.238281
+ valid loss: 693783.062500
+Epoch: [895/1000]:
+step: [100/1800]
+train loss: 6190697.484375
+ valid loss: 693646.750000
+Epoch: [896/1000]:
+step: [100/1800]
+train loss: 6189744.664062
+ valid loss: 693698.562500
+Epoch: [897/1000]:
+step: [100/1800]
+train loss: 6189595.777344
+ valid loss: 693634.000000
+Epoch: [898/1000]:
+step: [100/1800]
+train loss: 6188831.093750
+ valid loss: 693532.562500
+Epoch: [899/1000]:
+step: [100/1800]
+train loss: 6189917.855469
+ valid loss: 693726.500000
+Epoch: [900/1000]:
+step: [100/1800]
+train loss: 6189969.093750
+ valid loss: 693605.125000
+Epoch: [901/1000]:
+step: [100/1800]
+train loss: 6188590.566406
+ valid loss: 693631.875000
+Epoch: [902/1000]:
+step: [100/1800]
+train loss: 6188613.601562
+ valid loss: 693655.250000
+Epoch: [903/1000]:
+step: [100/1800]
+train loss: 6188503.765625
+ valid loss: 693591.187500
+Epoch: [904/1000]:
+step: [100/1800]
+train loss: 6188209.261719
+ valid loss: 693588.937500
+Epoch: [905/1000]:
+step: [100/1800]
+train loss: 6188899.980469
+ valid loss: 693570.187500
+Epoch: [906/1000]:
+step: [100/1800]
+train loss: 6188825.593750
+ valid loss: 693554.437500
+Epoch: [907/1000]:
+step: [100/1800]
+train loss: 6188376.410156
+ valid loss: 693522.687500
+Epoch: [908/1000]:
+step: [100/1800]
+train loss: 6188240.105469
+ valid loss: 693463.437500
+Epoch: [909/1000]:
+step: [100/1800]
+train loss: 6187907.414062
+ valid loss: 693497.625000
+Epoch: [910/1000]:
+step: [100/1800]
+train loss: 6188038.355469
+ valid loss: 693568.062500
+Epoch: [911/1000]:
+step: [100/1800]
+train loss: 6189365.539062
+ valid loss: 693618.812500
+Epoch: [912/1000]:
+step: [100/1800]
+train loss: 6188981.558594
+ valid loss: 693677.687500
+Epoch: [913/1000]:
+step: [100/1800]
+train loss: 6190109.605469
+ valid loss: 693832.937500
+Epoch: [914/1000]:
+step: [100/1800]
+train loss: 6189546.238281
+ valid loss: 693629.937500
+Epoch: [915/1000]:
+step: [100/1800]
+train loss: 6189275.843750
+ valid loss: 693626.312500
+Epoch: [916/1000]:
+step: [100/1800]
+train loss: 6188645.566406
+ valid loss: 693457.750000
+Epoch: [917/1000]:
+step: [100/1800]
+train loss: 6189236.582031
+ valid loss: 693744.500000
+Epoch: [918/1000]:
+step: [100/1800]
+train loss: 6190092.503906
+ valid loss: 693670.812500
+Epoch: [919/1000]:
+step: [100/1800]
+train loss: 6189363.238281
+ valid loss: 693735.187500
+Epoch: [920/1000]:
+step: [100/1800]
+train loss: 6189171.601562
+ valid loss: 693708.937500
+Epoch: [921/1000]:
+step: [100/1800]
+train loss: 6188821.960938
+ valid loss: 693544.000000
+Epoch: [922/1000]:
+step: [100/1800]
+train loss: 6188443.156250
+ valid loss: 693618.250000
+Epoch: [923/1000]:
+step: [100/1800]
+train loss: 6188191.910156
+ valid loss: 693532.687500
+Epoch: [924/1000]:
+step: [100/1800]
+train loss: 6188077.730469
+ valid loss: 693621.687500
+Epoch: [925/1000]:
+step: [100/1800]
+train loss: 6188004.933594
+ valid loss: 693546.562500
+Epoch: [926/1000]:
+step: [100/1800]
+train loss: 6188744.242188
+ valid loss: 693676.187500
+Epoch: [927/1000]:
+step: [100/1800]
+train loss: 6190124.167969
+ valid loss: 693661.312500
+Epoch: [928/1000]:
+step: [100/1800]
+train loss: 6189135.917969
+ valid loss: 693681.875000
+Epoch: [929/1000]:
+step: [100/1800]
+train loss: 6188678.738281
+ valid loss: 693625.625000
+Epoch: [930/1000]:
+step: [100/1800]
+train loss: 6188889.347656
+ valid loss: 693580.687500
+Epoch: [931/1000]:
+step: [100/1800]
+train loss: 6189503.910156
+ valid loss: 693579.812500
+Epoch: [932/1000]:
+step: [100/1800]
+train loss: 6189592.457031
+ valid loss: 693606.875000
+Epoch: [933/1000]:
+step: [100/1800]
+train loss: 6189565.578125
+ valid loss: 693563.187500
+Epoch: [934/1000]:
+step: [100/1800]
+train loss: 6189300.238281
+ valid loss: 693578.125000
+Epoch: [935/1000]:
+step: [100/1800]
+train loss: 6189881.515625
+ valid loss: 693543.875000
+Epoch: [936/1000]:
+step: [100/1800]
+train loss: 6189433.953125
+ valid loss: 693661.875000
+Epoch: [937/1000]:
+step: [100/1800]
+train loss: 6189436.539062
+ valid loss: 693560.750000
+Epoch: [938/1000]:
+step: [100/1800]
+train loss: 6189027.679688
+ valid loss: 693615.562500
+Epoch: [939/1000]:
+step: [100/1800]
+train loss: 6189637.949219
+ valid loss: 693817.687500
+Epoch: [940/1000]:
+step: [100/1800]
+train loss: 6191700.441406
+ valid loss: 693870.312500
+Epoch: [941/1000]:
+step: [100/1800]
+train loss: 6190567.812500
+ valid loss: 693628.187500
+Epoch: [942/1000]:
+step: [100/1800]
+train loss: 6189976.847656
+ valid loss: 693667.937500
+Epoch: [943/1000]:
+step: [100/1800]
+train loss: 6189942.718750
+ valid loss: 693589.125000
+Epoch: [944/1000]:
+step: [100/1800]
+train loss: 6189341.601562
+ valid loss: 693637.625000
+Epoch: [945/1000]:
+step: [100/1800]
+train loss: 6190062.871094
+ valid loss: 693654.062500
+Epoch: [946/1000]:
+step: [100/1800]
+train loss: 6190424.707031
+ valid loss: 693694.812500
+Epoch: [947/1000]:
+step: [100/1800]
+train loss: 6189652.183594
+ valid loss: 693741.625000
+Epoch: [948/1000]:
+step: [100/1800]
+train loss: 6189554.015625
+ valid loss: 693556.500000
+Epoch: [949/1000]:
+step: [100/1800]
+train loss: 6189248.929688
+ valid loss: 693720.875000
+Epoch: [950/1000]:
+step: [100/1800]
+train loss: 6189973.773438
+ valid loss: 693445.437500
+Epoch: [951/1000]:
+step: [100/1800]
+train loss: 6188911.085938
+ valid loss: 693517.687500
+Epoch: [952/1000]:
+step: [100/1800]
+train loss: 6189038.371094
+ valid loss: 693565.000000
+Epoch: [953/1000]:
+step: [100/1800]
+train loss: 6188694.871094
+ valid loss: 693507.937500
+Epoch: [954/1000]:
+step: [100/1800]
+train loss: 6189919.832031
+ valid loss: 693783.375000
+Epoch: [955/1000]:
+step: [100/1800]
+train loss: 6190137.160156
+ valid loss: 693570.812500
+Epoch: [956/1000]:
+step: [100/1800]
+train loss: 6190200.699219
+ valid loss: 693712.937500
+Epoch: [957/1000]:
+step: [100/1800]
+train loss: 6189296.363281
+ valid loss: 693538.750000
+Epoch: [958/1000]:
+step: [100/1800]
+train loss: 6188688.562500
+ valid loss: 693214.750000
+Epoch: [959/1000]:
+step: [100/1800]
+train loss: 6185930.578125
+ valid loss: 693217.375000
+Epoch: [960/1000]:
+step: [100/1800]
+train loss: 6185928.667969
+ valid loss: 693132.437500
+Epoch: [961/1000]:
+step: [100/1800]
+train loss: 6186258.800781
+ valid loss: 693208.937500
+Epoch: [962/1000]:
+step: [100/1800]
+train loss: 6185439.375000
+ valid loss: 693140.375000
+Epoch: [963/1000]:
+step: [100/1800]
+train loss: 6185041.109375
+ valid loss: 693114.312500
+Epoch: [964/1000]:
+step: [100/1800]
+train loss: 6187295.960938
+ valid loss: 693226.312500
+Epoch: [965/1000]:
+step: [100/1800]
+train loss: 6186434.800781
+ valid loss: 693128.000000
+Epoch: [966/1000]:
+step: [100/1800]
+train loss: 6185427.535156
+ valid loss: 693157.375000
+Epoch: [967/1000]:
+step: [100/1800]
+train loss: 6185264.328125
+ valid loss: 693171.125000
+Epoch: [968/1000]:
+step: [100/1800]
+train loss: 6185592.164062
+ valid loss: 693115.562500
+Epoch: [969/1000]:
+step: [100/1800]
+train loss: 6185312.281250
+ valid loss: 693130.312500
+Epoch: [970/1000]:
+step: [100/1800]
+train loss: 6187157.984375
+ valid loss: 693400.750000
+Epoch: [971/1000]:
+step: [100/1800]
+train loss: 6187743.875000
+ valid loss: 693387.375000
+Epoch: [972/1000]:
+step: [100/1800]
+train loss: 6186011.683594
+ valid loss: 693110.875000
+Epoch: [973/1000]:
+step: [100/1800]
+train loss: 6185365.148438
+ valid loss: 693175.937500
+Epoch: [974/1000]:
+step: [100/1800]
+train loss: 6185286.175781
+ valid loss: 693260.375000
+Epoch: [975/1000]:
+step: [100/1800]
+train loss: 6185547.636719
+ valid loss: 693232.937500
+Epoch: [976/1000]:
+step: [100/1800]
+train loss: 6185256.941406
+ valid loss: 693132.750000
+Epoch: [977/1000]:
+step: [100/1800]
+train loss: 6185056.441406
+ valid loss: 693148.312500
+Epoch: [978/1000]:
+step: [100/1800]
+train loss: 6185130.808594
+ valid loss: 692990.250000
+Epoch: [979/1000]:
+step: [100/1800]
+train loss: 6185157.414062
+ valid loss: 693075.437500
+Epoch: [980/1000]:
+step: [100/1800]
+train loss: 6186040.968750
+ valid loss: 693067.875000
+Epoch: [981/1000]:
+step: [100/1800]
+train loss: 6185687.902344
+ valid loss: 693054.375000
+Epoch: [982/1000]:
+step: [100/1800]
+train loss: 6185088.726562
+ valid loss: 693066.812500
+Epoch: [983/1000]:
+step: [100/1800]
+train loss: 6185534.832031
+ valid loss: 693124.750000
+Epoch: [984/1000]:
+step: [100/1800]
+train loss: 6185515.261719
+ valid loss: 693103.437500
+Epoch: [985/1000]:
+step: [100/1800]
+train loss: 6185590.500000
+ valid loss: 693173.937500
+Epoch: [986/1000]:
+step: [100/1800]
+train loss: 6185770.074219
+ valid loss: 693175.125000
+Epoch: [987/1000]:
+step: [100/1800]
+train loss: 6185558.828125
+ valid loss: 693171.750000
+Epoch: [988/1000]:
+step: [100/1800]
+train loss: 6185389.613281
+ valid loss: 693093.937500
+Epoch: [989/1000]:
+step: [100/1800]
+train loss: 6184819.578125
+ valid loss: 693115.750000
+Epoch: [990/1000]:
+step: [100/1800]
+train loss: 6185227.820312
+ valid loss: 693150.750000
+Epoch: [991/1000]:
+step: [100/1800]
+train loss: 6185373.359375
+ valid loss: 693102.125000
+Epoch: [992/1000]:
+step: [100/1800]
+train loss: 6185924.492188
+ valid loss: 693171.437500
+Epoch: [993/1000]:
+step: [100/1800]
+train loss: 6187278.023438
+ valid loss: 693223.750000
+Epoch: [994/1000]:
+step: [100/1800]
+train loss: 6186780.488281
+ valid loss: 693135.750000
+Epoch: [995/1000]:
+step: [100/1800]
+train loss: 6186193.992188
+ valid loss: 693150.437500
+Epoch: [996/1000]:
+step: [100/1800]
+train loss: 6186867.804688
+ valid loss: 693031.125000
+Epoch: [997/1000]:
+step: [100/1800]
+train loss: 6185589.128906
+ valid loss: 693148.750000
+Epoch: [998/1000]:
+step: [100/1800]
+train loss: 6185754.585938
+ valid loss: 693091.750000
+Epoch: [999/1000]:
+step: [100/1800]
+train loss: 6186185.515625
+ valid loss: 693048.812500
+Epoch: [1000/1000]:
+step: [100/1800]
+train loss: 6185650.921875
+ valid loss: 693091.000000
+[I 2021-07-18 06:21:38,328] Trial 42 finished with value: 6184819.578125 and parameters: {'batch_size': 17, 'lr': 0.0019159854054473905, 'weight_decay': 2.6463321113358208e-05, 'clip_th': 0.009743145114345186, 'emb_size': 79, 'en_hidden_size': 171, 'de_hidden_size': 255, 'rep_size': 124}. Best is trial 39 with value: 6172492.720703125.
+Epoch: [1/1000]:
+step: [100/1800]
+train loss: 6988993.373047
+ valid loss: 773243.875000
+Epoch: [2/1000]:
+step: [100/1800]
+train loss: 6918192.380859
+ valid loss: 771733.312500
+Epoch: [3/1000]:
+step: [100/1800]
+train loss: 6884733.558594
+ valid loss: 765638.312500
+Epoch: [4/1000]:
+step: [100/1800]
+train loss: 6849692.515625
+ valid loss: 763501.687500
+Epoch: [5/1000]:
+step: [100/1800]
+train loss: 6829814.773438
+ valid loss: 761573.687500
+Epoch: [6/1000]:
+step: [100/1800]
+train loss: 6816430.355469
+ valid loss: 760073.937500
+Epoch: [7/1000]:
+step: [100/1800]
+train loss: 6770204.208984
+ valid loss: 748673.625000
+Epoch: [8/1000]:
+step: [100/1800]
+train loss: 6694479.009766
+ valid loss: 746146.187500
+Epoch: [9/1000]:
+step: [100/1800]
+train loss: 6680167.205078
+ valid loss: 745396.312500
+Epoch: [10/1000]:
+step: [100/1800]
+train loss: 6667662.947266
+ valid loss: 743293.062500
+Epoch: [11/1000]:
+step: [100/1800]
+train loss: 6646559.990234
+ valid loss: 741066.750000
+Epoch: [12/1000]:
+step: [100/1800]
+train loss: 6632967.259766
+ valid loss: 739792.562500
+Epoch: [13/1000]:
+step: [100/1800]
+train loss: 6626443.505859
+ valid loss: 739450.375000
+Epoch: [14/1000]:
+step: [100/1800]
+train loss: 6619859.439453
+ valid loss: 738040.750000
+Epoch: [15/1000]:
+step: [100/1800]
+train loss: 6608889.714844
+ valid loss: 737466.125000
+Epoch: [16/1000]:
+step: [100/1800]
+train loss: 6598696.382812
+ valid loss: 735435.437500
+Epoch: [17/1000]:
+step: [100/1800]
+train loss: 6586415.142578
+ valid loss: 734762.312500
+Epoch: [18/1000]:
+step: [100/1800]
+train loss: 6580603.378906
+ valid loss: 734280.125000
+Epoch: [19/1000]:
+step: [100/1800]
+train loss: 6577089.445312
+ valid loss: 733693.875000
+Epoch: [20/1000]:
+step: [100/1800]
+train loss: 6572478.406250
+ valid loss: 733503.562500
+Epoch: [21/1000]:
+step: [100/1800]
+train loss: 6569053.181641
+ valid loss: 732802.750000
+Epoch: [22/1000]:
+step: [100/1800]
+train loss: 6560027.707031
+ valid loss: 731530.562500
+Epoch: [23/1000]:
+step: [100/1800]
+train loss: 6553837.994141
+ valid loss: 731256.937500
+Epoch: [24/1000]:
+step: [100/1800]
+train loss: 6548988.615234
+ valid loss: 730495.062500
+Epoch: [25/1000]:
+step: [100/1800]
+train loss: 6543626.726562
+ valid loss: 730097.000000
+Epoch: [26/1000]:
+step: [100/1800]
+train loss: 6541081.542969
+ valid loss: 729747.375000
+Epoch: [27/1000]:
+step: [100/1800]
+train loss: 6535344.958984
+ valid loss: 728589.562500
+Epoch: [28/1000]:
+step: [100/1800]
+train loss: 6528935.210938
+ valid loss: 728457.187500
+Epoch: [29/1000]:
+step: [100/1800]
+train loss: 6526252.685547
+ valid loss: 727876.750000
+Epoch: [30/1000]:
+step: [100/1800]
+train loss: 6521916.052734
+ valid loss: 727726.062500
+Epoch: [31/1000]:
+step: [100/1800]
+train loss: 6519532.812500
+ valid loss: 727215.062500
+Epoch: [32/1000]:
+step: [100/1800]
+train loss: 6515366.023438
+ valid loss: 727005.750000
+Epoch: [33/1000]:
+step: [100/1800]
+train loss: 6513598.095703
+ valid loss: 726703.687500
+Epoch: [34/1000]:
+step: [100/1800]
+train loss: 6510627.470703
+ valid loss: 726522.250000
+Epoch: [35/1000]:
+step: [100/1800]
+train loss: 6508895.103516
+ valid loss: 726395.625000
+Epoch: [36/1000]:
+step: [100/1800]
+train loss: 6506633.250000
+ valid loss: 725988.062500
+Epoch: [37/1000]:
+step: [100/1800]
+train loss: 6502996.679688
+ valid loss: 725574.312500
+Epoch: [38/1000]:
+step: [100/1800]
+train loss: 6499978.107422
+ valid loss: 725312.312500
+Epoch: [39/1000]:
+step: [100/1800]
+train loss: 6496799.365234
+ valid loss: 724929.250000
+Epoch: [40/1000]:
+step: [100/1800]
+train loss: 6490602.001953
+ valid loss: 723676.500000
+Epoch: [41/1000]:
+step: [100/1800]
+train loss: 6481955.148438
+ valid loss: 722829.187500
+Epoch: [42/1000]:
+step: [100/1800]
+train loss: 6476926.062500
+ valid loss: 722660.562500
+Epoch: [43/1000]:
+step: [100/1800]
+train loss: 6474992.628906
+ valid loss: 722420.312500
+Epoch: [44/1000]:
+step: [100/1800]
+train loss: 6472819.976562
+ valid loss: 722203.875000
+Epoch: [45/1000]:
+step: [100/1800]
+train loss: 6470659.646484
+ valid loss: 721786.750000
+Epoch: [46/1000]:
+step: [100/1800]
+train loss: 6464526.406250
+ valid loss: 720921.437500
+Epoch: [47/1000]:
+step: [100/1800]
+train loss: 6460374.861328
+ valid loss: 720840.250000
+Epoch: [48/1000]:
+step: [100/1800]
+train loss: 6457892.101562
+ valid loss: 720569.375000
+Epoch: [49/1000]:
+step: [100/1800]
+train loss: 6453177.343750
+ valid loss: 719888.625000
+Epoch: [50/1000]:
+step: [100/1800]
+train loss: 6450381.257812
+ valid loss: 719687.312500
+Epoch: [51/1000]:
+step: [100/1800]
+train loss: 6448630.476562
+ valid loss: 719582.375000
+Epoch: [52/1000]:
+step: [100/1800]
+train loss: 6447538.724609
+ valid loss: 719467.875000
+Epoch: [53/1000]:
+step: [100/1800]
+train loss: 6446394.068359
+ valid loss: 719407.750000
+Epoch: [54/1000]:
+step: [100/1800]
+train loss: 6445047.851562
+ valid loss: 719121.375000
+Epoch: [55/1000]:
+step: [100/1800]
+train loss: 6443454.482422
+ valid loss: 718998.187500
+Epoch: [56/1000]:
+step: [100/1800]
+train loss: 6441808.455078
+ valid loss: 718830.687500
+Epoch: [57/1000]:
+step: [100/1800]
+train loss: 6439123.486328
+ valid loss: 718395.250000
+Epoch: [58/1000]:
+step: [100/1800]
+train loss: 6436743.675781
+ valid loss: 718277.687500
+Epoch: [59/1000]:
+step: [100/1800]
+train loss: 6434285.392578
+ valid loss: 717978.187500
+Epoch: [60/1000]:
+step: [100/1800]
+train loss: 6432437.691406
+ valid loss: 717730.312500
+Epoch: [61/1000]:
+step: [100/1800]
+train loss: 6430305.083984
+ valid loss: 717547.937500
+Epoch: [62/1000]:
+step: [100/1800]
+train loss: 6427233.968750
+ valid loss: 716982.437500
+Epoch: [63/1000]:
+step: [100/1800]
+train loss: 6422273.316406
+ valid loss: 716543.312500
+Epoch: [64/1000]:
+step: [100/1800]
+train loss: 6419996.683594
+ valid loss: 716386.000000
+Epoch: [65/1000]:
+step: [100/1800]
+train loss: 6416028.171875
+ valid loss: 715691.312500
+Epoch: [66/1000]:
+step: [100/1800]
+train loss: 6413071.265625
+ valid loss: 715651.187500
+Epoch: [67/1000]:
+step: [100/1800]
+train loss: 6411499.464844
+ valid loss: 715483.562500
+Epoch: [68/1000]:
+step: [100/1800]
+train loss: 6410118.498047
+ valid loss: 715280.687500
+Epoch: [69/1000]:
+step: [100/1800]
+train loss: 6405633.046875
+ valid loss: 714848.937500
+Epoch: [70/1000]:
+step: [100/1800]
+train loss: 6403274.972656
+ valid loss: 714498.312500
+Epoch: [71/1000]:
+step: [100/1800]
+train loss: 6400960.083984
+ valid loss: 714239.562500
+Epoch: [72/1000]:
+step: [100/1800]
+train loss: 6399231.460938
+ valid loss: 713989.062500
+Epoch: [73/1000]:
+step: [100/1800]
+train loss: 6396175.613281
+ valid loss: 713444.125000
+Epoch: [74/1000]:
+step: [100/1800]
+train loss: 6392430.296875
+ valid loss: 713289.500000
+Epoch: [75/1000]:
+step: [100/1800]
+train loss: 6390827.875000
+ valid loss: 713178.750000
+Epoch: [76/1000]:
+step: [100/1800]
+train loss: 6387626.615234
+ valid loss: 712757.375000
+Epoch: [77/1000]:
+step: [100/1800]
+train loss: 6385205.923828
+ valid loss: 712542.500000
+Epoch: [78/1000]:
+step: [100/1800]
+train loss: 6383493.048828
+ valid loss: 712455.562500
+Epoch: [79/1000]:
+step: [100/1800]
+train loss: 6382759.208984
+ valid loss: 712373.562500
+Epoch: [80/1000]:
+step: [100/1800]
+train loss: 6380933.753906
+ valid loss: 712073.187500
+Epoch: [81/1000]:
+step: [100/1800]
+train loss: 6378513.414062
+ valid loss: 711784.375000
+Epoch: [82/1000]:
+step: [100/1800]
+train loss: 6375697.058594
+ valid loss: 711588.437500
+Epoch: [83/1000]:
+step: [100/1800]
+train loss: 6372590.646484
+ valid loss: 711028.312500
+Epoch: [84/1000]:
+step: [100/1800]
+train loss: 6369203.201172
+ valid loss: 710836.187500
+Epoch: [85/1000]:
+step: [100/1800]
+train loss: 6365813.464844
+ valid loss: 710407.937500
+Epoch: [86/1000]:
+step: [100/1800]
+train loss: 6363307.947266
+ valid loss: 710173.687500
+Epoch: [87/1000]:
+step: [100/1800]
+train loss: 6361623.728516
+ valid loss: 710045.562500
+Epoch: [88/1000]:
+step: [100/1800]
+train loss: 6360183.162109
+ valid loss: 710038.062500
+Epoch: [89/1000]:
+step: [100/1800]
+train loss: 6359670.001953
+ valid loss: 709379.375000
+Epoch: [90/1000]:
+step: [100/1800]
+train loss: 6353335.052734
+ valid loss: 709056.687500
+Epoch: [91/1000]:
+step: [100/1800]
+train loss: 6351829.556641
+ valid loss: 709034.187500
+Epoch: [92/1000]:
+step: [100/1800]
+train loss: 6351049.943359
+ valid loss: 708974.187500
+Epoch: [93/1000]:
+step: [100/1800]
+train loss: 6350069.392578
+ valid loss: 708917.437500
+Epoch: [94/1000]:
+step: [100/1800]
+train loss: 6349393.070312
+ valid loss: 708805.812500
+Epoch: [95/1000]:
+step: [100/1800]
+train loss: 6348477.546875
+ valid loss: 708697.812500
+Epoch: [96/1000]:
+step: [100/1800]
+train loss: 6345208.251953
+ valid loss: 708091.687500
+Epoch: [97/1000]:
+step: [100/1800]
+train loss: 6341813.443359
+ valid loss: 708016.312500
+Epoch: [98/1000]:
+step: [100/1800]
+train loss: 6341174.794922
+ valid loss: 707926.250000
+Epoch: [99/1000]:
+step: [100/1800]
+train loss: 6339839.857422
+ valid loss: 707756.000000
+Epoch: [100/1000]:
+step: [100/1800]
+train loss: 6338093.492188
+ valid loss: 707569.937500
+Epoch: [101/1000]:
+step: [100/1800]
+train loss: 6335820.400391
+ valid loss: 707300.687500
+Epoch: [102/1000]:
+step: [100/1800]
+train loss: 6334283.281250
+ valid loss: 707142.125000
+Epoch: [103/1000]:
+step: [100/1800]
+train loss: 6333548.501953
+ valid loss: 707148.812500
+Epoch: [104/1000]:
+step: [100/1800]
+train loss: 6330818.707031
+ valid loss: 706699.562500
+Epoch: [105/1000]:
+step: [100/1800]
+train loss: 6327834.322266
+ valid loss: 706402.500000
+Epoch: [106/1000]:
+step: [100/1800]
+train loss: 6324766.214844
+ valid loss: 706042.562500
+Epoch: [107/1000]:
+step: [100/1800]
+train loss: 6322802.775391
+ valid loss: 705950.937500
+Epoch: [108/1000]:
+step: [100/1800]
+train loss: 6321775.351562
+ valid loss: 705956.062500
+Epoch: [109/1000]:
+step: [100/1800]
+train loss: 6321186.728516
+ valid loss: 705925.062500
+Epoch: [110/1000]:
+step: [100/1800]
+train loss: 6320607.898438
+ valid loss: 705870.687500
+Epoch: [111/1000]:
+step: [100/1800]
+train loss: 6361753.570312
+ valid loss: 705763.375000
+Epoch: [112/1000]:
+step: [100/1800]
+train loss: 6319210.804688
+ valid loss: 705556.250000
+Epoch: [113/1000]:
+step: [100/1800]
+train loss: 6318137.039062
+ valid loss: 705514.812500
+Epoch: [114/1000]:
+step: [100/1800]
+train loss: 6317196.480469
+ valid loss: 705479.687500
+Epoch: [115/1000]:
+step: [100/1800]
+train loss: 6316797.714844
+ valid loss: 705471.312500
+Epoch: [116/1000]:
+step: [100/1800]
+train loss: 6316245.808594
+ valid loss: 705456.375000
+Epoch: [117/1000]:
+step: [100/1800]
+train loss: 6314129.490234
+ valid loss: 704986.187500
+Epoch: [118/1000]:
+step: [100/1800]
+train loss: 6312029.552734
+ valid loss: 705005.312500
+Epoch: [119/1000]:
+step: [100/1800]
+train loss: 6311819.951172
+ valid loss: 704929.812500
+Epoch: [120/1000]:
+step: [100/1800]
+train loss: 6311090.500000
+ valid loss: 704867.937500
+Epoch: [121/1000]:
+step: [100/1800]
+train loss: 6310651.238281
+ valid loss: 704857.187500
+Epoch: [122/1000]:
+step: [100/1800]
+train loss: 6310333.863281
+ valid loss: 704828.250000
+Epoch: [123/1000]:
+step: [100/1800]
+train loss: 6309838.164062
+ valid loss: 704741.312500
+Epoch: [124/1000]:
+step: [100/1800]
+train loss: 6308732.732422
+ valid loss: 704495.312500
+Epoch: [125/1000]:
+step: [100/1800]
+train loss: 6307145.056641
+ valid loss: 704510.437500
+Epoch: [126/1000]:
+step: [100/1800]
+train loss: 6306734.144531
+ valid loss: 704427.437500
+Epoch: [127/1000]:
+step: [100/1800]
+train loss: 6306422.546875
+ valid loss: 704182.375000
+Epoch: [128/1000]:
+step: [100/1800]
+train loss: 6302564.390625
+ valid loss: 703995.687500
+Epoch: [129/1000]:
+step: [100/1800]
+train loss: 6302177.183594
+ valid loss: 703999.062500
+Epoch: [130/1000]:
+step: [100/1800]
+train loss: 6302059.214844
+ valid loss: 703965.687500
+Epoch: [131/1000]:
+step: [100/1800]
+train loss: 6300690.199219
+ valid loss: 703898.875000
+Epoch: [132/1000]:
+step: [100/1800]
+train loss: 6300360.105469
+ valid loss: 703776.125000
+Epoch: [133/1000]:
+step: [100/1800]
+train loss: 6300051.871094
+ valid loss: 703817.875000
+Epoch: [134/1000]:
+step: [100/1800]
+train loss: 6299835.972656
+ valid loss: 703774.500000
+Epoch: [135/1000]:
+step: [100/1800]
+train loss: 6298944.226562
+ valid loss: 703667.312500
+Epoch: [136/1000]:
+step: [100/1800]
+train loss: 6297784.093750
+ valid loss: 703682.500000
+Epoch: [137/1000]:
+step: [100/1800]
+train loss: 6297876.703125
+ valid loss: 703624.875000
+Epoch: [138/1000]:
+step: [100/1800]
+train loss: 6297510.673828
+ valid loss: 703620.187500
+Epoch: [139/1000]:
+step: [100/1800]
+train loss: 6297201.632812
+ valid loss: 703586.125000
+Epoch: [140/1000]:
+step: [100/1800]
+train loss: 6296723.994141
+ valid loss: 703545.812500
+Epoch: [141/1000]:
+step: [100/1800]
+train loss: 6296584.089844
+ valid loss: 703574.562500
+Epoch: [142/1000]:
+step: [100/1800]
+train loss: 6296884.541016
+ valid loss: 703552.187500
+Epoch: [143/1000]:
+step: [100/1800]
+train loss: 6296491.892578
+ valid loss: 703499.062500
+Epoch: [144/1000]:
+step: [100/1800]
+train loss: 6295408.078125
+ valid loss: 703443.750000
+Epoch: [145/1000]:
+step: [100/1800]
+train loss: 6294546.062500
+ valid loss: 703418.250000
+Epoch: [146/1000]:
+step: [100/1800]
+train loss: 6294250.281250
+ valid loss: 703362.750000
+Epoch: [147/1000]:
+step: [100/1800]
+train loss: 6294259.765625
+ valid loss: 703299.812500
+Epoch: [148/1000]:
+step: [100/1800]
+train loss: 6292317.728516
+ valid loss: 703034.000000
+Epoch: [149/1000]:
+step: [100/1800]
+train loss: 6288462.677734
+ valid loss: 702378.375000
+Epoch: [150/1000]:
+step: [100/1800]
+train loss: 6286033.511719
+ valid loss: 702386.312500
+Epoch: [151/1000]:
+step: [100/1800]
+train loss: 6285434.128906
+ valid loss: 702308.125000
+Epoch: [152/1000]:
+step: [100/1800]
+train loss: 6283792.310547
+ valid loss: 701987.375000
+Epoch: [153/1000]:
+step: [100/1800]
+train loss: 6281824.894531
+ valid loss: 701995.687500
+Epoch: [154/1000]:
+step: [100/1800]
+train loss: 6281390.355469
+ valid loss: 701953.312500
+Epoch: [155/1000]:
+step: [100/1800]
+train loss: 6281185.437500
+ valid loss: 701958.250000
+Epoch: [156/1000]:
+step: [100/1800]
+train loss: 6281091.224609
+ valid loss: 701965.437500
+Epoch: [157/1000]:
+step: [100/1800]
+train loss: 6280481.996094
+ valid loss: 701761.750000
+Epoch: [158/1000]:
+step: [100/1800]
+train loss: 6278548.892578
+ valid loss: 701581.375000
+Epoch: [159/1000]:
+step: [100/1800]
+train loss: 6277854.582031
+ valid loss: 701626.062500
+Epoch: [160/1000]:
+step: [100/1800]
+train loss: 6277451.517578
+ valid loss: 701577.062500
+Epoch: [161/1000]:
+step: [100/1800]
+train loss: 6277133.662109
+ valid loss: 701543.250000
+Epoch: [162/1000]:
+step: [100/1800]
+train loss: 6276878.033203
+ valid loss: 701563.062500
+Epoch: [163/1000]:
+step: [100/1800]
+train loss: 6276251.826172
+ valid loss: 701454.687500
+Epoch: [164/1000]:
+step: [100/1800]
+train loss: 6275497.765625
+ valid loss: 701439.562500
+Epoch: [165/1000]:
+step: [100/1800]
+train loss: 6275314.298828
+ valid loss: 701370.125000
+Epoch: [166/1000]:
+step: [100/1800]
+train loss: 6274863.134766
+ valid loss: 701345.250000
+Epoch: [167/1000]:
+step: [100/1800]
+train loss: 6274858.054688
+ valid loss: 701377.937500
+Epoch: [168/1000]:
+step: [100/1800]
+train loss: 6274357.783203
+ valid loss: 701355.750000
+Epoch: [169/1000]:
+step: [100/1800]
+train loss: 6274256.433594
+ valid loss: 701321.187500
+Epoch: [170/1000]:
+step: [100/1800]
+train loss: 6274355.984375
+ valid loss: 701409.812500
+Epoch: [171/1000]:
+step: [100/1800]
+train loss: 6273993.722656
+ valid loss: 701381.562500
+Epoch: [172/1000]:
+step: [100/1800]
+train loss: 6273907.888672
+ valid loss: 701367.000000
+Epoch: [173/1000]:
+step: [100/1800]
+train loss: 6273690.080078
+ valid loss: 701425.312500
+Epoch: [174/1000]:
+step: [100/1800]
+train loss: 6273414.769531
+ valid loss: 701381.000000
+Epoch: [175/1000]:
+step: [100/1800]
+train loss: 6273263.839844
+ valid loss: 701375.125000
+Epoch: [176/1000]:
+step: [100/1800]
+train loss: 6273152.003906
+ valid loss: 701334.812500
+Epoch: [177/1000]:
+step: [100/1800]
+train loss: 6273107.214844
+ valid loss: 701347.437500
+Epoch: [178/1000]:
+step: [100/1800]
+train loss: 6273047.226562
+ valid loss: 701319.187500
+Epoch: [179/1000]:
+step: [100/1800]
+train loss: 6272990.320312
+ valid loss: 701253.562500
+Epoch: [180/1000]:
+step: [100/1800]
+train loss: 6272649.808594
+ valid loss: 701305.750000
+Epoch: [181/1000]:
+step: [100/1800]
+train loss: 6272383.150391
+ valid loss: 701277.875000
+Epoch: [182/1000]:
+step: [100/1800]
+train loss: 6270052.410156
+ valid loss: 700899.562500
+Epoch: [183/1000]:
+step: [100/1800]
+train loss: 6269115.910156
+ valid loss: 700952.187500
+Epoch: [184/1000]:
+step: [100/1800]
+train loss: 6268864.361328
+ valid loss: 700944.062500
+Epoch: [185/1000]:
+step: [100/1800]
+train loss: 6268685.232422
+ valid loss: 700873.562500
+Epoch: [186/1000]:
+step: [100/1800]
+train loss: 6268350.863281
+ valid loss: 700872.812500
+Epoch: [187/1000]:
+step: [100/1800]
+train loss: 6268381.751953
+ valid loss: 700932.812500
+Epoch: [188/1000]:
+step: [100/1800]
+train loss: 6268126.402344
+ valid loss: 700876.125000
+Epoch: [189/1000]:
+step: [100/1800]
+train loss: 6268076.324219
+ valid loss: 700858.875000
+Epoch: [190/1000]:
+step: [100/1800]
+train loss: 6267884.179688
+ valid loss: 700868.437500
+Epoch: [191/1000]:
+step: [100/1800]
+train loss: 6267700.087891
+ valid loss: 700899.687500
+Epoch: [192/1000]:
+step: [100/1800]
+train loss: 6267392.779297
+ valid loss: 700815.187500
+Epoch: [193/1000]:
+step: [100/1800]
+train loss: 6267610.902344
+ valid loss: 700810.937500
+Epoch: [194/1000]:
+step: [100/1800]
+train loss: 6267587.701172
+ valid loss: 700799.812500
+Epoch: [195/1000]:
+step: [100/1800]
+train loss: 6266409.210938
+ valid loss: 700653.875000
+Epoch: [196/1000]:
+step: [100/1800]
+train loss: 6265901.347656
+ valid loss: 700648.062500
+Epoch: [197/1000]:
+step: [100/1800]
+train loss: 6265589.345703
+ valid loss: 700594.750000
+Epoch: [198/1000]:
+step: [100/1800]
+train loss: 6265753.638672
+ valid loss: 700639.187500
+Epoch: [199/1000]:
+step: [100/1800]
+train loss: 6265821.162109
+ valid loss: 700715.437500
+Epoch: [200/1000]:
+step: [100/1800]
+train loss: 6265926.953125
+ valid loss: 700627.062500
+Epoch: [201/1000]:
+step: [100/1800]
+train loss: 6265371.257812
+ valid loss: 700615.250000
+Epoch: [202/1000]:
+step: [100/1800]
+train loss: 6264882.218750
+ valid loss: 700614.437500
+Epoch: [203/1000]:
+step: [100/1800]
+train loss: 6263596.042969
+ valid loss: 700407.812500
+Epoch: [204/1000]:
+step: [100/1800]
+train loss: 6262860.257812
+ valid loss: 700446.812500
+Epoch: [205/1000]:
+step: [100/1800]
+train loss: 6262717.546875
+ valid loss: 700431.937500
+Epoch: [206/1000]:
+step: [100/1800]
+train loss: 6263147.765625
+ valid loss: 700449.625000
+Epoch: [207/1000]:
+step: [100/1800]
+train loss: 6262911.810547
+ valid loss: 700478.375000
+Epoch: [208/1000]:
+step: [100/1800]
+train loss: 6262101.781250
+ valid loss: 699952.187500
+Epoch: [209/1000]:
+step: [100/1800]
+train loss: 6259130.933594
+ valid loss: 700018.375000
+Epoch: [210/1000]:
+step: [100/1800]
+train loss: 6259457.675781
+ valid loss: 700062.312500
+Epoch: [211/1000]:
+step: [100/1800]
+train loss: 6259119.962891
+ valid loss: 700057.187500
+Epoch: [212/1000]:
+step: [100/1800]
+train loss: 6258878.687500
+ valid loss: 700058.437500
+Epoch: [213/1000]:
+step: [100/1800]
+train loss: 6258467.222656
+ valid loss: 700055.937500
+Epoch: [214/1000]:
+step: [100/1800]
+train loss: 6258697.751953
+ valid loss: 700043.687500
+Epoch: [215/1000]:
+step: [100/1800]
+train loss: 6258525.326172
+ valid loss: 700056.187500
+Epoch: [216/1000]:
+step: [100/1800]
+train loss: 6258542.275391
+ valid loss: 700012.250000
+Epoch: [217/1000]:
+step: [100/1800]
+train loss: 6258203.023438
+ valid loss: 700020.625000
+Epoch: [218/1000]:
+step: [100/1800]
+train loss: 6257995.261719
+ valid loss: 699931.937500
+Epoch: [219/1000]:
+step: [100/1800]
+train loss: 6256984.794922
+ valid loss: 699841.875000
+Epoch: [220/1000]:
+step: [100/1800]
+train loss: 6257199.179688
+ valid loss: 699884.250000
+Epoch: [221/1000]:
+step: [100/1800]
+train loss: 6257170.693359
+ valid loss: 699887.937500
+Epoch: [222/1000]:
+step: [100/1800]
+train loss: 6256799.716797
+ valid loss: 699818.187500
+Epoch: [223/1000]:
+step: [100/1800]
+train loss: 6256874.880859
+ valid loss: 699904.312500
+Epoch: [224/1000]:
+step: [100/1800]
+train loss: 6256378.236328
+ valid loss: 699828.250000
+Epoch: [225/1000]:
+step: [100/1800]
+train loss: 6256348.816406
+ valid loss: 699854.187500
+Epoch: [226/1000]:
+step: [100/1800]
+train loss: 6256291.529297
+ valid loss: 699826.937500
+Epoch: [227/1000]:
+step: [100/1800]
+train loss: 6255842.263672
+ valid loss: 699843.750000
+Epoch: [228/1000]:
+step: [100/1800]
+train loss: 6256134.839844
+ valid loss: 699862.937500
+Epoch: [229/1000]:
+step: [100/1800]
+train loss: 6256102.080078
+ valid loss: 699791.312500
+Epoch: [230/1000]:
+step: [100/1800]
+train loss: 6255509.425781
+ valid loss: 699869.062500
+Epoch: [231/1000]:
+step: [100/1800]
+train loss: 6255613.406250
+ valid loss: 699831.937500
+Epoch: [232/1000]:
+step: [100/1800]
+train loss: 6255445.250000
+ valid loss: 699798.312500
+Epoch: [233/1000]:
+step: [100/1800]
+train loss: 6255667.539062
+ valid loss: 699876.062500
+Epoch: [234/1000]:
+step: [100/1800]
+train loss: 6255567.728516
+ valid loss: 699811.812500
+Epoch: [235/1000]:
+step: [100/1800]
+train loss: 6255237.300781
+ valid loss: 699845.875000
+Epoch: [236/1000]:
+step: [100/1800]
+train loss: 6255079.167969
+ valid loss: 699810.000000
+Epoch: [237/1000]:
+step: [100/1800]
+train loss: 6255071.326172
+ valid loss: 699806.375000
+Epoch: [238/1000]:
+step: [100/1800]
+train loss: 6255069.419922
+ valid loss: 699782.312500
+Epoch: [239/1000]:
+step: [100/1800]
+train loss: 6254952.570312
+ valid loss: 699821.750000
+Epoch: [240/1000]:
+step: [100/1800]
+train loss: 6254421.771484
+ valid loss: 699796.812500
+Epoch: [241/1000]:
+step: [100/1800]
+train loss: 6254536.527344
+ valid loss: 699794.875000
+Epoch: [242/1000]:
+step: [100/1800]
+train loss: 6254730.505859
+ valid loss: 699785.062500
+Epoch: [243/1000]:
+step: [100/1800]
+train loss: 6254567.291016
+ valid loss: 699825.937500
+Epoch: [244/1000]:
+step: [100/1800]
+train loss: 6254187.662109
+ valid loss: 699818.437500
+Epoch: [245/1000]:
+step: [100/1800]
+train loss: 6254294.929688
+ valid loss: 699843.375000
+Epoch: [246/1000]:
+step: [100/1800]
+train loss: 6254460.763672
+ valid loss: 699856.937500
+Epoch: [247/1000]:
+step: [100/1800]
+train loss: 6254217.833984
+ valid loss: 699858.437500
+Epoch: [248/1000]:
+step: [100/1800]
+train loss: 6254019.917969
+ valid loss: 699824.500000
+Epoch: [249/1000]:
+step: [100/1800]
+train loss: 6254250.873047
+ valid loss: 699764.625000
+Epoch: [250/1000]:
+step: [100/1800]
+train loss: 6254011.900391
+ valid loss: 699822.187500
+Epoch: [251/1000]:
+step: [100/1800]
+train loss: 6254928.660156
+ valid loss: 699851.750000
+Epoch: [252/1000]:
+step: [100/1800]
+train loss: 6253973.917969
+ valid loss: 699814.562500
+Epoch: [253/1000]:
+step: [100/1800]
+train loss: 6253854.521484
+ valid loss: 699784.250000
+Epoch: [254/1000]:
+step: [100/1800]
+train loss: 6254464.943359
+ valid loss: 699814.937500
+Epoch: [255/1000]:
+step: [100/1800]
+train loss: 6253493.103516
+ valid loss: 699874.750000
+Epoch: [256/1000]:
+step: [100/1800]
+train loss: 6254037.054688
+ valid loss: 699833.062500
+Epoch: [257/1000]:
+step: [100/1800]
+train loss: 6253598.044922
+ valid loss: 699799.562500
+Epoch: [258/1000]:
+step: [100/1800]
+train loss: 6253387.033203
+ valid loss: 699740.062500
+Epoch: [259/1000]:
+step: [100/1800]
+train loss: 6253538.447266
+ valid loss: 699782.875000
+Epoch: [260/1000]:
+step: [100/1800]
+train loss: 6253434.884766
+ valid loss: 699766.500000
+Epoch: [261/1000]:
+step: [100/1800]
+train loss: 6252766.955078
+ valid loss: 699732.687500
+Epoch: [262/1000]:
+step: [100/1800]
+train loss: 6252371.726562
+ valid loss: 699573.750000
+Epoch: [263/1000]:
+step: [100/1800]
+train loss: 6251546.179688
+ valid loss: 699609.687500
+Epoch: [264/1000]:
+step: [100/1800]
+train loss: 6251713.433594
+ valid loss: 699547.687500
+Epoch: [265/1000]:
+step: [100/1800]
+train loss: 6251283.039062
+ valid loss: 699539.000000
+Epoch: [266/1000]:
+step: [100/1800]
+train loss: 6251519.140625
+ valid loss: 699578.000000
+Epoch: [267/1000]:
+step: [100/1800]
+train loss: 6251343.876953
+ valid loss: 699579.937500
+Epoch: [268/1000]:
+step: [100/1800]
+train loss: 6250985.912109
+ valid loss: 699542.562500
+Epoch: [269/1000]:
+step: [100/1800]
+train loss: 6251153.921875
+ valid loss: 699558.437500
+Epoch: [270/1000]:
+step: [100/1800]
+train loss: 6251277.214844
+ valid loss: 699556.375000
+Epoch: [271/1000]:
+step: [100/1800]
+train loss: 6250938.039062
+ valid loss: 699547.312500
+Epoch: [272/1000]:
+step: [100/1800]
+train loss: 6250582.828125
+ valid loss: 699557.437500
+Epoch: [273/1000]:
+step: [100/1800]
+train loss: 6251072.978516
+ valid loss: 699551.062500
+Epoch: [274/1000]:
+step: [100/1800]
+train loss: 6250883.582031
+ valid loss: 699564.937500
+Epoch: [275/1000]:
+step: [100/1800]
+train loss: 6250843.093750
+ valid loss: 699558.062500
+Epoch: [276/1000]:
+step: [100/1800]
+train loss: 6250844.685547
+ valid loss: 699539.312500
+Epoch: [277/1000]:
+step: [100/1800]
+train loss: 6250717.652344
+ valid loss: 699604.687500
+Epoch: [278/1000]:
+step: [100/1800]
+train loss: 6250836.591797
+ valid loss: 699650.312500
+Epoch: [279/1000]:
+step: [100/1800]
+train loss: 6250637.964844
+ valid loss: 699577.312500
+Epoch: [280/1000]:
+step: [100/1800]
+train loss: 6250335.412109
+ valid loss: 699534.500000
+Epoch: [281/1000]:
+step: [100/1800]
+train loss: 6250292.839844
+ valid loss: 699544.812500
+Epoch: [282/1000]:
+step: [100/1800]
+train loss: 6250391.929688
+ valid loss: 699585.437500
+Epoch: [283/1000]:
+step: [100/1800]
+train loss: 6250057.681641
+ valid loss: 699528.937500
+Epoch: [284/1000]:
+step: [100/1800]
+train loss: 6250100.806641
+ valid loss: 699554.937500
+Epoch: [285/1000]:
+step: [100/1800]
+train loss: 6249640.353516
+ valid loss: 699498.062500
+Epoch: [286/1000]:
+step: [100/1800]
+train loss: 6249802.359375
+ valid loss: 699528.125000
+Epoch: [287/1000]:
+step: [100/1800]
+train loss: 6249939.892578
+ valid loss: 699547.437500
+Epoch: [288/1000]:
+step: [100/1800]
+train loss: 6250054.070312
+ valid loss: 699527.437500
+Epoch: [289/1000]:
+step: [100/1800]
+train loss: 6249640.642578
+ valid loss: 699595.625000
+Epoch: [290/1000]:
+step: [100/1800]
+train loss: 6249535.449219
+ valid loss: 699565.750000
+Epoch: [291/1000]:
+step: [100/1800]
+train loss: 6250030.824219
+ valid loss: 699556.562500
+Epoch: [292/1000]:
+step: [100/1800]
+train loss: 6249771.148438
+ valid loss: 699598.937500
+Epoch: [293/1000]:
+step: [100/1800]
+train loss: 6250214.435547
+ valid loss: 699560.500000
+Epoch: [294/1000]:
+step: [100/1800]
+train loss: 6247516.871094
+ valid loss: 699164.187500
+Epoch: [295/1000]:
+step: [100/1800]
+train loss: 6246173.578125
+ valid loss: 699142.750000
+Epoch: [296/1000]:
+step: [100/1800]
+train loss: 6246424.398438
+ valid loss: 699089.562500
+Epoch: [297/1000]:
+step: [100/1800]
+train loss: 6245760.595703
+ valid loss: 699149.437500
+Epoch: [298/1000]:
+step: [100/1800]
+train loss: 6245301.734375
+ valid loss: 699130.937500
+Epoch: [299/1000]:
+step: [100/1800]
+train loss: 6245198.398438
+ valid loss: 699199.500000
+Epoch: [300/1000]:
+step: [100/1800]
+train loss: 6245354.794922
+ valid loss: 699151.812500
+Epoch: [301/1000]:
+step: [100/1800]
+train loss: 6245143.972656
+ valid loss: 699190.687500
+Epoch: [302/1000]:
+step: [100/1800]
+train loss: 6244954.917969
+ valid loss: 699067.937500
+Epoch: [303/1000]:
+step: [100/1800]
+train loss: 6244749.632812
+ valid loss: 699137.437500
+Epoch: [304/1000]:
+step: [100/1800]
+train loss: 6244677.873047
+ valid loss: 699075.312500
+Epoch: [305/1000]:
+step: [100/1800]
+train loss: 6244823.658203
+ valid loss: 699168.687500
+Epoch: [306/1000]:
+step: [100/1800]
+train loss: 6245151.544922
+ valid loss: 699124.625000
+Epoch: [307/1000]:
+step: [100/1800]
+train loss: 6244619.394531
+ valid loss: 699060.625000
+Epoch: [308/1000]:
+step: [100/1800]
+train loss: 6244585.734375
+ valid loss: 699080.312500
+Epoch: [309/1000]:
+step: [100/1800]
+train loss: 6244689.607422
+ valid loss: 699125.812500
+Epoch: [310/1000]:
+step: [100/1800]
+train loss: 6244498.294922
+ valid loss: 699098.437500
+Epoch: [311/1000]:
+step: [100/1800]
+train loss: 6244606.000000
+ valid loss: 699087.062500
+Epoch: [312/1000]:
+step: [100/1800]
+train loss: 6244497.291016
+ valid loss: 699080.062500
+Epoch: [313/1000]:
+step: [100/1800]
+train loss: 6244859.806641
+ valid loss: 699099.062500
+Epoch: [314/1000]:
+step: [100/1800]
+train loss: 6244668.148438
+ valid loss: 699128.937500
+Epoch: [315/1000]:
+step: [100/1800]
+train loss: 6244728.796875
+ valid loss: 699157.000000
+Epoch: [316/1000]:
+step: [100/1800]
+train loss: 6245110.666016
+ valid loss: 699135.687500
+Epoch: [317/1000]:
+step: [100/1800]
+train loss: 6245070.675781
+ valid loss: 699174.687500
+Epoch: [318/1000]:
+step: [100/1800]
+train loss: 6244611.689453
+ valid loss: 699157.000000
+Epoch: [319/1000]:
+step: [100/1800]
+train loss: 6244507.394531
+ valid loss: 699114.937500
+Epoch: [320/1000]:
+step: [100/1800]
+train loss: 6244086.128906
+ valid loss: 699072.375000
+Epoch: [321/1000]:
+step: [100/1800]
+train loss: 6244288.962891
+ valid loss: 699184.812500
+Epoch: [322/1000]:
+step: [100/1800]
+train loss: 6244184.308594
+ valid loss: 699110.312500
+Epoch: [323/1000]:
+step: [100/1800]
+train loss: 6243855.658203
+ valid loss: 699119.750000
+Epoch: [324/1000]:
+step: [100/1800]
+train loss: 6243785.220703
+ valid loss: 699090.562500
+Epoch: [325/1000]:
+step: [100/1800]
+train loss: 6244441.824219
+ valid loss: 699152.437500
+Epoch: [326/1000]:
+step: [100/1800]
+train loss: 6243717.339844
+ valid loss: 699215.687500
+Epoch: [327/1000]:
+step: [100/1800]
+train loss: 6244120.093750
+ valid loss: 699191.437500
+Epoch: [328/1000]:
+step: [100/1800]
+train loss: 6244252.638672
+ valid loss: 699149.250000
+Epoch: [329/1000]:
+step: [100/1800]
+train loss: 6243889.955078
+ valid loss: 699070.187500
+Epoch: [330/1000]:
+step: [100/1800]
+train loss: 6244096.480469
+ valid loss: 699104.625000
+Epoch: [331/1000]:
+step: [100/1800]
+train loss: 6243937.251953
+ valid loss: 699168.312500
+Epoch: [332/1000]:
+step: [100/1800]
+train loss: 6243633.396484
+ valid loss: 699102.437500
+Epoch: [333/1000]:
+step: [100/1800]
+train loss: 6244072.105469
+ valid loss: 699056.687500
+Epoch: [334/1000]:
+step: [100/1800]
+train loss: 6243449.941406
+ valid loss: 699139.375000
+Epoch: [335/1000]:
+step: [100/1800]
+train loss: 6243939.736328
+ valid loss: 699125.062500
+Epoch: [336/1000]:
+step: [100/1800]
+train loss: 6243507.714844
+ valid loss: 699148.562500
+Epoch: [337/1000]:
+step: [100/1800]
+train loss: 6243669.712891
+ valid loss: 699029.562500
+Epoch: [338/1000]:
+step: [100/1800]
+train loss: 6243757.455078
+ valid loss: 699196.687500
+Epoch: [339/1000]:
+step: [100/1800]
+train loss: 6243857.880859
+ valid loss: 699181.000000
+Epoch: [340/1000]:
+step: [100/1800]
+train loss: 6243704.998047
+ valid loss: 699091.750000
+Epoch: [341/1000]:
+step: [100/1800]
+train loss: 6243623.757812
+ valid loss: 699135.687500
+Epoch: [342/1000]:
+step: [100/1800]
+train loss: 6243517.716797
+ valid loss: 699080.250000
+Epoch: [343/1000]:
+step: [100/1800]
+train loss: 6243548.976562
+ valid loss: 699069.062500
+Epoch: [344/1000]:
+step: [100/1800]
+train loss: 6244347.132812
+ valid loss: 699136.312500
+Epoch: [345/1000]:
+step: [100/1800]
+train loss: 6244479.255859
+ valid loss: 699180.875000
+Epoch: [346/1000]:
+step: [100/1800]
+train loss: 6244650.697266
+ valid loss: 699122.687500
+Epoch: [347/1000]:
+step: [100/1800]
+train loss: 6244453.437500
+ valid loss: 698864.437500
+Epoch: [348/1000]:
+step: [100/1800]
+train loss: 6241967.087891
+ valid loss: 698671.375000
+Epoch: [349/1000]:
+step: [100/1800]
+train loss: 6241008.855469
+ valid loss: 698839.687500
+Epoch: [350/1000]:
+step: [100/1800]
+train loss: 6241303.810547
+ valid loss: 698874.500000
+Epoch: [351/1000]:
+step: [100/1800]
+train loss: 6241793.011719
+ valid loss: 698825.500000
+Epoch: [352/1000]:
+step: [100/1800]
+train loss: 6241293.746094
+ valid loss: 698811.250000
+Epoch: [353/1000]:
+step: [100/1800]
+train loss: 6241010.695312
+ valid loss: 698824.812500
+Epoch: [354/1000]:
+step: [100/1800]
+train loss: 6240653.089844
+ valid loss: 698780.437500
+Epoch: [355/1000]:
+step: [100/1800]
+train loss: 6240605.179688
+ valid loss: 698769.062500
+Epoch: [356/1000]:
+step: [100/1800]
+train loss: 6240707.117188
+ valid loss: 698814.187500
+Epoch: [357/1000]:
+step: [100/1800]
+train loss: 6240923.802734
+ valid loss: 698763.375000
+Epoch: [358/1000]:
+step: [100/1800]
+train loss: 6241240.724609
+ valid loss: 698803.375000
+Epoch: [359/1000]:
+step: [100/1800]
+train loss: 6240289.572266
+ valid loss: 698783.000000
+Epoch: [360/1000]:
+step: [100/1800]
+train loss: 6240591.904297
+ valid loss: 698915.500000
+Epoch: [361/1000]:
+step: [100/1800]
+train loss: 6241636.873047
+ valid loss: 698768.812500
+Epoch: [362/1000]:
+step: [100/1800]
+train loss: 6240496.283203
+ valid loss: 698737.437500
+Epoch: [363/1000]:
+step: [100/1800]
+train loss: 6240411.070312
+ valid loss: 698744.312500
+Epoch: [364/1000]:
+step: [100/1800]
+train loss: 6240267.136719
+ valid loss: 698723.437500
+Epoch: [365/1000]:
+step: [100/1800]
+train loss: 6240294.097656
+ valid loss: 698711.437500
+Epoch: [366/1000]:
+step: [100/1800]
+train loss: 6239887.740234
+ valid loss: 698607.000000
+Epoch: [367/1000]:
+step: [100/1800]
+train loss: 6238574.048828
+ valid loss: 698558.812500
+Epoch: [368/1000]:
+step: [100/1800]
+train loss: 6238443.529297
+ valid loss: 698503.750000
+Epoch: [369/1000]:
+step: [100/1800]
+train loss: 6238582.281250
+ valid loss: 698568.000000
+Epoch: [370/1000]:
+step: [100/1800]
+train loss: 6238010.753906
+ valid loss: 698591.375000
+Epoch: [371/1000]:
+step: [100/1800]
+train loss: 6237986.130859
+ valid loss: 698586.437500
+Epoch: [372/1000]:
+step: [100/1800]
+train loss: 6238147.398438
+ valid loss: 698570.750000
+Epoch: [373/1000]:
+step: [100/1800]
+train loss: 6238213.027344
+ valid loss: 698504.812500
+Epoch: [374/1000]:
+step: [100/1800]
+train loss: 6238035.414062
+ valid loss: 698544.562500
+Epoch: [375/1000]:
+step: [100/1800]
+train loss: 6238291.210938
+ valid loss: 698595.000000
+Epoch: [376/1000]:
+step: [100/1800]
+train loss: 6237978.095703
+ valid loss: 698583.625000
+Epoch: [377/1000]:
+step: [100/1800]
+train loss: 6238219.583984
+ valid loss: 698517.750000
+Epoch: [378/1000]:
+step: [100/1800]
+train loss: 6238302.554688
+ valid loss: 698607.937500
+Epoch: [379/1000]:
+step: [100/1800]
+train loss: 6237973.441406
+ valid loss: 698650.437500
+Epoch: [380/1000]:
+step: [100/1800]
+train loss: 6237996.279297
+ valid loss: 698640.125000
+Epoch: [381/1000]:
+step: [100/1800]
+train loss: 6237847.910156
+ valid loss: 698544.250000
+Epoch: [382/1000]:
+step: [100/1800]
+train loss: 6237957.298828
+ valid loss: 698616.187500
+Epoch: [383/1000]:
+step: [100/1800]
+train loss: 6237898.207031
+ valid loss: 698558.562500
+Epoch: [384/1000]:
+step: [100/1800]
+train loss: 6238332.228516
+ valid loss: 698535.625000
+Epoch: [385/1000]:
+step: [100/1800]
+train loss: 6237806.648438
+ valid loss: 698571.687500
+Epoch: [386/1000]:
+step: [100/1800]
+train loss: 6237623.767578
+ valid loss: 698501.187500
+Epoch: [387/1000]:
+step: [100/1800]
+train loss: 6237821.773438
+ valid loss: 698537.750000
+Epoch: [388/1000]:
+step: [100/1800]
+train loss: 6237892.519531
+ valid loss: 698554.937500
+Epoch: [389/1000]:
+step: [100/1800]
+train loss: 6237920.396484
+ valid loss: 698593.687500
+Epoch: [390/1000]:
+step: [100/1800]
+train loss: 6237595.751953
+ valid loss: 698575.500000
+Epoch: [391/1000]:
+step: [100/1800]
+train loss: 6237063.240234
+ valid loss: 698504.187500
+Epoch: [392/1000]:
+step: [100/1800]
+train loss: 6236991.365234
+ valid loss: 698548.000000
+Epoch: [393/1000]:
+step: [100/1800]
+train loss: 6237617.937500
+ valid loss: 698570.062500
+Epoch: [394/1000]:
+step: [100/1800]
+train loss: 6237110.371094
+ valid loss: 698516.937500
+Epoch: [395/1000]:
+step: [100/1800]
+train loss: 6237545.908203
+ valid loss: 698630.875000
+Epoch: [396/1000]:
+step: [100/1800]
+train loss: 6237224.855469
+ valid loss: 698562.062500
+Epoch: [397/1000]:
+step: [100/1800]
+train loss: 6237340.875000
+ valid loss: 698654.125000
+Epoch: [398/1000]:
+step: [100/1800]
+train loss: 6237429.187500
+ valid loss: 698575.437500
+Epoch: [399/1000]:
+step: [100/1800]
+train loss: 6237234.919922
+ valid loss: 698567.125000
+Epoch: [400/1000]:
+step: [100/1800]
+train loss: 6237413.800781
+ valid loss: 698522.687500
+Epoch: [401/1000]:
+step: [100/1800]
+train loss: 6236934.693359
+ valid loss: 698578.562500
+Epoch: [402/1000]:
+step: [100/1800]
+train loss: 6237090.224609
+ valid loss: 698665.312500
+Epoch: [403/1000]:
+step: [100/1800]
+train loss: 6237273.855469
+ valid loss: 698501.875000
+Epoch: [404/1000]:
+step: [100/1800]
+train loss: 6236600.207031
+ valid loss: 698585.250000
+Epoch: [405/1000]:
+step: [100/1800]
+train loss: 6236962.330078
+ valid loss: 698587.187500
+Epoch: [406/1000]:
+step: [100/1800]
+train loss: 6237237.380859
+ valid loss: 698572.500000
+Epoch: [407/1000]:
+step: [100/1800]
+train loss: 6237248.068359
+ valid loss: 698518.437500
+Epoch: [408/1000]:
+step: [100/1800]
+train loss: 6236913.542969
+ valid loss: 698496.687500
+Epoch: [409/1000]:
+step: [100/1800]
+train loss: 6236910.507812
+ valid loss: 698614.625000
+Epoch: [410/1000]:
+step: [100/1800]
+train loss: 6236723.726562
+ valid loss: 698560.562500
+Epoch: [411/1000]:
+step: [100/1800]
+train loss: 6236720.035156
+ valid loss: 698534.375000
+Epoch: [412/1000]:
+step: [100/1800]
+train loss: 6236696.851562
+ valid loss: 698542.687500
+Epoch: [413/1000]:
+step: [100/1800]
+train loss: 6236524.087891
+ valid loss: 698572.187500
+Epoch: [414/1000]:
+step: [100/1800]
+train loss: 6236419.261719
+ valid loss: 698571.687500
+Epoch: [415/1000]:
+step: [100/1800]
+train loss: 6237066.566406
+ valid loss: 698566.000000
+Epoch: [416/1000]:
+step: [100/1800]
+train loss: 6236754.595703
+ valid loss: 698545.562500
+Epoch: [417/1000]:
+step: [100/1800]
+train loss: 6236569.412109
+ valid loss: 698526.062500
+Epoch: [418/1000]:
+step: [100/1800]
+train loss: 6236813.580078
+ valid loss: 698491.500000
+Epoch: [419/1000]:
+step: [100/1800]
+train loss: 6236715.564453
+ valid loss: 698578.812500
+Epoch: [420/1000]:
+step: [100/1800]
+train loss: 6236503.871094
+ valid loss: 698527.437500
+Epoch: [421/1000]:
+step: [100/1800]
+train loss: 6236285.447266
+ valid loss: 698604.562500
+Epoch: [422/1000]:
+step: [100/1800]
+train loss: 6236516.304688
+ valid loss: 698502.750000
+Epoch: [423/1000]:
+step: [100/1800]
+train loss: 6236876.394531
+ valid loss: 698599.937500
+Epoch: [424/1000]:
+step: [100/1800]
+train loss: 6236495.931641
+ valid loss: 698536.062500
+Epoch: [425/1000]:
+step: [100/1800]
+train loss: 6236329.343750
+ valid loss: 698621.187500
+Epoch: [426/1000]:
+step: [100/1800]
+train loss: 6236675.513672
+ valid loss: 698651.812500
+Epoch: [427/1000]:
+step: [100/1800]
+train loss: 6235994.968750
+ valid loss: 698618.000000
+Epoch: [428/1000]:
+step: [100/1800]
+train loss: 6236246.849609
+ valid loss: 698522.375000
+Epoch: [429/1000]:
+step: [100/1800]
+train loss: 6236613.939453
+ valid loss: 698578.375000
+Epoch: [430/1000]:
+step: [100/1800]
+train loss: 6235680.400391
+ valid loss: 698512.562500
+Epoch: [431/1000]:
+step: [100/1800]
+train loss: 6236286.148438
+ valid loss: 698528.562500
+Epoch: [432/1000]:
+step: [100/1800]
+train loss: 6236344.736328
+ valid loss: 698494.625000
+Epoch: [433/1000]:
+step: [100/1800]
+train loss: 6236265.873047
+ valid loss: 698501.187500
+Epoch: [434/1000]:
+step: [100/1800]
+train loss: 6236312.113281
+ valid loss: 698485.187500
+Epoch: [435/1000]:
+step: [100/1800]
+train loss: 6236755.615234
+ valid loss: 698551.625000
+Epoch: [436/1000]:
+step: [100/1800]
+train loss: 6236742.113281
+ valid loss: 698485.187500
+Epoch: [437/1000]:
+step: [100/1800]
+train loss: 6236201.398438
+ valid loss: 698506.187500
+Epoch: [438/1000]:
+step: [100/1800]
+train loss: 6236886.140625
+ valid loss: 698553.437500
+Epoch: [439/1000]:
+step: [100/1800]
+train loss: 6236738.861328
+ valid loss: 698669.125000
+Epoch: [440/1000]:
+step: [100/1800]
+train loss: 6236618.128906
+ valid loss: 698598.187500
+Epoch: [441/1000]:
+step: [100/1800]
+train loss: 6236406.679688
+ valid loss: 698483.687500
+Epoch: [442/1000]:
+step: [100/1800]
+train loss: 6236468.232422
+ valid loss: 698555.000000
+Epoch: [443/1000]:
+step: [100/1800]
+train loss: 6236321.546875
+ valid loss: 698528.062500
+Epoch: [444/1000]:
+step: [100/1800]
+train loss: 6235193.091797
+ valid loss: 698162.000000
+Epoch: [445/1000]:
+step: [100/1800]
+train loss: 6233242.972656
+ valid loss: 698123.687500
+Epoch: [446/1000]:
+step: [100/1800]
+train loss: 6233392.880859
+ valid loss: 698176.312500
+Epoch: [447/1000]:
+step: [100/1800]
+train loss: 6233741.753906
+ valid loss: 698128.437500
+Epoch: [448/1000]:
+step: [100/1800]
+train loss: 6233432.542969
+ valid loss: 698178.625000
+Epoch: [449/1000]:
+step: [100/1800]
+train loss: 6233144.251953
+ valid loss: 698226.062500
+Epoch: [450/1000]:
+step: [100/1800]
+train loss: 6233302.310547
+ valid loss: 698224.812500
+Epoch: [451/1000]:
+step: [100/1800]
+train loss: 6232993.457031
+ valid loss: 698198.562500
+Epoch: [452/1000]:
+step: [100/1800]
+train loss: 6233240.683594
+ valid loss: 698213.375000
+Epoch: [453/1000]:
+step: [100/1800]
+train loss: 6232866.388672
+ valid loss: 698191.937500
+Epoch: [454/1000]:
+step: [100/1800]
+train loss: 6233015.169922
+ valid loss: 698177.312500
+Epoch: [455/1000]:
+step: [100/1800]
+train loss: 6232950.716797
+ valid loss: 698277.375000
+Epoch: [456/1000]:
+step: [100/1800]
+train loss: 6232606.728516
+ valid loss: 698160.437500
+Epoch: [457/1000]:
+step: [100/1800]
+train loss: 6232962.294922
+ valid loss: 698155.500000
+Epoch: [458/1000]:
+step: [100/1800]
+train loss: 6232739.636719
+ valid loss: 698182.062500
+Epoch: [459/1000]:
+step: [100/1800]
+train loss: 6232887.546875
+ valid loss: 698189.500000
+Epoch: [460/1000]:
+step: [100/1800]
+train loss: 6232903.265625
+ valid loss: 698163.062500
+Epoch: [461/1000]:
+step: [100/1800]
+train loss: 6232839.080078
+ valid loss: 698224.312500
+Epoch: [462/1000]:
+step: [100/1800]
+train loss: 6232485.498047
+ valid loss: 698149.937500
+Epoch: [463/1000]:
+step: [100/1800]
+train loss: 6232718.560547
+ valid loss: 698109.937500
+Epoch: [464/1000]:
+step: [100/1800]
+train loss: 6232601.724609
+ valid loss: 698173.187500
+Epoch: [465/1000]:
+step: [100/1800]
+train loss: 6232706.007812
+ valid loss: 698136.812500
+Epoch: [466/1000]:
+step: [100/1800]
+train loss: 6232599.613281
+ valid loss: 698094.000000
+Epoch: [467/1000]:
+step: [100/1800]
+train loss: 6232413.355469
+ valid loss: 698102.000000
+Epoch: [468/1000]:
+step: [100/1800]
+train loss: 6232502.539062
+ valid loss: 698098.750000
+Epoch: [469/1000]:
+step: [100/1800]
+train loss: 6232419.550781
+ valid loss: 698142.437500
+Epoch: [470/1000]:
+step: [100/1800]
+train loss: 6232633.437500
+ valid loss: 698194.812500
+Epoch: [471/1000]:
+step: [100/1800]
+train loss: 6232167.291016
+ valid loss: 698123.437500
+Epoch: [472/1000]:
+step: [100/1800]
+train loss: 6232481.150391
+ valid loss: 698161.500000
+Epoch: [473/1000]:
+step: [100/1800]
+train loss: 6232268.826172
+ valid loss: 698159.437500
+Epoch: [474/1000]:
+step: [100/1800]
+train loss: 6232232.931641
+ valid loss: 698141.937500
+Epoch: [475/1000]:
+step: [100/1800]
+train loss: 6232457.166016
+ valid loss: 698144.562500
+Epoch: [476/1000]:
+step: [100/1800]
+train loss: 6232803.462891
+ valid loss: 698121.812500
+Epoch: [477/1000]:
+step: [100/1800]
+train loss: 6232406.003906
+ valid loss: 698130.687500
+Epoch: [478/1000]:
+step: [100/1800]
+train loss: 6232290.890625
+ valid loss: 698287.312500
+Epoch: [479/1000]:
+step: [100/1800]
+train loss: 6232671.630859
+ valid loss: 698162.562500
+Epoch: [480/1000]:
+step: [100/1800]
+train loss: 6232537.421875
+ valid loss: 698200.625000
+Epoch: [481/1000]:
+step: [100/1800]
+train loss: 6232610.199219
+ valid loss: 698221.562500
+Epoch: [482/1000]:
+step: [100/1800]
+train loss: 6232654.953125
+ valid loss: 698147.500000
+Epoch: [483/1000]:
+step: [100/1800]
+train loss: 6232445.142578
+ valid loss: 698220.812500
+Epoch: [484/1000]:
+step: [100/1800]
+train loss: 6232424.076172
+ valid loss: 698252.312500
+Epoch: [485/1000]:
+step: [100/1800]
+train loss: 6232727.257812
+ valid loss: 698127.500000
+Epoch: [486/1000]:
+step: [100/1800]
+train loss: 6232596.910156
+ valid loss: 698167.437500
+Epoch: [487/1000]:
+step: [100/1800]
+train loss: 6232761.542969
+ valid loss: 698129.312500
+Epoch: [488/1000]:
+step: [100/1800]
+train loss: 6233339.511719
+ valid loss: 698165.875000
+Epoch: [489/1000]:
+step: [100/1800]
+train loss: 6233546.919922
+ valid loss: 698168.312500
+Epoch: [490/1000]:
+step: [100/1800]
+train loss: 6232833.824219
+ valid loss: 698138.375000
+Epoch: [491/1000]:
+step: [100/1800]
+train loss: 6233034.623047
+ valid loss: 698181.062500
+Epoch: [492/1000]:
+step: [100/1800]
+train loss: 6233320.488281
+ valid loss: 698101.187500
+Epoch: [493/1000]:
+step: [100/1800]
+train loss: 6232956.738281
+ valid loss: 698260.875000
+Epoch: [494/1000]:
+step: [100/1800]
+train loss: 6233544.167969
+ valid loss: 698158.562500
+Epoch: [495/1000]:
+step: [100/1800]
+train loss: 6233178.730469
+ valid loss: 698115.437500
+Epoch: [496/1000]:
+step: [100/1800]
+train loss: 6233039.468750
+ valid loss: 698133.000000
+Epoch: [497/1000]:
+step: [100/1800]
+train loss: 6232918.414062
+ valid loss: 698161.687500
+Epoch: [498/1000]:
+step: [100/1800]
+train loss: 6233118.636719
+ valid loss: 698141.687500
+Epoch: [499/1000]:
+step: [100/1800]
+train loss: 6232871.636719
+ valid loss: 698178.250000
+Epoch: [500/1000]:
+step: [100/1800]
+train loss: 6232832.429688
+ valid loss: 698160.687500
+Epoch: [501/1000]:
+step: [100/1800]
+train loss: 6232687.794922
+ valid loss: 698160.875000
+Epoch: [502/1000]:
+step: [100/1800]
+train loss: 6232792.501953
+ valid loss: 698175.687500
+Epoch: [503/1000]:
+step: [100/1800]
+train loss: 6233014.982422
+ valid loss: 698103.437500
+Epoch: [504/1000]:
+step: [100/1800]
+train loss: 6232680.708984
+ valid loss: 698122.687500
+Epoch: [505/1000]:
+step: [100/1800]
+train loss: 6233156.986328
+ valid loss: 698137.812500
+Epoch: [506/1000]:
+step: [100/1800]
+train loss: 6232754.572266
+ valid loss: 698131.312500
+Epoch: [507/1000]:
+step: [100/1800]
+train loss: 6232702.679688
+ valid loss: 698171.375000
+Epoch: [508/1000]:
+step: [100/1800]
+train loss: 6233269.121094
+ valid loss: 698110.562500
+Epoch: [509/1000]:
+step: [100/1800]
+train loss: 6232850.933594
+ valid loss: 698167.125000
+Epoch: [510/1000]:
+step: [100/1800]
+train loss: 6232968.792969
+ valid loss: 698127.062500
+Epoch: [511/1000]:
+step: [100/1800]
+train loss: 6233160.253906
+ valid loss: 698120.375000
+Epoch: [512/1000]:
+step: [100/1800]
+train loss: 6232579.634766
+ valid loss: 698132.500000
+Epoch: [513/1000]:
+step: [100/1800]
+train loss: 6232715.080078
+ valid loss: 698248.875000
+Epoch: [514/1000]:
+step: [100/1800]
+train loss: 6232458.660156
+ valid loss: 698166.062500
+Epoch: [515/1000]:
+step: [100/1800]
+train loss: 6233241.652344
+ valid loss: 698185.062500
+Epoch: [516/1000]:
+step: [100/1800]
+train loss: 6233226.091797
+ valid loss: 698193.312500
+Epoch: [517/1000]:
+step: [100/1800]
+train loss: 6233179.257812
+ valid loss: 698102.187500
+Epoch: [518/1000]:
+step: [100/1800]
+train loss: 6232751.492188
+ valid loss: 698171.375000
+Epoch: [519/1000]:
+step: [100/1800]
+train loss: 6232883.214844
+ valid loss: 698146.562500
+Epoch: [520/1000]:
+step: [100/1800]
+train loss: 6232817.894531
+ valid loss: 698201.312500
+Epoch: [521/1000]:
+step: [100/1800]
+train loss: 6232659.035156
+ valid loss: 698129.937500
+Epoch: [522/1000]:
+step: [100/1800]
+train loss: 6232846.003906
+ valid loss: 698176.625000
+Epoch: [523/1000]:
+step: [100/1800]
+train loss: 6232804.685547
+ valid loss: 698124.000000
+Epoch: [524/1000]:
+step: [100/1800]
+train loss: 6232968.351562
+ valid loss: 698149.437500
+Epoch: [525/1000]:
+step: [100/1800]
+train loss: 6232694.435547
+ valid loss: 698145.437500
+Epoch: [526/1000]:
+step: [100/1800]
+train loss: 6232679.373047
+ valid loss: 698144.062500
+Epoch: [527/1000]:
+step: [100/1800]
+train loss: 6233009.455078
+ valid loss: 698137.125000
+Epoch: [528/1000]:
+step: [100/1800]
+train loss: 6232440.925781
+ valid loss: 698211.125000
+Epoch: [529/1000]:
+step: [100/1800]
+train loss: 6233102.896484
+ valid loss: 698228.500000
+Epoch: [530/1000]:
+step: [100/1800]
+train loss: 6233112.521484
+ valid loss: 698128.812500
+Epoch: [531/1000]:
+step: [100/1800]
+train loss: 6233518.388672
+ valid loss: 698147.625000
+Epoch: [532/1000]:
+step: [100/1800]
+train loss: 6232724.722656
+ valid loss: 698181.062500
+Epoch: [533/1000]:
+step: [100/1800]
+train loss: 6232463.000000
+ valid loss: 698113.687500
+Epoch: [534/1000]:
+step: [100/1800]
+train loss: 6232363.953125
+ valid loss: 698118.812500
+Epoch: [535/1000]:
+step: [100/1800]
+train loss: 6232089.531250
+ valid loss: 698110.750000
+Epoch: [536/1000]:
+step: [100/1800]
+train loss: 6232316.964844
+ valid loss: 698156.562500
+Epoch: [537/1000]:
+step: [100/1800]
+train loss: 6232162.421875
+ valid loss: 698027.875000
+Epoch: [538/1000]:
+step: [100/1800]
+train loss: 6232288.685547
+ valid loss: 698089.937500
+Epoch: [539/1000]:
+step: [100/1800]
+train loss: 6232699.478516
+ valid loss: 698236.187500
+Epoch: [540/1000]:
+step: [100/1800]
+train loss: 6232710.970703
+ valid loss: 698068.500000
+Epoch: [541/1000]:
+step: [100/1800]
+train loss: 6232223.925781
+ valid loss: 698075.312500
+Epoch: [542/1000]:
+step: [100/1800]
+train loss: 6232664.664062
+ valid loss: 698126.562500
+Epoch: [543/1000]:
+step: [100/1800]
+train loss: 6232881.716797
+ valid loss: 698088.937500
+Epoch: [544/1000]:
+step: [100/1800]
+train loss: 6232824.078125
+ valid loss: 698163.312500
+Epoch: [545/1000]:
+step: [100/1800]
+train loss: 6233013.619141
+ valid loss: 698140.562500
+Epoch: [546/1000]:
+step: [100/1800]
+train loss: 6233031.398438
+ valid loss: 698055.000000
+Epoch: [547/1000]:
+step: [100/1800]
+train loss: 6232383.798828
+ valid loss: 698141.437500
+Epoch: [548/1000]:
+step: [100/1800]
+train loss: 6232490.060547
+ valid loss: 698193.250000
+Epoch: [549/1000]:
+step: [100/1800]
+train loss: 6232854.142578
+ valid loss: 698187.187500
+Epoch: [550/1000]:
+step: [100/1800]
+train loss: 6232215.292969
+ valid loss: 698041.375000
+Epoch: [551/1000]:
+step: [100/1800]
+train loss: 6232025.255859
+ valid loss: 698179.875000
+Epoch: [552/1000]:
+step: [100/1800]
+train loss: 6232234.945312
+ valid loss: 698126.000000
+Epoch: [553/1000]:
+step: [100/1800]
+train loss: 6232249.166016
+ valid loss: 698084.062500
+Epoch: [554/1000]:
+step: [100/1800]
+train loss: 6232348.892578
+ valid loss: 698133.750000
+Epoch: [555/1000]:
+step: [100/1800]
+train loss: 6232329.585938
+ valid loss: 698187.062500
+Epoch: [556/1000]:
+step: [100/1800]
+train loss: 6232023.523438
+ valid loss: 698131.625000
+Epoch: [557/1000]:
+step: [100/1800]
+train loss: 6232620.595703
+ valid loss: 698037.187500
+Epoch: [558/1000]:
+step: [100/1800]
+train loss: 6232603.224609
+ valid loss: 698068.312500
+Epoch: [559/1000]:
+step: [100/1800]
+train loss: 6232200.191406
+ valid loss: 698155.687500
+Epoch: [560/1000]:
+step: [100/1800]
+train loss: 6231700.945312
+ valid loss: 698109.312500
+Epoch: [561/1000]:
+step: [100/1800]
+train loss: 6232489.173828
+ valid loss: 698176.750000
+Epoch: [562/1000]:
+step: [100/1800]
+train loss: 6232838.394531
+ valid loss: 698305.687500
+Epoch: [563/1000]:
+step: [100/1800]
+train loss: 6233025.287109
+ valid loss: 698134.250000
+Epoch: [564/1000]:
+step: [100/1800]
+train loss: 6232738.171875
+ valid loss: 698147.562500
+Epoch: [565/1000]:
+step: [100/1800]
+train loss: 6232424.037109
+ valid loss: 698188.562500
+Epoch: [566/1000]:
+step: [100/1800]
+train loss: 6232044.666016
+ valid loss: 698138.312500
+Epoch: [567/1000]:
+step: [100/1800]
+train loss: 6232763.318359
+ valid loss: 698121.250000
+Epoch: [568/1000]:
+step: [100/1800]
+train loss: 6232336.371094
+ valid loss: 698110.500000
+Epoch: [569/1000]:
+step: [100/1800]
+train loss: 6232596.248047
+ valid loss: 698084.500000
+Epoch: [570/1000]:
+step: [100/1800]
+train loss: 6232146.132812
+ valid loss: 698155.562500
+Epoch: [571/1000]:
+step: [100/1800]
+train loss: 6232688.597656
+ valid loss: 698124.000000
+Epoch: [572/1000]:
+step: [100/1800]
+train loss: 6232040.910156
+ valid loss: 698071.500000
+Epoch: [573/1000]:
+step: [100/1800]
+train loss: 6231989.427734
+ valid loss: 698127.187500
+Epoch: [574/1000]:
+step: [100/1800]
+train loss: 6231899.867188
+ valid loss: 698075.937500
+Epoch: [575/1000]:
+step: [100/1800]
+train loss: 6232100.546875
+ valid loss: 698087.062500
+Epoch: [576/1000]:
+step: [100/1800]
+train loss: 6232532.337891
+ valid loss: 698175.500000
+Epoch: [577/1000]:
+step: [100/1800]
+train loss: 6232918.673828
+ valid loss: 698198.312500
+Epoch: [578/1000]:
+step: [100/1800]
+train loss: 6233056.968750
+ valid loss: 698173.437500
+Epoch: [579/1000]:
+step: [100/1800]
+train loss: 6232373.314453
+ valid loss: 698177.812500
+Epoch: [580/1000]:
+step: [100/1800]
+train loss: 6232511.939453
+ valid loss: 698186.312500
+Epoch: [581/1000]:
+step: [100/1800]
+train loss: 6232447.603516
+ valid loss: 698212.375000
+Epoch: [582/1000]:
+step: [100/1800]
+train loss: 6232619.117188
+ valid loss: 698089.500000
+Epoch: [583/1000]:
+step: [100/1800]
+train loss: 6232518.183594
+ valid loss: 698211.375000
+Epoch: [584/1000]:
+step: [100/1800]
+train loss: 6232521.185547
+ valid loss: 698178.937500
+Epoch: [585/1000]:
+step: [100/1800]
+train loss: 6232723.113281
+ valid loss: 698160.437500
+Epoch: [586/1000]:
+step: [100/1800]
+train loss: 6232692.521484
+ valid loss: 698239.187500
+Epoch: [587/1000]:
+step: [100/1800]
+train loss: 6232790.009766
+ valid loss: 698192.125000
+Epoch: [588/1000]:
+step: [100/1800]
+train loss: 6231784.613281
+ valid loss: 697733.875000
+Epoch: [589/1000]:
+step: [100/1800]
+train loss: 6228627.144531
+ valid loss: 697653.250000
+Epoch: [590/1000]:
+step: [100/1800]
+train loss: 6228565.972656
+ valid loss: 697706.375000
+Epoch: [591/1000]:
+step: [100/1800]
+train loss: 6228368.527344
+ valid loss: 697663.312500
+Epoch: [592/1000]:
+step: [100/1800]
+train loss: 6228276.892578
+ valid loss: 697753.250000
+Epoch: [593/1000]:
+step: [100/1800]
+train loss: 6228428.318359
+ valid loss: 697704.375000
+Epoch: [594/1000]:
+step: [100/1800]
+train loss: 6228254.501953
+ valid loss: 697668.937500
+Epoch: [595/1000]:
+step: [100/1800]
+train loss: 6228329.408203
+ valid loss: 697660.812500
+Epoch: [596/1000]:
+step: [100/1800]
+train loss: 6228257.095703
+ valid loss: 697711.812500
+Epoch: [597/1000]:
+step: [100/1800]
+train loss: 6228805.220703
+ valid loss: 697669.125000
+Epoch: [598/1000]:
+step: [100/1800]
+train loss: 6229054.359375
+ valid loss: 697756.812500
+Epoch: [599/1000]:
+step: [100/1800]
+train loss: 6229139.015625
+ valid loss: 697696.312500
+Epoch: [600/1000]:
+step: [100/1800]
+train loss: 6228947.363281
+ valid loss: 697721.062500
+Epoch: [601/1000]:
+step: [100/1800]
+train loss: 6228688.695312
+ valid loss: 697690.312500
+Epoch: [602/1000]:
+step: [100/1800]
+train loss: 6229112.472656
+ valid loss: 697645.187500
+Epoch: [603/1000]:
+step: [100/1800]
+train loss: 6228625.632812
+ valid loss: 697780.250000
+Epoch: [604/1000]:
+step: [100/1800]
+train loss: 6228871.724609
+ valid loss: 697738.625000
+Epoch: [605/1000]:
+step: [100/1800]
+train loss: 6228430.115234
+ valid loss: 697707.062500
+Epoch: [606/1000]:
+step: [100/1800]
+train loss: 6228270.597656
+ valid loss: 697713.437500
+Epoch: [607/1000]:
+step: [100/1800]
+train loss: 6228664.683594
+ valid loss: 697721.812500
+Epoch: [608/1000]:
+step: [100/1800]
+train loss: 6228468.855469
+ valid loss: 697683.625000
+Epoch: [609/1000]:
+step: [100/1800]
+train loss: 6228528.796875
+ valid loss: 697761.125000
+Epoch: [610/1000]:
+step: [100/1800]
+train loss: 6228554.398438
+ valid loss: 697713.187500
+Epoch: [611/1000]:
+step: [100/1800]
+train loss: 6228435.777344
+ valid loss: 697775.375000
+Epoch: [612/1000]:
+step: [100/1800]
+train loss: 6228820.253906
+ valid loss: 697742.625000
+Epoch: [613/1000]:
+step: [100/1800]
+train loss: 6228795.431641
+ valid loss: 697722.187500
+Epoch: [614/1000]:
+step: [100/1800]
+train loss: 6228441.996094
+ valid loss: 697724.187500
+Epoch: [615/1000]:
+step: [100/1800]
+train loss: 6228686.949219
+ valid loss: 697704.437500
+Epoch: [616/1000]:
+step: [100/1800]
+train loss: 6228449.785156
+ valid loss: 697650.312500
+Epoch: [617/1000]:
+step: [100/1800]
+train loss: 6228303.601562
+ valid loss: 697655.312500
+Epoch: [618/1000]:
+step: [100/1800]
+train loss: 6228516.828125
+ valid loss: 697721.812500
+Epoch: [619/1000]:
+step: [100/1800]
+train loss: 6228478.158203
+ valid loss: 697719.500000
+Epoch: [620/1000]:
+step: [100/1800]
+train loss: 6228515.812500
+ valid loss: 697655.437500
+Epoch: [621/1000]:
+step: [100/1800]
+train loss: 6228736.050781
+ valid loss: 697680.812500
+Epoch: [622/1000]:
+step: [100/1800]
+train loss: 6228645.519531
+ valid loss: 697767.375000
+Epoch: [623/1000]:
+step: [100/1800]
+train loss: 6228590.203125
+ valid loss: 697733.562500
+Epoch: [624/1000]:
+step: [100/1800]
+train loss: 6228736.912109
+ valid loss: 697686.500000
+Epoch: [625/1000]:
+step: [100/1800]
+train loss: 6228567.796875
+ valid loss: 697780.000000
+Epoch: [626/1000]:
+step: [100/1800]
+train loss: 6228161.835938
+ valid loss: 697759.000000
+Epoch: [627/1000]:
+step: [100/1800]
+train loss: 6229203.939453
+ valid loss: 697772.750000
+Epoch: [628/1000]:
+step: [100/1800]
+train loss: 6229031.640625
+ valid loss: 697717.187500
+Epoch: [629/1000]:
+step: [100/1800]
+train loss: 6229409.363281
+ valid loss: 697725.000000
+Epoch: [630/1000]:
+step: [100/1800]
+train loss: 6229336.955078
+ valid loss: 697708.687500
+Epoch: [631/1000]:
+step: [100/1800]
+train loss: 6229714.966797
+ valid loss: 697587.687500
+Epoch: [632/1000]:
+step: [100/1800]
+train loss: 6228938.363281
+ valid loss: 697577.375000
+Epoch: [633/1000]:
+step: [100/1800]
+train loss: 6228792.804688
+ valid loss: 697666.812500
+Epoch: [634/1000]:
+step: [100/1800]
+train loss: 6228456.179688
+ valid loss: 697543.437500
+Epoch: [635/1000]:
+step: [100/1800]
+train loss: 6228707.787109
+ valid loss: 697670.687500
+Epoch: [636/1000]:
+step: [100/1800]
+train loss: 6228317.244141
+ valid loss: 697679.687500
+Epoch: [637/1000]:
+step: [100/1800]
+train loss: 6228343.564453
+ valid loss: 697563.187500
+Epoch: [638/1000]:
+step: [100/1800]
+train loss: 6228257.779297
+ valid loss: 697703.312500
+Epoch: [639/1000]:
+step: [100/1800]
+train loss: 6228661.818359
+ valid loss: 697602.750000
+Epoch: [640/1000]:
+step: [100/1800]
+train loss: 6230611.925781
+ valid loss: 697658.625000
+Epoch: [641/1000]:
+step: [100/1800]
+train loss: 6230281.960938
+ valid loss: 697716.875000
+Epoch: [642/1000]:
+step: [100/1800]
+train loss: 6230237.882812
+ valid loss: 697729.625000
+Epoch: [643/1000]:
+step: [100/1800]
+train loss: 6230200.371094
+ valid loss: 697728.562500
+Epoch: [644/1000]:
+step: [100/1800]
+train loss: 6229951.062500
+ valid loss: 697621.250000
+Epoch: [645/1000]:
+step: [100/1800]
+train loss: 6229970.625000
+ valid loss: 697776.875000
+Epoch: [646/1000]:
+step: [100/1800]
+train loss: 6229692.613281
+ valid loss: 697797.937500
+Epoch: [647/1000]:
+step: [100/1800]
+train loss: 6229046.587891
+ valid loss: 697675.062500
+Epoch: [648/1000]:
+step: [100/1800]
+train loss: 6228999.320312
+ valid loss: 697627.562500
+Epoch: [649/1000]:
+step: [100/1800]
+train loss: 6228772.546875
+ valid loss: 697676.062500
+Epoch: [650/1000]:
+step: [100/1800]
+train loss: 6229437.128906
+ valid loss: 697718.937500
+Epoch: [651/1000]:
+step: [100/1800]
+train loss: 6229659.078125
+ valid loss: 697669.750000
+Epoch: [652/1000]:
+step: [100/1800]
+train loss: 6228815.457031
+ valid loss: 697751.437500
+Epoch: [653/1000]:
+step: [100/1800]
+train loss: 6228554.857422
+ valid loss: 697599.000000
+Epoch: [654/1000]:
+step: [100/1800]
+train loss: 6227957.707031
+ valid loss: 697681.062500
+Epoch: [655/1000]:
+step: [100/1800]
+train loss: 6228539.398438
+ valid loss: 697615.250000
+Epoch: [656/1000]:
+step: [100/1800]
+train loss: 6228108.355469
+ valid loss: 697561.437500
+Epoch: [657/1000]:
+step: [100/1800]
+train loss: 6228624.060547
+ valid loss: 697610.062500
+Epoch: [658/1000]:
+step: [100/1800]
+train loss: 6228606.587891
+ valid loss: 697569.750000
+Epoch: [659/1000]:
+step: [100/1800]
+train loss: 6228223.951172
+ valid loss: 697669.625000
+Epoch: [660/1000]:
+step: [100/1800]
+train loss: 6228258.162109
+ valid loss: 697569.437500
+Epoch: [661/1000]:
+step: [100/1800]
+train loss: 6228483.388672
+ valid loss: 697638.125000
+Epoch: [662/1000]:
+step: [100/1800]
+train loss: 6228355.962891
+ valid loss: 697611.625000
+Epoch: [663/1000]:
+step: [100/1800]
+train loss: 6228209.644531
+ valid loss: 697651.187500
+Epoch: [664/1000]:
+step: [100/1800]
+train loss: 6228892.466797
+ valid loss: 697642.250000
+Epoch: [665/1000]:
+step: [100/1800]
+train loss: 6228396.460938
+ valid loss: 697484.687500
+Epoch: [666/1000]:
+step: [100/1800]
+train loss: 6228110.000000
+ valid loss: 697596.375000
+Epoch: [667/1000]:
+step: [100/1800]
+train loss: 6227402.949219
+ valid loss: 697590.875000
+Epoch: [668/1000]:
+step: [100/1800]
+train loss: 6228402.277344
+ valid loss: 697623.937500
+Epoch: [669/1000]:
+step: [100/1800]
+train loss: 6228284.087891
+ valid loss: 697577.812500
+Epoch: [670/1000]:
+step: [100/1800]
+train loss: 6228168.449219
+ valid loss: 697671.187500
+Epoch: [671/1000]:
+step: [100/1800]
+train loss: 6228266.957031
+ valid loss: 697585.500000
+Epoch: [672/1000]:
+step: [100/1800]
+train loss: 6229036.097656
+ valid loss: 697675.562500
+Epoch: [673/1000]:
+step: [100/1800]
+train loss: 6228931.195312
+ valid loss: 697530.250000
+Epoch: [674/1000]:
+step: [100/1800]
+train loss: 6228373.142578
+ valid loss: 697585.250000
+Epoch: [675/1000]:
+step: [100/1800]
+train loss: 6228420.708984
+ valid loss: 697633.562500
+Epoch: [676/1000]:
+step: [100/1800]
+train loss: 6228775.232422
+ valid loss: 697499.062500
+Epoch: [677/1000]:
+step: [100/1800]
+train loss: 6228353.187500
+ valid loss: 697604.187500
+Epoch: [678/1000]:
+step: [100/1800]
+train loss: 6228322.785156
+ valid loss: 697643.312500
+Epoch: [679/1000]:
+step: [100/1800]
+train loss: 6228405.070312
+ valid loss: 697541.250000
+Epoch: [680/1000]:
+step: [100/1800]
+train loss: 6228624.156250
+ valid loss: 697540.500000
+Epoch: [681/1000]:
+step: [100/1800]
+train loss: 6228640.701172
+ valid loss: 697483.812500
+Epoch: [682/1000]:
+step: [100/1800]
+train loss: 6228267.326172
+ valid loss: 697567.812500
+Epoch: [683/1000]:
+step: [100/1800]
+train loss: 6228000.412109
+ valid loss: 697584.562500
+Epoch: [684/1000]:
+step: [100/1800]
+train loss: 6228114.378906
+ valid loss: 697494.812500
+Epoch: [685/1000]:
+step: [100/1800]
+train loss: 6228368.632812
+ valid loss: 697588.437500
+Epoch: [686/1000]:
+step: [100/1800]
+train loss: 6228082.419922
+ valid loss: 697625.625000
+Epoch: [687/1000]:
+step: [100/1800]
+train loss: 6228517.871094
+ valid loss: 697634.312500
+Epoch: [688/1000]:
+step: [100/1800]
+train loss: 6228135.027344
+ valid loss: 697666.687500
+Epoch: [689/1000]:
+step: [100/1800]
+train loss: 6228121.332031
+ valid loss: 697690.437500
+Epoch: [690/1000]:
+step: [100/1800]
+train loss: 6228799.029297
+ valid loss: 697622.062500
+Epoch: [691/1000]:
+step: [100/1800]
+train loss: 6228733.250000
+ valid loss: 697624.625000
+Epoch: [692/1000]:
+step: [100/1800]
+train loss: 6228300.455078
+ valid loss: 697520.312500
+Epoch: [693/1000]:
+step: [100/1800]
+train loss: 6228374.824219
+ valid loss: 697522.437500
+Epoch: [694/1000]:
+step: [100/1800]
+train loss: 6228442.519531
+ valid loss: 697488.562500
+Epoch: [695/1000]:
+step: [100/1800]
+train loss: 6229324.074219
+ valid loss: 697645.562500
+Epoch: [696/1000]:
+step: [100/1800]
+train loss: 6229725.916016
+ valid loss: 697602.687500
+Epoch: [697/1000]:
+step: [100/1800]
+train loss: 6229666.224609
+ valid loss: 697567.562500
+Epoch: [698/1000]:
+step: [100/1800]
+train loss: 6229538.210938
+ valid loss: 697640.312500
+Epoch: [699/1000]:
+step: [100/1800]
+train loss: 6229410.011719
+ valid loss: 697647.687500
+Epoch: [700/1000]:
+step: [100/1800]
+train loss: 6229435.097656
+ valid loss: 697631.812500
+Epoch: [701/1000]:
+step: [100/1800]
+train loss: 6229777.980469
+ valid loss: 697561.437500
+Epoch: [702/1000]:
+step: [100/1800]
+train loss: 6229407.412109
+ valid loss: 697612.187500
+Epoch: [703/1000]:
+step: [100/1800]
+train loss: 6229347.054688
+ valid loss: 697568.937500
+Epoch: [704/1000]:
+step: [100/1800]
+train loss: 6229358.451172
+ valid loss: 697679.000000
+Epoch: [705/1000]:
+step: [100/1800]
+train loss: 6229368.246094
+ valid loss: 697560.312500
+Epoch: [706/1000]:
+step: [100/1800]
+train loss: 6228921.267578
+ valid loss: 697601.437500
+Epoch: [707/1000]:
+step: [100/1800]
+train loss: 6228753.537109
+ valid loss: 697586.812500
+Epoch: [708/1000]:
+step: [100/1800]
+train loss: 6228706.750000
+ valid loss: 697639.500000
+Epoch: [709/1000]:
+step: [100/1800]
+train loss: 6229061.320312
+ valid loss: 697512.812500
+Epoch: [710/1000]:
+step: [100/1800]
+train loss: 6228584.216797
+ valid loss: 697480.187500
+Epoch: [711/1000]:
+step: [100/1800]
+train loss: 6229051.269531
+ valid loss: 697629.437500
+Epoch: [712/1000]:
+step: [100/1800]
+train loss: 6229770.066406
+ valid loss: 697514.812500
+Epoch: [713/1000]:
+step: [100/1800]
+train loss: 6229602.792969
+ valid loss: 697470.812500
+Epoch: [714/1000]:
+step: [100/1800]
+train loss: 6228940.251953
+ valid loss: 697482.187500
+Epoch: [715/1000]:
+step: [100/1800]
+train loss: 6229621.470703
+ valid loss: 697532.500000
+Epoch: [716/1000]:
+step: [100/1800]
+train loss: 6228490.183594
+ valid loss: 697509.812500
+Epoch: [717/1000]:
+step: [100/1800]
+train loss: 6228905.648438
+ valid loss: 697479.625000
+Epoch: [718/1000]:
+step: [100/1800]
+train loss: 6228892.296875
+ valid loss: 697535.000000
+Epoch: [719/1000]:
+step: [100/1800]
+train loss: 6229291.853516
+ valid loss: 697556.750000
+Epoch: [720/1000]:
+step: [100/1800]
+train loss: 6228759.023438
+ valid loss: 697545.750000
+Epoch: [721/1000]:
+step: [100/1800]
+train loss: 6229335.201172
+ valid loss: 697558.812500
+Epoch: [722/1000]:
+step: [100/1800]
+train loss: 6229337.302734
+ valid loss: 697560.250000
+Epoch: [723/1000]:
+step: [100/1800]
+train loss: 6229371.472656
+ valid loss: 697583.312500
+Epoch: [724/1000]:
+step: [100/1800]
+train loss: 6229134.720703
+ valid loss: 697500.625000
+Epoch: [725/1000]:
+step: [100/1800]
+train loss: 6228527.783203
+ valid loss: 697502.312500
+Epoch: [726/1000]:
+step: [100/1800]
+train loss: 6229351.552734
+ valid loss: 697502.562500
+Epoch: [727/1000]:
+step: [100/1800]
+train loss: 6229226.244141
+ valid loss: 697527.812500
+Epoch: [728/1000]:
+step: [100/1800]
+train loss: 6228799.943359
+ valid loss: 697501.250000
+Epoch: [729/1000]:
+step: [100/1800]
+train loss: 6228665.310547
+ valid loss: 697530.250000
+Epoch: [730/1000]:
+step: [100/1800]
+train loss: 6228794.703125
+ valid loss: 697551.375000
+Epoch: [731/1000]:
+step: [100/1800]
+train loss: 6228953.833984
+ valid loss: 697579.250000
+Epoch: [732/1000]:
+step: [100/1800]
+train loss: 6228940.529297
+ valid loss: 697673.250000
+Epoch: [733/1000]:
+step: [100/1800]
+train loss: 6229107.837891
+ valid loss: 697702.625000
+Epoch: [734/1000]:
+step: [100/1800]
+train loss: 6229278.478516
+ valid loss: 697540.187500
+Epoch: [735/1000]:
+step: [100/1800]
+train loss: 6228915.318359
+ valid loss: 697567.250000
+Epoch: [736/1000]:
+step: [100/1800]
+train loss: 6229209.027344
+ valid loss: 697524.375000
+Epoch: [737/1000]:
+step: [100/1800]
+train loss: 6228923.566406
+ valid loss: 697502.875000
+Epoch: [738/1000]:
+step: [100/1800]
+train loss: 6230333.386719
+ valid loss: 697643.187500
+Epoch: [739/1000]:
+step: [100/1800]
+train loss: 6229781.486328
+ valid loss: 697604.062500
+Epoch: [740/1000]:
+step: [100/1800]
+train loss: 6229261.548828
+ valid loss: 697623.812500
+Epoch: [741/1000]:
+step: [100/1800]
+train loss: 6230277.671875
+ valid loss: 697525.875000
+Epoch: [742/1000]:
+step: [100/1800]
+train loss: 6229896.105469
+ valid loss: 697486.187500
+Epoch: [743/1000]:
+step: [100/1800]
+train loss: 6229775.015625
+ valid loss: 697553.375000
+Epoch: [744/1000]:
+step: [100/1800]
+train loss: 6229507.195312
+ valid loss: 697565.937500
+Epoch: [745/1000]:
+step: [100/1800]
+train loss: 6229565.298828
+ valid loss: 697513.937500
+Epoch: [746/1000]:
+step: [100/1800]
+train loss: 6231506.753906
+ valid loss: 697697.812500
+Epoch: [747/1000]:
+step: [100/1800]
+train loss: 6229496.359375
+ valid loss: 697587.937500
+Epoch: [748/1000]:
+step: [100/1800]
+train loss: 6229362.884766
+ valid loss: 697506.687500
+Epoch: [749/1000]:
+step: [100/1800]
+train loss: 6228977.853516
+ valid loss: 697567.812500
+Epoch: [750/1000]:
+step: [100/1800]
+train loss: 6229098.068359
+ valid loss: 697511.750000
+Epoch: [751/1000]:
+step: [100/1800]
+train loss: 6228499.435547
+ valid loss: 697215.750000
+Epoch: [752/1000]:
+step: [100/1800]
+train loss: 6226418.841797
+ valid loss: 697288.437500
+Epoch: [753/1000]:
+step: [100/1800]
+train loss: 6229181.703125
+ valid loss: 697840.562500
+Epoch: [754/1000]:
+step: [100/1800]
+train loss: 6231370.318359
+ valid loss: 697652.500000
+Epoch: [755/1000]:
+step: [100/1800]
+train loss: 6230508.253906
+ valid loss: 697217.312500
+Epoch: [756/1000]:
+step: [100/1800]
+train loss: 6226110.585938
+ valid loss: 697236.500000
+Epoch: [757/1000]:
+step: [100/1800]
+train loss: 6226268.394531
+ valid loss: 697232.500000
+Epoch: [758/1000]:
+step: [100/1800]
+train loss: 6226668.900391
+ valid loss: 697293.437500
+Epoch: [759/1000]:
+step: [100/1800]
+train loss: 6226842.253906
+ valid loss: 697267.562500
+Epoch: [760/1000]:
+step: [100/1800]
+train loss: 6226385.556641
+ valid loss: 697321.812500
+Epoch: [761/1000]:
+step: [100/1800]
+train loss: 6225862.425781
+ valid loss: 697242.375000
+Epoch: [762/1000]:
+step: [100/1800]
+train loss: 6226470.867188
+ valid loss: 697268.562500
+Epoch: [763/1000]:
+step: [100/1800]
+train loss: 6226563.773438
+ valid loss: 697347.187500
+Epoch: [764/1000]:
+step: [100/1800]
+train loss: 6227052.310547
+ valid loss: 697451.750000
+Epoch: [765/1000]:
+step: [100/1800]
+train loss: 6226924.835938
+ valid loss: 697394.562500
+Epoch: [766/1000]:
+step: [100/1800]
+train loss: 6226494.230469
+ valid loss: 697268.375000
+Epoch: [767/1000]:
+step: [100/1800]
+train loss: 6226045.765625
+ valid loss: 697271.250000
+Epoch: [768/1000]:
+step: [100/1800]
+train loss: 6226654.427734
+ valid loss: 697338.812500
+Epoch: [769/1000]:
+step: [100/1800]
+train loss: 6225838.552734
+ valid loss: 697226.062500
+Epoch: [770/1000]:
+step: [100/1800]
+train loss: 6226756.279297
+ valid loss: 697211.562500
+Epoch: [771/1000]:
+step: [100/1800]
+train loss: 6226079.812500
+ valid loss: 697185.875000
+Epoch: [772/1000]:
+step: [100/1800]
+train loss: 6225743.554688
+ valid loss: 697125.312500
+Epoch: [773/1000]:
+step: [100/1800]
+train loss: 6225145.716797
+ valid loss: 697133.187500
+Epoch: [774/1000]:
+step: [100/1800]
+train loss: 6225550.220703
+ valid loss: 697192.750000
+Epoch: [775/1000]:
+step: [100/1800]
+train loss: 6230705.882812
+ valid loss: 697929.125000
+Epoch: [776/1000]:
+step: [100/1800]
+train loss: 6230619.445312
+ valid loss: 698023.062500
+Epoch: [777/1000]:
+step: [100/1800]
+train loss: 6233802.726562
+ valid loss: 697772.687500
+Epoch: [778/1000]:
+step: [100/1800]
+train loss: 6233256.837891
+ valid loss: 697617.062500
+Epoch: [779/1000]:
+step: [100/1800]
+train loss: 6228225.689453
+ valid loss: 697385.062500
+Epoch: [780/1000]:
+step: [100/1800]
+train loss: 6226660.888672
+ valid loss: 697276.125000
+Epoch: [781/1000]:
+step: [100/1800]
+train loss: 6226688.166016
+ valid loss: 697198.312500
+Epoch: [782/1000]:
+step: [100/1800]
+train loss: 6226873.605469
+ valid loss: 697190.812500
+Epoch: [783/1000]:
+step: [100/1800]
+train loss: 6226757.998047
+ valid loss: 697206.250000
+Epoch: [784/1000]:
+step: [100/1800]
+train loss: 6226164.001953
+ valid loss: 697062.312500
+Epoch: [785/1000]:
+step: [100/1800]
+train loss: 6226222.906250
+ valid loss: 697236.437500
+Epoch: [786/1000]:
+step: [100/1800]
+train loss: 6226385.039062
+ valid loss: 697250.937500
+Epoch: [787/1000]:
+step: [100/1800]
+train loss: 6226398.681641
+ valid loss: 697320.062500
+Epoch: [788/1000]:
+step: [100/1800]
+train loss: 6227077.962891
+ valid loss: 697299.875000
+Epoch: [789/1000]:
+step: [100/1800]
+train loss: 6227046.447266
+ valid loss: 697308.375000
+Epoch: [790/1000]:
+step: [100/1800]
+train loss: 6226425.560547
+ valid loss: 697288.375000
+Epoch: [791/1000]:
+step: [100/1800]
+train loss: 6226746.919922
+ valid loss: 697134.937500
+Epoch: [792/1000]:
+step: [100/1800]
+train loss: 6226311.910156
+ valid loss: 697191.875000
+Epoch: [793/1000]:
+step: [100/1800]
+train loss: 6226829.769531
+ valid loss: 697313.375000
+Epoch: [794/1000]:
+step: [100/1800]
+train loss: 6227136.332031
+ valid loss: 697204.500000
+Epoch: [795/1000]:
+step: [100/1800]
+train loss: 6227025.083984
+ valid loss: 697306.062500
+Epoch: [796/1000]:
+step: [100/1800]
+train loss: 6227763.949219
+ valid loss: 697272.875000
+Epoch: [797/1000]:
+step: [100/1800]
+train loss: 6227638.912109
+ valid loss: 697273.375000
+Epoch: [798/1000]:
+step: [100/1800]
+train loss: 6226679.617188
+ valid loss: 697254.250000
+Epoch: [799/1000]:
+step: [100/1800]
+train loss: 6227149.234375
+ valid loss: 697271.312500
+Epoch: [800/1000]:
+step: [100/1800]
+train loss: 6226904.937500
+ valid loss: 697205.500000
+Epoch: [801/1000]:
+step: [100/1800]
+train loss: 6226326.865234
+ valid loss: 697112.687500
+Epoch: [802/1000]:
+step: [100/1800]
+train loss: 6226042.769531
+ valid loss: 697149.062500
+Epoch: [803/1000]:
+step: [100/1800]
+train loss: 6225870.582031
+ valid loss: 697164.187500
+Epoch: [804/1000]:
+step: [100/1800]
+train loss: 6225997.068359
+ valid loss: 697188.750000
+Epoch: [805/1000]:
+step: [100/1800]
+train loss: 6225596.472656
+ valid loss: 697222.562500
+Epoch: [806/1000]:
+step: [100/1800]
+train loss: 6226078.564453
+ valid loss: 697147.875000
+Epoch: [807/1000]:
+step: [100/1800]
+train loss: 6226661.701172
+ valid loss: 697233.000000
+Epoch: [808/1000]:
+step: [100/1800]
+train loss: 6226273.517578
+ valid loss: 697320.187500
+Epoch: [809/1000]:
+step: [100/1800]
+train loss: 6226605.339844
+ valid loss: 697220.625000
+Epoch: [810/1000]:
+step: [100/1800]
+train loss: 6226747.363281
+ valid loss: 697187.312500
+Epoch: [811/1000]:
+step: [100/1800]
+train loss: 6226728.824219
+ valid loss: 697240.312500
+Epoch: [812/1000]:
+step: [100/1800]
+train loss: 6226938.457031
+ valid loss: 697241.812500
+Epoch: [813/1000]:
+step: [100/1800]
+train loss: 6226042.787109
+ valid loss: 697170.250000
+Epoch: [814/1000]:
+step: [100/1800]
+train loss: 6226368.781250
+ valid loss: 697150.687500
+Epoch: [815/1000]:
+step: [100/1800]
+train loss: 6226645.794922
+ valid loss: 697081.562500
+Epoch: [816/1000]:
+step: [100/1800]
+train loss: 6226837.230469
+ valid loss: 697157.812500
+Epoch: [817/1000]:
+step: [100/1800]
+train loss: 6227046.968750
+ valid loss: 697233.562500
+Epoch: [818/1000]:
+step: [100/1800]
+train loss: 6227158.029297
+ valid loss: 697190.062500
+Epoch: [819/1000]:
+step: [100/1800]
+train loss: 6227499.230469
+ valid loss: 697253.937500
+Epoch: [820/1000]:
+step: [100/1800]
+train loss: 6227861.666016
+ valid loss: 697190.937500
+Epoch: [821/1000]:
+step: [100/1800]
+train loss: 6227490.605469
+ valid loss: 697238.250000
+Epoch: [822/1000]:
+step: [100/1800]
+train loss: 6227307.017578
+ valid loss: 697195.875000
+Epoch: [823/1000]:
+step: [100/1800]
+train loss: 6227442.351562
+ valid loss: 697179.375000
+Epoch: [824/1000]:
+step: [100/1800]
+train loss: 6226956.673828
+ valid loss: 697256.375000
+Epoch: [825/1000]:
+step: [100/1800]
+train loss: 6227047.437500
+ valid loss: 697285.937500
+Epoch: [826/1000]:
+step: [100/1800]
+train loss: 6227565.960938
+ valid loss: 697197.125000
+Epoch: [827/1000]:
+step: [100/1800]
+train loss: 6227160.125000
+ valid loss: 697206.812500
+Epoch: [828/1000]:
+step: [100/1800]
+train loss: 6226773.636719
+ valid loss: 697240.687500
+Epoch: [829/1000]:
+step: [100/1800]
+train loss: 6227773.712891
+ valid loss: 697402.625000
+Epoch: [830/1000]:
+step: [100/1800]
+train loss: 6228099.517578
+ valid loss: 697309.875000
+Epoch: [831/1000]:
+step: [100/1800]
+train loss: 6227540.435547
+ valid loss: 697305.000000
+Epoch: [832/1000]:
+step: [100/1800]
+train loss: 6227765.968750
+ valid loss: 697209.937500
+Epoch: [833/1000]:
+step: [100/1800]
+train loss: 6227446.761719
+ valid loss: 697362.500000
+Epoch: [834/1000]:
+step: [100/1800]
+train loss: 6227743.947266
+ valid loss: 697282.750000
+Epoch: [835/1000]:
+step: [100/1800]
+train loss: 6227604.814453
+ valid loss: 697197.437500
+Epoch: [836/1000]:
+step: [100/1800]
+train loss: 6227807.740234
+ valid loss: 697226.812500
+Epoch: [837/1000]:
+step: [100/1800]
+train loss: 6227606.992188
+ valid loss: 697284.750000
+Epoch: [838/1000]:
+step: [100/1800]
+train loss: 6227701.242188
+ valid loss: 697181.250000
+Epoch: [839/1000]:
+step: [100/1800]
+train loss: 6227125.488281
+ valid loss: 697287.062500
+Epoch: [840/1000]:
+step: [100/1800]
+train loss: 6227035.144531
+ valid loss: 697204.062500
+Epoch: [841/1000]:
+step: [100/1800]
+train loss: 6227069.185547
+ valid loss: 697261.562500
+Epoch: [842/1000]:
+step: [100/1800]
+train loss: 6227666.585938
+ valid loss: 697173.250000
+Epoch: [843/1000]:
+step: [100/1800]
+train loss: 6227212.982422
+ valid loss: 697062.937500
+Epoch: [844/1000]:
+step: [100/1800]
+train loss: 6225497.955078
+ valid loss: 697002.875000
+Epoch: [845/1000]:
+step: [100/1800]
+train loss: 6225229.830078
+ valid loss: 696996.250000
+Epoch: [846/1000]:
+step: [100/1800]
+train loss: 6225597.996094
+ valid loss: 697022.687500
+Epoch: [847/1000]:
+step: [100/1800]
+train loss: 6225353.521484
+ valid loss: 696901.187500
+Epoch: [848/1000]:
+step: [100/1800]
+train loss: 6225057.478516
+ valid loss: 696952.125000
+Epoch: [849/1000]:
+step: [100/1800]
+train loss: 6225306.654297
+ valid loss: 696995.312500
+Epoch: [850/1000]:
+step: [100/1800]
+train loss: 6226039.392578
+ valid loss: 696958.812500
+Epoch: [851/1000]:
+step: [100/1800]
+train loss: 6226007.029297
+ valid loss: 697022.812500
+Epoch: [852/1000]:
+step: [100/1800]
+train loss: 6225987.369141
+ valid loss: 696994.562500
+Epoch: [853/1000]:
+step: [100/1800]
+train loss: 6225765.634766
+ valid loss: 696977.500000
+Epoch: [854/1000]:
+step: [100/1800]
+train loss: 6225997.832031
+ valid loss: 697045.937500
+Epoch: [855/1000]:
+step: [100/1800]
+train loss: 6228067.552734
+ valid loss: 697180.062500
+Epoch: [856/1000]:
+step: [100/1800]
+train loss: 6236044.046875
+ valid loss: 699306.375000
+Epoch: [857/1000]:
+step: [100/1800]
+train loss: 6233692.160156
+ valid loss: 697296.437500
+Epoch: [858/1000]:
+step: [100/1800]
+train loss: 6227844.841797
+ valid loss: 697043.687500
+Epoch: [859/1000]:
+step: [100/1800]
+train loss: 6227431.904297
+ valid loss: 697102.000000
+Epoch: [860/1000]:
+step: [100/1800]
+train loss: 6228804.142578
+ valid loss: 697121.437500
+Epoch: [861/1000]:
+step: [100/1800]
+train loss: 6230164.818359
+ valid loss: 697196.062500
+Epoch: [862/1000]:
+step: [100/1800]
+train loss: 6228643.685547
+ valid loss: 697130.875000
+Epoch: [863/1000]:
+step: [100/1800]
+train loss: 6227274.347656
+ valid loss: 697040.437500
+Epoch: [864/1000]:
+step: [100/1800]
+train loss: 6227230.726562
+ valid loss: 697033.750000
+Epoch: [865/1000]:
+step: [100/1800]
+train loss: 6226993.544922
+ valid loss: 697233.187500
+Epoch: [866/1000]:
+step: [100/1800]
+train loss: 6228451.111328
+ valid loss: 697321.437500
+Epoch: [867/1000]:
+step: [100/1800]
+train loss: 6228039.750000
+ valid loss: 697198.562500
+Epoch: [868/1000]:
+step: [100/1800]
+train loss: 6226731.380859
+ valid loss: 697109.562500
+Epoch: [869/1000]:
+step: [100/1800]
+train loss: 6226226.570312
+ valid loss: 697011.437500
+Epoch: [870/1000]:
+step: [100/1800]
+train loss: 6226314.113281
+ valid loss: 697047.062500
+Epoch: [871/1000]:
+step: [100/1800]
+train loss: 6226090.617188
+ valid loss: 696691.625000
+Epoch: [872/1000]:
+step: [100/1800]
+train loss: 6223096.679688
+ valid loss: 696501.687500
+Epoch: [873/1000]:
+step: [100/1800]
+train loss: 6222547.449219
+ valid loss: 696535.500000
+Epoch: [874/1000]:
+step: [100/1800]
+train loss: 6221969.269531
+ valid loss: 696549.312500
+Epoch: [875/1000]:
+step: [100/1800]
+train loss: 6222123.296875
+ valid loss: 696602.437500
+Epoch: [876/1000]:
+step: [100/1800]
+train loss: 6222397.642578
+ valid loss: 696674.125000
+Epoch: [877/1000]:
+step: [100/1800]
+train loss: 6222364.617188
+ valid loss: 696490.187500
+Epoch: [878/1000]:
+step: [100/1800]
+train loss: 6221800.105469
+ valid loss: 696590.187500
+Epoch: [879/1000]:
+step: [100/1800]
+train loss: 6222057.191406
+ valid loss: 696536.500000
+Epoch: [880/1000]:
+step: [100/1800]
+train loss: 6221581.851562
+ valid loss: 696589.562500
+Epoch: [881/1000]:
+step: [100/1800]
+train loss: 6222408.396484
+ valid loss: 696602.812500
+Epoch: [882/1000]:
+step: [100/1800]
+train loss: 6221787.794922
+ valid loss: 696484.375000
+Epoch: [883/1000]:
+step: [100/1800]
+train loss: 6221843.431641
+ valid loss: 696490.375000
+Epoch: [884/1000]:
+step: [100/1800]
+train loss: 6222334.644531
+ valid loss: 696561.875000
+Epoch: [885/1000]:
+step: [100/1800]
+train loss: 6222471.164062
+ valid loss: 696492.875000
+Epoch: [886/1000]:
+step: [100/1800]
+train loss: 6221483.574219
+ valid loss: 696551.687500
+Epoch: [887/1000]:
+step: [100/1800]
+train loss: 6222474.533203
+ valid loss: 696667.437500
+Epoch: [888/1000]:
+step: [100/1800]
+train loss: 6222268.244141
+ valid loss: 696523.375000
+Epoch: [889/1000]:
+step: [100/1800]
+train loss: 6222150.187500
+ valid loss: 696580.562500
+Epoch: [890/1000]:
+step: [100/1800]
+train loss: 6221994.884766
+ valid loss: 696554.062500
+Epoch: [891/1000]:
+step: [100/1800]
+train loss: 6221636.457031
+ valid loss: 696574.937500
+Epoch: [892/1000]:
+step: [100/1800]
+train loss: 6221757.703125
+ valid loss: 696558.625000
+Epoch: [893/1000]:
+step: [100/1800]
+train loss: 6221785.492188
+ valid loss: 696511.562500
+Epoch: [894/1000]:
+step: [100/1800]
+train loss: 6221884.638672
+ valid loss: 696636.500000
+Epoch: [895/1000]:
+step: [100/1800]
+train loss: 6221587.689453
+ valid loss: 696532.437500
+Epoch: [896/1000]:
+step: [100/1800]
+train loss: 6222011.888672
+ valid loss: 696567.062500
+Epoch: [897/1000]:
+step: [100/1800]
+train loss: 6222536.652344
+ valid loss: 696519.500000
+Epoch: [898/1000]:
+step: [100/1800]
+train loss: 6221935.126953
+ valid loss: 696477.437500
+Epoch: [899/1000]:
+step: [100/1800]
+train loss: 6222461.400391
+ valid loss: 696474.187500
+Epoch: [900/1000]:
+step: [100/1800]
+train loss: 6221691.888672
+ valid loss: 696501.000000
+Epoch: [901/1000]:
+step: [100/1800]
+train loss: 6222310.703125
+ valid loss: 696626.500000
+Epoch: [902/1000]:
+step: [100/1800]
+train loss: 6221933.132812
+ valid loss: 696468.187500
+Epoch: [903/1000]:
+step: [100/1800]
+train loss: 6222073.933594
+ valid loss: 696453.187500
+Epoch: [904/1000]:
+step: [100/1800]
+train loss: 6221651.447266
+ valid loss: 696427.875000
+Epoch: [905/1000]:
+step: [100/1800]
+train loss: 6221272.255859
+ valid loss: 696438.500000
+Epoch: [906/1000]:
+step: [100/1800]
+train loss: 6221406.433594
+ valid loss: 696535.437500
+Epoch: [907/1000]:
+step: [100/1800]
+train loss: 6222049.869141
+ valid loss: 696455.187500
+Epoch: [908/1000]:
+step: [100/1800]
+train loss: 6221595.814453
+ valid loss: 696441.375000
+Epoch: [909/1000]:
+step: [100/1800]
+train loss: 6222728.250000
+ valid loss: 696708.562500
+Epoch: [910/1000]:
+step: [100/1800]
+train loss: 6224225.460938
+ valid loss: 696621.750000
+Epoch: [911/1000]:
+step: [100/1800]
+train loss: 6223512.748047
+ valid loss: 696561.687500
+Epoch: [912/1000]:
+step: [100/1800]
+train loss: 6222715.750000
+ valid loss: 696562.812500
+Epoch: [913/1000]:
+step: [100/1800]
+train loss: 6222238.640625
+ valid loss: 696577.125000
+Epoch: [914/1000]:
+step: [100/1800]
+train loss: 6221567.535156
+ valid loss: 696377.062500
+Epoch: [915/1000]:
+step: [100/1800]
+train loss: 6221854.013672
+ valid loss: 696374.000000
+Epoch: [916/1000]:
+step: [100/1800]
+train loss: 6221223.703125
+ valid loss: 696358.937500
+Epoch: [917/1000]:
+step: [100/1800]
+train loss: 6221408.759766
+ valid loss: 696461.875000
+Epoch: [918/1000]:
+step: [100/1800]
+train loss: 6221854.458984
+ valid loss: 696519.250000
+Epoch: [919/1000]:
+step: [100/1800]
+train loss: 6224752.773438
+ valid loss: 696682.375000
+Epoch: [920/1000]:
+step: [100/1800]
+train loss: 6223232.679688
+ valid loss: 696467.125000
+Epoch: [921/1000]:
+step: [100/1800]
+train loss: 6222194.308594
+ valid loss: 696479.625000
+Epoch: [922/1000]:
+step: [100/1800]
+train loss: 6221833.691406
+ valid loss: 696458.187500
+Epoch: [923/1000]:
+step: [100/1800]
+train loss: 6222384.533203
+ valid loss: 696435.687500
+Epoch: [924/1000]:
+step: [100/1800]
+train loss: 6221974.728516
+ valid loss: 696449.437500
+Epoch: [925/1000]:
+step: [100/1800]
+train loss: 6222296.572266
+ valid loss: 696484.000000
+Epoch: [926/1000]:
+step: [100/1800]
+train loss: 6221827.185547
+ valid loss: 696444.062500
+Epoch: [927/1000]:
+step: [100/1800]
+train loss: 6221658.408203
+ valid loss: 696418.187500
+Epoch: [928/1000]:
+step: [100/1800]
+train loss: 6221268.123047
+ valid loss: 696413.375000
+Epoch: [929/1000]:
+step: [100/1800]
+train loss: 6221787.177734
+ valid loss: 696528.437500
+Epoch: [930/1000]:
+step: [100/1800]
+train loss: 6223211.886719
+ valid loss: 696483.000000
+Epoch: [931/1000]:
+step: [100/1800]
+train loss: 6223682.910156
+ valid loss: 696552.937500
+Epoch: [932/1000]:
+step: [100/1800]
+train loss: 6222885.761719
+ valid loss: 696528.750000
+Epoch: [933/1000]:
+step: [100/1800]
+train loss: 6222745.761719
+ valid loss: 696639.250000
+Epoch: [934/1000]:
+step: [100/1800]
+train loss: 6223290.939453
+ valid loss: 696473.875000
+Epoch: [935/1000]:
+step: [100/1800]
+train loss: 6221752.375000
+ valid loss: 696469.812500
+Epoch: [936/1000]:
+step: [100/1800]
+train loss: 6222244.572266
+ valid loss: 696454.312500
+Epoch: [937/1000]:
+step: [100/1800]
+train loss: 6222302.710938
+ valid loss: 696567.500000
+Epoch: [938/1000]:
+step: [100/1800]
+train loss: 6222338.435547
+ valid loss: 696420.187500
+Epoch: [939/1000]:
+step: [100/1800]
+train loss: 6222453.384766
+ valid loss: 696512.312500
+Epoch: [940/1000]:
+step: [100/1800]
+train loss: 6222899.453125
+ valid loss: 696484.875000
+Epoch: [941/1000]:
+step: [100/1800]
+train loss: 6222266.744141
+ valid loss: 696510.750000
+Epoch: [942/1000]:
+step: [100/1800]
+train loss: 6222756.023438
+ valid loss: 696481.250000
+Epoch: [943/1000]:
+step: [100/1800]
+train loss: 6222339.521484
+ valid loss: 696422.437500
+Epoch: [944/1000]:
+step: [100/1800]
+train loss: 6222303.900391
+ valid loss: 696425.937500
+Epoch: [945/1000]:
+step: [100/1800]
+train loss: 6222407.095703
+ valid loss: 696465.187500
+Epoch: [946/1000]:
+step: [100/1800]
+train loss: 6223841.142578
+ valid loss: 696546.125000
+Epoch: [947/1000]:
+step: [100/1800]
+train loss: 6223794.921875
+ valid loss: 696398.000000
+Epoch: [948/1000]:
+step: [100/1800]
+train loss: 6223374.007812
+ valid loss: 696452.312500
+Epoch: [949/1000]:
+step: [100/1800]
+train loss: 6223311.599609
+ valid loss: 696425.437500
+Epoch: [950/1000]:
+step: [100/1800]
+train loss: 6222654.578125
+ valid loss: 696501.500000
+Epoch: [951/1000]:
+step: [100/1800]
+train loss: 6222409.259766
+ valid loss: 696417.187500
+Epoch: [952/1000]:
+step: [100/1800]
+train loss: 6222613.500000
+ valid loss: 696459.937500
+Epoch: [953/1000]:
+step: [100/1800]
+train loss: 6222434.978516
+ valid loss: 696492.187500
+Epoch: [954/1000]:
+step: [100/1800]
+train loss: 6222493.029297
+ valid loss: 696391.187500
+Epoch: [955/1000]:
+step: [100/1800]
+train loss: 6222758.316406
+ valid loss: 696443.812500
+Epoch: [956/1000]:
+step: [100/1800]
+train loss: 6222289.339844
+ valid loss: 696440.000000
+Epoch: [957/1000]:
+step: [100/1800]
+train loss: 6222375.679688
+ valid loss: 696357.625000
+Epoch: [958/1000]:
+step: [100/1800]
+train loss: 6222537.517578
+ valid loss: 696354.125000
+Epoch: [959/1000]:
+step: [100/1800]
+train loss: 6222863.111328
+ valid loss: 696511.562500
+Epoch: [960/1000]:
+step: [100/1800]
+train loss: 6222796.294922
+ valid loss: 696503.375000
+Epoch: [961/1000]:
+step: [100/1800]
+train loss: 6223526.308594
+ valid loss: 696490.812500
+Epoch: [962/1000]:
+step: [100/1800]
+train loss: 6223235.904297
+ valid loss: 696517.812500
+Epoch: [963/1000]:
+step: [100/1800]
+train loss: 6222860.484375
+ valid loss: 696558.375000
+Epoch: [964/1000]:
+step: [100/1800]
+train loss: 6222877.828125
+ valid loss: 696437.062500
+Epoch: [965/1000]:
+step: [100/1800]
+train loss: 6223331.730469
+ valid loss: 696522.187500
+Epoch: [966/1000]:
+step: [100/1800]
+train loss: 6222509.265625
+ valid loss: 696474.187500
+Epoch: [967/1000]:
+step: [100/1800]
+train loss: 6222787.292969
+ valid loss: 696530.562500
+Epoch: [968/1000]:
+step: [100/1800]
+train loss: 6223082.746094
+ valid loss: 696437.562500
+Epoch: [969/1000]:
+step: [100/1800]
+train loss: 6223006.869141
+ valid loss: 696482.562500
+Epoch: [970/1000]:
+step: [100/1800]
+train loss: 6222099.144531
+ valid loss: 696350.875000
+Epoch: [971/1000]:
+step: [100/1800]
+train loss: 6222602.117188
+ valid loss: 696436.625000
+Epoch: [972/1000]:
+step: [100/1800]
+train loss: 6222771.371094
+ valid loss: 696448.937500
+Epoch: [973/1000]:
+step: [100/1800]
+train loss: 6222625.421875
+ valid loss: 696426.937500
+Epoch: [974/1000]:
+step: [100/1800]
+train loss: 6222343.804688
+ valid loss: 696494.312500
+Epoch: [975/1000]:
+step: [100/1800]
+train loss: 6222271.900391
+ valid loss: 696364.125000
+Epoch: [976/1000]:
+step: [100/1800]
+train loss: 6222071.878906
+ valid loss: 696400.187500
+Epoch: [977/1000]:
+step: [100/1800]
+train loss: 6222281.082031
+ valid loss: 696433.312500
+Epoch: [978/1000]:
+step: [100/1800]
+train loss: 6222097.630859
+ valid loss: 696451.750000
+Epoch: [979/1000]:
+step: [100/1800]
+train loss: 6222849.162109
+ valid loss: 696533.437500
+Epoch: [980/1000]:
+step: [100/1800]
+train loss: 6223172.582031
+ valid loss: 696595.000000
+Epoch: [981/1000]:
+step: [100/1800]
+train loss: 6223739.007812
+ valid loss: 696557.187500
+Epoch: [982/1000]:
+step: [100/1800]
+train loss: 6223312.285156
+ valid loss: 696529.500000
+Epoch: [983/1000]:
+step: [100/1800]
+train loss: 6223465.853516
+ valid loss: 696502.437500
+Epoch: [984/1000]:
+step: [100/1800]
+train loss: 6224178.691406
+ valid loss: 696565.625000
+Epoch: [985/1000]:
+step: [100/1800]
+train loss: 6223297.859375
+ valid loss: 696565.312500
+Epoch: [986/1000]:
+step: [100/1800]
+train loss: 6223520.361328
+ valid loss: 696551.062500
+Epoch: [987/1000]:
+step: [100/1800]
+train loss: 6223229.775391
+ valid loss: 696555.687500
+Epoch: [988/1000]:
+step: [100/1800]
+train loss: 6223450.513672
+ valid loss: 696466.625000
+Epoch: [989/1000]:
+step: [100/1800]
+train loss: 6223595.500000
+ valid loss: 696584.250000
+Epoch: [990/1000]:
+step: [100/1800]
+train loss: 6223776.046875
+ valid loss: 696544.937500
+Epoch: [991/1000]:
+step: [100/1800]
+train loss: 6224017.160156
+ valid loss: 696603.875000
+Epoch: [992/1000]:
+step: [100/1800]
+train loss: 6223613.109375
+ valid loss: 696529.250000
+Epoch: [993/1000]:
+step: [100/1800]
+train loss: 6223520.146484
+ valid loss: 696600.187500
+Epoch: [994/1000]:
+step: [100/1800]
+train loss: 6223458.853516
+ valid loss: 696540.875000
+Epoch: [995/1000]:
+step: [100/1800]
+train loss: 6223558.421875
+ valid loss: 696503.187500
+Epoch: [996/1000]:
+step: [100/1800]
+train loss: 6223526.695312
+ valid loss: 696563.687500
+Epoch: [997/1000]:
+step: [100/1800]
+train loss: 6224068.259766
+ valid loss: 696455.687500
+Epoch: [998/1000]:
+step: [100/1800]
+train loss: 6224360.123047
+ valid loss: 696486.812500
+Epoch: [999/1000]:
+step: [100/1800]
+train loss: 6226611.103516
+ valid loss: 696639.500000
+Epoch: [1000/1000]:
+step: [100/1800]
+train loss: 6228833.746094
+ valid loss: 696514.062500
+[I 2021-07-18 09:43:49,445] Trial 43 finished with value: 6221223.703125 and parameters: {'batch_size': 16, 'lr': 0.0019729098401339196, 'weight_decay': 2.6733768684666666e-05, 'clip_th': 0.001845602336936299, 'emb_size': 77, 'en_hidden_size': 181, 'de_hidden_size': 256, 'rep_size': 168}. Best is trial 39 with value: 6172492.720703125.
+Epoch: [1/1000]:
+train loss: 7040120.035156
+ valid loss: 780096.125000
+Epoch: [2/1000]:
+train loss: 6952631.601562
+ valid loss: 773225.500000
+Epoch: [3/1000]:
+train loss: 6919518.210938
+ valid loss: 770893.625000
+Epoch: [4/1000]:
+train loss: 6881448.656250
+ valid loss: 766822.562500
+Epoch: [5/1000]:
+train loss: 6863338.937500
+ valid loss: 765602.187500
+Epoch: [6/1000]:
+train loss: 6853487.687500
+ valid loss: 764509.375000
+Epoch: [7/1000]:
+train loss: 6845459.601562
+ valid loss: 763851.250000
+Epoch: [8/1000]:
+train loss: 6835079.679688
+ valid loss: 760153.812500
+Epoch: [9/1000]:
+train loss: 6802729.457031
+ valid loss: 758762.062500
+Epoch: [10/1000]:
+train loss: 6794408.445312
+ valid loss: 758160.187500
+Epoch: [11/1000]:
+train loss: 6789111.062500
+ valid loss: 757655.437500
+Epoch: [12/1000]:
+train loss: 6785845.820312
+ valid loss: 757474.250000
+Epoch: [13/1000]:
+train loss: 6781020.859375
+ valid loss: 756140.687500
+Epoch: [14/1000]:
+train loss: 6770763.226562
+ valid loss: 755461.625000
+Epoch: [15/1000]:
+train loss: 6756476.074219
+ valid loss: 752743.937500
+Epoch: [16/1000]:
+train loss: 6741361.453125
+ valid loss: 752109.812500
+Epoch: [17/1000]:
+train loss: 6735545.328125
+ valid loss: 751640.937500
+Epoch: [18/1000]:
+train loss: 6731674.148438
+ valid loss: 751373.687500
+Epoch: [19/1000]:
+train loss: 6729142.445312
+ valid loss: 751136.937500
+Epoch: [20/1000]:
+train loss: 6726991.109375
+ valid loss: 750789.062500
+Epoch: [21/1000]:
+train loss: 6722191.570312
+ valid loss: 747177.187500
+Epoch: [22/1000]:
+train loss: 6673175.621094
+ valid loss: 743386.500000
+Epoch: [23/1000]:
+train loss: 6657908.992188
+ valid loss: 742931.250000
+Epoch: [24/1000]:
+train loss: 6654263.328125
+ valid loss: 742492.437500
+Epoch: [25/1000]:
+train loss: 6649518.476562
+ valid loss: 741871.312500
+Epoch: [26/1000]:
+train loss: 6643639.476562
+ valid loss: 741256.062500
+Epoch: [27/1000]:
+train loss: 6639701.292969
+ valid loss: 740953.500000
+Epoch: [28/1000]:
+train loss: 6636088.230469
+ valid loss: 740564.312500
+Epoch: [29/1000]:
+train loss: 6633648.882812
+ valid loss: 740344.562500
+Epoch: [30/1000]:
+train loss: 6631899.109375
+ valid loss: 740216.750000
+Epoch: [31/1000]:
+train loss: 6629654.140625
+ valid loss: 739838.875000
+Epoch: [32/1000]:
+train loss: 6623088.031250
+ valid loss: 738592.812500
+Epoch: [33/1000]:
+train loss: 6617724.984375
+ valid loss: 738419.875000
+Epoch: [34/1000]:
+train loss: 6615000.187500
+ valid loss: 737860.750000
+Epoch: [35/1000]:
+train loss: 6610251.656250
+ valid loss: 737539.187500
+Epoch: [36/1000]:
+train loss: 6607152.742188
+ valid loss: 737297.625000
+Epoch: [37/1000]:
+train loss: 6605185.527344
+ valid loss: 737140.750000
+Epoch: [38/1000]:
+train loss: 6602978.832031
+ valid loss: 736682.250000
+Epoch: [39/1000]:
+train loss: 6599522.757812
+ valid loss: 736447.625000
+Epoch: [40/1000]:
+train loss: 6597357.386719
+[W 2021-07-18 09:51:08,315] Trial 44 failed because of the following error: RuntimeError('CUDA out of memory. Tried to allocate 156.00 MiB (GPU 0; 5.81 GiB total capacity; 3.91 GiB already allocated; 166.38 MiB free; 4.39 GiB reserved in total by PyTorch)')
+Traceback (most recent call last):
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/optuna/study.py", line 709, in _run_trial
+    result = func(trial)
+  File "/home/yokoyama/networkgenerate/tune.py", line 184, in tuning_trial
+    mu,sigma, *result = vae(valid_dataset)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/networkgenerate/model.py", line 394, in forward
+    tu, tv, lu, lv, le = self.decoder(z, x)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/networkgenerate/model.py", line 167, in forward
+    le = self.softmax(self.f_le(x))
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/linear.py", line 96, in forward
+    return F.linear(input, self.weight, self.bias)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/functional.py", line 1847, in linear
+    return torch._C._nn.linear(input, weight, bias)
+RuntimeError: CUDA out of memory. Tried to allocate 156.00 MiB (GPU 0; 5.81 GiB total capacity; 3.91 GiB already allocated; 166.38 MiB free; 4.39 GiB reserved in total by PyTorch)
+Traceback (most recent call last):
+  File "main.py", line 88, in <module>
+    main(args)
+  File "main.py", line 33, in main
+    tune.conditional_tune(args)
+  File "/home/yokoyama/networkgenerate/tune.py", line 219, in conditional_tune
+    study.optimize(tuning_trial, n_trials=opt_epoch)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/optuna/study.py", line 292, in optimize
+    func, n_trials, timeout, catch, callbacks, gc_after_trial, None
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/optuna/study.py", line 654, in _optimize_sequential
+    self._run_trial_and_callbacks(func, catch, callbacks, gc_after_trial)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/optuna/study.py", line 685, in _run_trial_and_callbacks
+    trial = self._run_trial(func, catch, gc_after_trial)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/optuna/study.py", line 709, in _run_trial
+    result = func(trial)
+  File "/home/yokoyama/networkgenerate/tune.py", line 184, in tuning_trial
+    mu,sigma, *result = vae(valid_dataset)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/networkgenerate/model.py", line 394, in forward
+    tu, tv, lu, lv, le = self.decoder(z, x)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/networkgenerate/model.py", line 167, in forward
+    le = self.softmax(self.f_le(x))
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/module.py", line 1051, in _call_impl
+    return forward_call(*input, **kwargs)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/modules/linear.py", line 96, in forward
+    return F.linear(input, self.weight, self.bias)
+  File "/home/yokoyama/.pyenv/versions/3.7.6/lib/python3.7/site-packages/torch/nn/functional.py", line 1847, in linear
+    return torch._C._nn.linear(input, weight, bias)
+RuntimeError: CUDA out of memory. Tried to allocate 156.00 MiB (GPU 0; 5.81 GiB total capacity; 3.91 GiB already allocated; 166.38 MiB free; 4.39 GiB reserved in total by PyTorch)
