@@ -24,3 +24,5 @@ default.png
 results/*
 
 logs/*
+*.zip
+
