@@ -4,6 +4,7 @@ import optuna
 import yaml
 import shutil
 import joblib
+import sys
 
 import torch
 from torch import nn, reshape, tensor
@@ -168,12 +169,11 @@ def conditional_tune(args):
                 timestep+=1
                 loss.backward()
                 loss_sum+=loss.item()
-                # Back Propagationの後は、計算グラフを削除
-                del loss
                 opt.step()
 
                 torch.nn.utils.clip_grad_norm_(vae.parameters(), clip_th)
 
+            del datas, args
             if train_min_loss>loss_sum:
                 train_min_loss = loss_sum
             print("train loss: %lf"%(loss_sum))
@@ -206,17 +206,13 @@ def conditional_tune(args):
             print(" valid loss: %lf"%(valid_loss_sum))
             writer.add_scalar("tune_condition/valid_loss", valid_loss_sum, epoch)
 
-        # myPCのためにいろいろ消してみる
-        del vae, opt, train_dl
-        torch.cuda.empty_cache()
-        # print(torch.cuda.memory_summary(device=None, abbreviated=False))
-
         return train_min_loss
 
     study = optuna.create_study(study_name="condition_tune_twitter",
                             storage='sqlite:///../optuna_condition_tune_twitter_lr_decay_ari.db',
                             load_if_exists=True)
     study.optimize(tuning_trial, n_trials=opt_epoch)
+
 
     print("--------------------------")
     print(study.best_params)
