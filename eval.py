@@ -79,7 +79,7 @@ def eval(args):
         vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
     else:
         # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-        vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
+        vae.load_state_dict(torch.load("results/" + run_time + "/train/weight_1000", map_location="cpu"))
 
     vae = utils.try_gpu(device,vae)
 

@@ -33,7 +33,9 @@ def main(args):
     #     utils.make_dir(["visualize"])
 
     # args type が何も指定されていない場合は全てのtypeが指定され、指定がある場合はそのtypeのcsv pathが持ってこられる
-    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+    #csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./results/' + run_time + '/csv/*')
+
     if args.scatter:
         if os.path.isdir("results/"+run_time+"/visualize/scatter_diagram/"):
             shutil.rmtree("results/"+run_time+"/visualize/scatter_diagram")
