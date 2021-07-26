@@ -1,0 +1,6 @@
+batch_size: 21
+clip_th: 0.00018132953639126497
+de_hidden_size: 252
+emb_size: 233
+en_hidden_size: 108
+rep_size: 65

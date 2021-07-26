@@ -67,15 +67,15 @@ def eval(args):
 
     # model_param load
     import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    #with open('results/best_tune.yml', 'r') as yml:
+    #    model_param = yaml.load(yml) 
+    print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-    vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
+    vae.load_state_dict(torch.load("results/" + run_time + "/train/weight_1000", map_location="cpu"))
     vae = utils.try_gpu(device,vae)
 
     vae.eval()
