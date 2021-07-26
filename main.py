@@ -25,7 +25,7 @@ def main(args):
 
     # 大まかなディレクトリ作成. より細かいディレクトリは各関数で作成
     required_dirs = ["dataset", "param", "results", "results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
-    utils.make_dir(required_dirs)
+    #utils.make_dir(required_dirs)
 
     # tune
     if args.tune:

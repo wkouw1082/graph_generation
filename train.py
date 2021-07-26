@@ -91,10 +91,10 @@ def conditional_train(args):
     print("--------------")
 
     # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    #import yaml
+    #with open('results/best_tune.yml', 'r') as yml:
+    #    model_param = yaml.load(yml) 
+    print(f"model_param = {model_param}")
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
@@ -329,7 +329,7 @@ def conditional_train(args):
         # output weight each 1000 epochs
         # if epoch % 1000 == 0:
         if epoch % 200 == 0:
-            torch.save(vae.state_dict(), "param/weight_"+epoch)
+            torch.save(vae.state_dict(), "param/weight_"+str(epoch))
             torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
 
         print("\n")

@@ -211,7 +211,7 @@ def conditional_tune(args):
     study = optuna.create_study(study_name="condition_tune_twitter",
                             storage='sqlite:///../optuna_condition_tune_twitter_lr_decay_ari.db',
                             load_if_exists=True)
-    study.optimize(tuning_trial, n_trials=opt_epoch)
+    #study.optimize(tuning_trial, n_trials=opt_epoch)
 
 
     print("--------------------------")
@@ -262,10 +262,10 @@ def tune(args):
 
     def tuning_trial(trial):
         batch_size = trial.suggest_int("batch_size", 16, 128)
-        # lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
-        lr = 0.001
-        # decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
-        decay = 0
+        lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
+        # lr = 0.001
+        decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
+        # decay = 0
         clip_th = trial.suggest_loguniform("clip_th", 1e-5, 0.1)
         model_param = {
             "emb_size" : trial.suggest_int("emb_size", 10, 256),

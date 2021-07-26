@@ -21,8 +21,7 @@ result_graph_*
 result_graph
 
 default.png
-results/*
+#results/*
 
 logs/*
 *.zip
-
