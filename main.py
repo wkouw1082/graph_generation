@@ -74,6 +74,7 @@ if __name__ == "__main__":
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
+    parser.add_argument('--eval_model',action='store')
     parser.add_argument('--visualize', action='store_true')
 
     parser.add_argument('--histogram', action='store_true')
