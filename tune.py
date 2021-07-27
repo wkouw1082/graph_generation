@@ -201,6 +201,7 @@ def conditional_tune(args):
                 valid_loss_sum+=degree_loss*classifier_bias
                 valid_loss_sum+=cluster_loss*classifier_bias
 
+
             if valid_min_loss>valid_loss_sum:
                 valid_min_loss = valid_loss_sum
             print(" valid loss: %lf"%(valid_loss_sum))
@@ -209,9 +210,9 @@ def conditional_tune(args):
         return train_min_loss
 
     study = optuna.create_study(study_name="condition_tune_twitter",
-                            storage='sqlite:///../optuna_condition_tune_twitter_lr_decay_ari.db',
+                            storage='sqlite:///../optuna_condition_tune_twitter.db',
                             load_if_exists=True)
-    #study.optimize(tuning_trial, n_trials=opt_epoch)
+    study.optimize(tuning_trial, n_trials=opt_epoch)
 
 
     print("--------------------------")

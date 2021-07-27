@@ -19,9 +19,7 @@ requirementsbk.txt
 *.pyc
 result_graph_*
 result_graph
-
 default.png
-#results/*
-
-logs/*
+/results/*
+/logs/*
 *.zip
