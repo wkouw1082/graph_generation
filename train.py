@@ -201,7 +201,7 @@ def conditional_train(args):
 
             loss.backward()
             train_loss_sum+=loss.item()
-            del loss
+            # del loss
             opt.step()
 
             torch.nn.utils.clip_grad_norm_(vae.parameters(), model_param["clip_th"])
@@ -223,7 +223,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
-        writer.add_scalar("train/train_loss", loss, epoch)
+        writer.add_scalar("train_condition/train_loss", loss, epoch)
 
         # memory free
         del current_train_loss, current_train_acc
@@ -309,7 +309,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
-        writer.add_scalar("train/vallid_loss", loss, epoch)
+        writer.add_scalar("train_condition/vallid_loss", loss, epoch)
 
         # output loss/acc transition
         utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")

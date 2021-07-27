@@ -101,7 +101,9 @@ def conditional_tune(args):
     def tuning_trial(trial):
         batch_size = trial.suggest_int("batch_size", 16, 128)
         lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
+        #lr = 0.001
         decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
+        #decay = 0
         clip_th = trial.suggest_loguniform("clip_th", 1e-5, 0.1)
         model_param = {
             "emb_size" : trial.suggest_int("emb_size", 10, 256),
@@ -132,7 +134,6 @@ def conditional_tune(args):
 
         for epoch in range(1, epochs+1):
             print("Epoch: [%d/%d]:"%(epoch, epochs))
-            print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
             # train
             loss_sum = 0
@@ -176,7 +177,7 @@ def conditional_tune(args):
             if train_min_loss>loss_sum:
                 train_min_loss = loss_sum
             print("train loss: %lf"%(loss_sum))
-            writer.add_scalar("tune/train_loss", loss_sum, epoch)
+            writer.add_scalar("tune_condition/train_loss", loss_sum, epoch)
 
             valid_loss_sum = 0
             vae.eval()
@@ -203,16 +204,18 @@ def conditional_tune(args):
             if valid_min_loss>valid_loss_sum:
                 valid_min_loss = valid_loss_sum
             print(" valid loss: %lf"%(valid_loss_sum))
-            writer.add_scalar("tune/valid_loss", valid_loss_sum, epoch)
+            writer.add_scalar("tune_condition/valid_loss", valid_loss_sum, epoch)
 
         # myPCのためにいろいろ消してみる
         del vae, opt, train_dl
         torch.cuda.empty_cache()
-        print(torch.cuda.memory_summary(device=None, abbreviated=False))
+        # print(torch.cuda.memory_summary(device=None, abbreviated=False))
 
         return train_min_loss
 
-    study = optuna.create_study()
+    study = optuna.create_study(study_name="condition_tune_twitter",
+                            storage='sqlite:///../optuna_condition_tune_twitter_lr_decay_ari.db',
+                            load_if_exists=True)
     study.optimize(tuning_trial, n_trials=opt_epoch)
 
     print("--------------------------")
@@ -263,6 +266,10 @@ def tune(args):
 
     def tuning_trial(trial):
         batch_size = trial.suggest_int("batch_size", 16, 128)
+        # lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
+        lr = 0.001
+        # decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
+        decay = 0
         clip_th = trial.suggest_loguniform("clip_th", 1e-5, 0.1)
         model_param = {
             "emb_size" : trial.suggest_int("emb_size", 10, 256),
@@ -291,7 +298,7 @@ def tune(args):
         if is_classifier:
             keys+=["classifier"]
 
-        for epoch in range(1, epochs):
+        for epoch in range(1, epochs+1):
             print("Epoch: [%d/%d]:"%(epoch, epochs))
 
             # train
@@ -344,7 +351,9 @@ def tune(args):
             print(" valid loss: %lf"%(valid_loss_sum))
         return train_min_loss
 
-    study = optuna.create_study()
+    study = optuna.create_study(study_name="tune_twitter",
+                            storage='sqlite:///../optuna_tune_twitter.db',
+                            load_if_exists=True)
     study.optimize(tuning_trial, n_trials=opt_epoch)
 
     print("--------------------------")
