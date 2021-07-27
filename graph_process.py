@@ -312,12 +312,11 @@ class complex_networks():
 
     def gcn_dataset(self, graphs):
         graph_list = []
-        node_feats = torch.Tensor()
         for graph in graphs:
+            node_feats = torch.Tensor()
             for node in graph.nodes():
-                node_feats = torch.cat((node_feats,graph.degree(node)),dim=1)
-            graph.ndata['feat'] = node_feats
-            graph_list.append(dgl.from_networkx(graph_list))
+                graph.nodes[node]['feat'] = torch.tensor(graph.degree(node))
+            graph_list.append(dgl.from_networkx(graph,node_attrs=['feat']))
 
         return graph_list
 

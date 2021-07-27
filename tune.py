@@ -263,8 +263,6 @@ def tune(args):
 
     def tuning_trial(trial):
         batch_size = trial.suggest_int("batch_size", 16, 128)
-        lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
-        decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
         clip_th = trial.suggest_loguniform("clip_th", 1e-5, 0.1)
         model_param = {
             "emb_size" : trial.suggest_int("emb_size", 10, 256),
@@ -275,7 +273,7 @@ def tune(args):
 
         vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
         vae = utils.try_gpu(device,vae)
-        opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
+        opt = optim.Adam(vae.parameters(), lr=0.001)
 
         train_data_num = train_dataset.shape[0]
         train_label_args = torch.LongTensor(list(range(train_data_num)))
