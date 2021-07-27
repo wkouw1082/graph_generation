@@ -19,6 +19,12 @@ def main(args):
         # required_dirs = ["data/csv"]
         # utils.make_dir(required_dirs)
 
+        # resultsの時系列ディレクトリ直下にcsvディレクトリを作成
+        if not os.path.exists("./results/" + run_time + "/csv"):
+            required_dirs = ["results/" + run_time + "/csv"]
+            utils.make_dir(required_dirs)
+        dd
+
         # visualize_detailをもとにデータセットを作成
         cn = graph_process.complex_networks()
         dataset = cn.create_dataset(visualize_detail, do_type='visualize')
