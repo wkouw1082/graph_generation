@@ -96,10 +96,8 @@ def conditional_train(args):
     print("--------------")
 
     # model_param load
-    #import yaml
-    #with open('results/best_tune.yml', 'r') as yml:
-    #    model_param = yaml.load(yml) 
-    print(f"model_param = {model_param}")
+    model_param = utils.load_model_param()
+    # print(f"model_param = {model_param}")
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)

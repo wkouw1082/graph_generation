@@ -54,3 +54,10 @@ python classifier_train.py [--preprocess]
 python classifier_tune.py [--preprocess]
 ```
 
+### 全体の実行
+
+- tune, train, eval, visualizeまでまとめて実行
+
+'''
+nohup python -u main.py --condition --train --eval --visualize --type generate_0 generate_1 generate_2 twitter_pickup --preprocess --pair --tune > log &
+'''

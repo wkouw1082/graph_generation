@@ -141,12 +141,16 @@ def concat_scatter_diagram_visualize(save_dir,csv_paths):
             fig.clf()
             plt.close('all')
 
-def pair_plot(csv_paths):
+def pair_plot(csv_paths, do_time=None):
     fig = plt.figure()
     df = utils.concat_csv(csv_paths)
     sns.pairplot(df,data=df,hue='type')
-    plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.pdf')
-    plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.png')
+    if do_time:
+        plt.savefig('results/'+do_time+'/visualize/pair_plot/pair_plot.pdf')
+        plt.savefig('results/'+do_time+'/visualize/pair_plot/pair_plot.png')
+    else:
+        plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.pdf')
+        plt.savefig('results/'+run_time+'/visualize/pair_plot/pair_plot.png')
     fig.clf()
     plt.close('all')
 
@@ -259,10 +263,13 @@ def log_log():
         plt.savefig('results/'+run_time+"/visualize/power_degree_line/" + name + ".png")
         plt.clf()
 
-def generate_result2csv():
+def generate_result2csv(result_path=None):
     gene_result = []
     for index in range(len(cluster_coefficient_label)):
-        gene_result.append(joblib.load('results/'+run_time+'/eval/generated_graph_'+str(index)))
+        if result_path is None:
+            gene_result.append(joblib.load('results/'+run_time+'/eval/generated_graph_'+str(index)))
+        else:
+            gene_result.append(joblib.load('results/'+result_path+'/eval/generated_graph_'+str(index)))
 
     cn = graph_process.complex_networks()
 

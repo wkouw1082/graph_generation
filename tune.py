@@ -115,7 +115,7 @@ def conditional_tune(args):
 
         vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
         vae = utils.try_gpu(device,vae)
-        opt = optim.Adam(vae.parameters(), lr=lr, weight_decay=decay)
+        opt = optim.Adam(vae.parameters(), lr=0.001)
 
         train_data_num = train_dataset.shape[0]
         train_label_args = torch.LongTensor(list(range(train_data_num)))

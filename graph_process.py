@@ -341,11 +341,7 @@ class complex_networks():
         '''
         statistic = graph_statistic()
         trait_dict = statistic.calc_graph_traits2csv(graph_datas, eval_params)
-        # with open('./data/csv/' + file_name + '.csv', 'w') as f:
-        #     writer = csv.DictWriter(f, fieldnames=eval_params)
-        #     writer.writeheader()
-        #     writer.writerows(trait_dict)
-        with open('./results/'+ run_time + '/csv/' + file_name + '.csv', 'w') as f:
+        with open('./data/csv/' + file_name + '.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=eval_params)
             writer.writeheader()
             writer.writerows(trait_dict)

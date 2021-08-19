@@ -11,6 +11,7 @@ from config import *
 
 def main(args):
     # args = parser.parse_args()
+
     if args.preprocess:
         # 危険なのでコメントアウト
         # すでにあるディレクトリを削除して再作成
@@ -109,6 +110,7 @@ if __name__ == '__main__':
     parser.add_argument('--concat_histogram',action='store_true')
     parser.add_argument('--concat_scatter',action='store_true')
     parser.add_argument('--pair',action='store_true')
+    parser.add_argument('--result', action='store')
     parser.add_argument('--type',nargs='*')
 
     args = parser.parse_args()

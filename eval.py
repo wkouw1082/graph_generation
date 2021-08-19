@@ -66,10 +66,8 @@ def eval(args):
     print("--------------")
 
     # load model_param
-    import yaml
-    #with open('results/best_tune.yml', 'r') as yml:
-    #    model_param = yaml.load(yml) 
-    print(f"model_param = {model_param}")
+    model_param = utils.load_model_param()
+    # print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
