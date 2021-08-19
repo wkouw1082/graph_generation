@@ -91,10 +91,10 @@ def conditional_train(args):
     print("--------------")
 
     # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    #import yaml
+    #with open('results/best_tune.yml', 'r') as yml:
+    #    model_param = yaml.load(yml) 
+    print(f"model_param = {model_param}")
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
@@ -201,7 +201,7 @@ def conditional_train(args):
 
             loss.backward()
             train_loss_sum+=loss.item()
-            del loss
+            # del loss
             opt.step()
 
             torch.nn.utils.clip_grad_norm_(vae.parameters(), model_param["clip_th"])
@@ -223,7 +223,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
-        writer.add_scalar("train/train_loss", loss, epoch)
+        writer.add_scalar("train_condition/train_loss", loss, epoch)
 
         # memory free
         del current_train_loss, current_train_acc
@@ -309,7 +309,7 @@ def conditional_train(args):
         print(" %s:"%(ekey))
         print("     loss:%lf"%(loss))
         print("----------------------------")
-        writer.add_scalar("train/vallid_loss", loss, epoch)
+        writer.add_scalar("train_condition/vallid_loss", loss, epoch)
 
         # output loss/acc transition
         utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
@@ -329,7 +329,7 @@ def conditional_train(args):
         # output weight each 1000 epochs
         # if epoch % 1000 == 0:
         if epoch % 200 == 0:
-            torch.save(vae.state_dict(), "param/weight_"+epoch)
+            torch.save(vae.state_dict(), "param/weight_"+str(epoch))
             torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
 
         print("\n")

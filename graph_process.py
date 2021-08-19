@@ -345,7 +345,7 @@ class complex_networks():
         #     writer = csv.DictWriter(f, fieldnames=eval_params)
         #     writer.writeheader()
         #     writer.writerows(trait_dict)
-        with open('./results/'+ run_time + '/' + file_name + '.csv', 'w') as f:
+        with open('./results/'+ run_time + '/csv/' + file_name + '.csv', 'w') as f:
             writer = csv.DictWriter(f, fieldnames=eval_params)
             writer.writeheader()
             writer.writerows(trait_dict)

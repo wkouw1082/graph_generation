@@ -1,5 +1,6 @@
 import argparse
 import yaml
+import os
 
 import utils
 import tune
@@ -24,8 +25,10 @@ def main(args):
         is_finished_preprocess = False
 
     # 大まかなディレクトリ作成. より細かいディレクトリは各関数で作成
-    required_dirs = ["dataset", "param", "results", "results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
-    utils.make_dir(required_dirs)
+    required_dirs = ["dataset", "param", "results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    if not os.path.exists("./results"):
+        required_dirs.remove("results")
+    #utils.make_dir(required_dirs)
 
     # tune
     if args.tune:
@@ -74,6 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
+    parser.add_argument('--eval_model',action='store')
     parser.add_argument('--visualize', action='store_true')
 
     parser.add_argument('--histogram', action='store_true')

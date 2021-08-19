@@ -19,6 +19,12 @@ def main(args):
         # required_dirs = ["data/csv"]
         # utils.make_dir(required_dirs)
 
+        # resultsの時系列ディレクトリ直下にcsvディレクトリを作成
+        if not os.path.exists("./results/" + run_time + "/csv"):
+            required_dirs = ["results/" + run_time + "/csv"]
+            utils.make_dir(required_dirs)
+        dd
+
         # visualize_detailをもとにデータセットを作成
         cn = graph_process.complex_networks()
         dataset = cn.create_dataset(visualize_detail, do_type='visualize')
@@ -33,7 +39,9 @@ def main(args):
     #     utils.make_dir(["visualize"])
 
     # args type が何も指定されていない場合は全てのtypeが指定され、指定がある場合はそのtypeのcsv pathが持ってこられる
-    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+    #csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./results/' + run_time + '/csv/*')
+
     if args.scatter:
         if os.path.isdir("results/"+run_time+"/visualize/scatter_diagram/"):
             shutil.rmtree("results/"+run_time+"/visualize/scatter_diagram")
