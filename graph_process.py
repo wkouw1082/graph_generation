@@ -349,6 +349,10 @@ class complex_networks():
             writer = csv.DictWriter(f, fieldnames=eval_params)
             writer.writeheader()
             writer.writerows(trait_dict)
+        # with open('./results/'+ run_time + '/' + file_name + '.csv', 'w') as f:
+        #     writer = csv.DictWriter(f, fieldnames=eval_params)
+        #     writer.writeheader()
+        #     writer.writerows(trait_dict)
 
     def graph_data_compress(datas,file_name):
         joblib.dump(datas,'./data/graph_datas/'+file_name+'.pkl.cmp',compress=True)
@@ -820,7 +824,6 @@ def dfs_code_to_graph_obj(dfs_code,end_value_list):
         for i in range(len(current_code)):
             # 長さ自体はend_value_listの値だが実際の値は0から始まっているため-1する
             if current_code[i] == end_value_list[i]-1:
-                print('end code desu')
                 return G
         tu,tv,_,_,_ = current_code
         G.add_edge(tu,tv)

@@ -263,13 +263,6 @@ def tune(args):
 
     def tuning_trial(trial):
         batch_size = trial.suggest_int("batch_size", 16, 128)
-<<<<<<< HEAD
-=======
-        lr = trial.suggest_loguniform("lr", 1e-4, 5e-2)
-        # lr = 0.001
-        decay = trial.suggest_loguniform("weight_decay", 1e-5, 0.1)
-        # decay = 0
->>>>>>> f2e28ff3cd9d6a9d979072961f75dea323c4900d
         clip_th = trial.suggest_loguniform("clip_th", 1e-5, 0.1)
         model_param = {
             "emb_size" : trial.suggest_int("emb_size", 10, 256),
