@@ -16,7 +16,8 @@ model_param = {'batch_size': 30,
 # model_param={'batch_size': 69, 'lr': 0.0013549389234627585, 'weight_decay': 0.010660900921725731, 'clip_th': 0.014512071116018106, 'emb_size': 165, 'en_hidden_size': 203, 'de_hidden_size': 227, 'rep_size': 20}
 # model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
 # model_param = {'batch_size': 16, 'lr': 0.01082131764731544, 'weight_decay': 0.09174137908657536, 'clip_th': 0.0004241902009358986, 'emb_size': 189, 'en_hidden_size': 30, 'de_hidden_size': 247, 'rep_size': 220}
-# model_param = {'batch_size': 28, 'lr': 0.005967467004955157, 'weight_decay': 4.645431458470567e-05, 'clip_th': 0.023132574888566335, 'emb_size': 185, 'en_hidden_size': 40, 'de_hidden_size': 232, 'rep_size': 172}
+# tuneされていない場合に指定されるハイパーパラメータ
+model_params = {'batch_size': 30, 'clip_th': 0.03, 'emb_size': 150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
@@ -77,14 +78,14 @@ eval_params_limit = {"power_degree":None,"cluster_coefficient":[0,0.5],"distance
                     "average_degree":[0,10],"density":[0,0.1],"modularity":[0,1],"maximum_distance":None,\
                     "degree_centrality":None,"betweenness_centrality":None,"closeness_centrality":None, "size":None}
 # 評価に用いるネットワークのサイズの閾値
-size_th=90
+size_th=0
 # 評価に用いるネットワーク数
 graph_num=300
 # 生成する最大dfsコード長
 generate_max_len=2000
 
 reddit_path = "./data/reddit_threads/reddit_edges.json"
-twitter_path = "./data/Twitter_2000/renum*"
+twitter_path = "./data/edgelists_50/renum*"
 twitter_train_path = './data/twitter_train'
 twitter_valid_path = './data/twitter_eval'
 

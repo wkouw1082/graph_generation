@@ -42,8 +42,6 @@ class GCNDataset(Dataset):
 
         self.data = joblib.load('./dataset/'+data_type+'/onehot')
         self.label = joblib.load('./dataset/'+data_type+'/label')
-        print(len(self.data))
-        print(len(self.label))
         self.datanum = len(self.data)
 
         # TODO conditionの付与位置を2種類試す　1:ノードラベルとして与える 2:gcnでembeddingした後にラベルをconcatする
@@ -69,9 +67,10 @@ class GCNDataset(Dataset):
         return out_data, out_label
 
 if __name__=='__main__':
-    pp.preprocess_gcn(train_generate_detail, valid_generate_detail, True)
     test_dataset = GCNDataset('train', conditional=True)
     test_dataloader = GraphDataLoader(test_dataset, batch_size=8, shuffle=True)
+    print(len(test_dataset))
     for data, label in test_dataloader:
         print(data)
+        print(label[:,0].shape)
         dd

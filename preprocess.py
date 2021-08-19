@@ -1,4 +1,5 @@
 from networkx.algorithms.assortativity.mixing import degree_mixing_dict
+from sklearn.model_selection import train_test_split
 import utils
 import joblib
 import torch
@@ -7,6 +8,7 @@ import matplotlib.pyplot as plt
 from config import *
 import numpy as np
 import graph_process
+
 
 def preprocess_not_conditional(train_network_detail,valid_network_detail,train_directory='./dataset/train/',valid_directory='./dataset/valid/'):
     print('start preprocess for not conditional...')
@@ -58,6 +60,7 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
     if condition:
         complex_network = graph_process.complex_networks()
         graphs_list = complex_network.make_twitter_gcn_dataset()
+        train_graphs, valid_graphs = train_test_split(graphs_list, test_size=0.1)
         
         # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
         train_dfs,train_time_set,train_node_set,train_max_length,train_label = to_dfs_conditional(train_network_detail)
@@ -75,12 +78,13 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
 
         del time_stamp_set, node_label_set
 
-        get_gcn_and_label(train_dfs,time_dict,node_dict,graphs_list,max_sequence_length,train_directory, train_label)
-        get_gcn_and_label(valid_dfs,time_dict,node_dict,graphs_list,max_sequence_length,valid_directory, valid_label)
+        get_gcn_and_label(train_dfs,time_dict,node_dict,train_graphs,max_sequence_length,train_directory, train_label)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,valid_graphs,max_sequence_length,valid_directory, valid_label)
 
     else:
         complex_network = graph_process.complex_networks()
         graphs_list = complex_network.make_twitter_graph_with_label()
+        train_graphs, valid_graphs = train_test_split(graphs_list, test_size=0.1)
         
         # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
         train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
@@ -97,8 +101,8 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
 
         del time_stamp_set, node_label_set
 
-        get_gcn_and_label(train_dfs,time_dict,node_dict,graphs_list,max_sequence_length,train_directory)
-        get_gcn_and_label(valid_dfs,time_dict,node_dict,graphs_list,max_sequence_length,valid_directory)
+        get_gcn_and_label(train_dfs,time_dict,node_dict,train_graphs,max_sequence_length,train_directory)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,valid_graphs,max_sequence_length,valid_directory)
 
 def get_onehot_and_list_no_conditional(dfs_code,time_dict,node_dict,max_sequence_length,directory):
 
@@ -209,6 +213,7 @@ def get_gcn_and_label(dfs_code,time_dict,node_dict,graphs,max_sequence_length,di
 
     time_end_num = len(time_dict.keys())
     node_end_num = len(node_dict.keys())
+    dfs_code_list = []
     t_u_list = []
     t_v_list = []
     n_u_list = []
@@ -235,13 +240,18 @@ def get_gcn_and_label(dfs_code,time_dict,node_dict,graphs,max_sequence_length,di
         n_v_list.append(n_v)
         e = data[4]
         e = np.append(e,1)
+        e = np.array(e)
         e_list.append(e)
 
-    t_u_list = []
-    t_v_list = []
-    n_u_list = []
-    n_v_list = []
-    e_list = []
+        t_u = utils.padding([t_u], max_sequence_length, ignore_label)
+        t_v = utils.padding([t_v], max_sequence_length, ignore_label)
+        n_u = utils.padding([n_u], max_sequence_length, ignore_label)
+        n_v = utils.padding([n_v], max_sequence_length, ignore_label)
+        e = utils.padding([e], max_sequence_length, ignore_label)
+        dfs_code_list.append(\
+            np.concatenate([t_u,t_v,n_u,n_v,e],0))
+
+    dfs_code_list = torch.Tensor(dfs_code_list)
     t_u_list = torch.LongTensor(utils.padding(t_u_list,max_sequence_length,ignore_label))
     t_v_list = torch.LongTensor(utils.padding(t_v_list,max_sequence_length,ignore_label))
     n_u_list = torch.LongTensor(utils.padding(n_u_list,max_sequence_length,ignore_label))
@@ -250,7 +260,7 @@ def get_gcn_and_label(dfs_code,time_dict,node_dict,graphs,max_sequence_length,di
 
     # 本来はonehotではないけどt他のデータがonehotなので整合性を取るために名前だけonehotに
     joblib.dump(graphs, directory+'onehot')
-    joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
+    joblib.dump(dfs_code_list,directory+'label')
     if label_set is not None:
         joblib.dump(label_set,directory+'conditional')
 

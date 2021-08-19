@@ -6,6 +6,7 @@ import tune
 import train
 import eval
 import visualize
+import config
 from config import *
 
 def main(args):
@@ -15,6 +16,10 @@ def main(args):
     Args:
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ
     """
+
+    device = utils.get_gpu_info()
+    print('using device is {}.'.format(device))
+
     # preprocee が必要か、既に終了したかを意味するフラグを作成
     if args.preprocess is False:
         # preprocessは不要
@@ -47,22 +52,20 @@ def main(args):
             is_finished_preprocess = True
             args.preprocess = False
     
+    # eval以降のpreprocessは仕様が違うのでtrueにする必要がある
+    args.preprocess = True
+
     # eval
     if args.eval:
         if args.condition:
             eval.eval(args)
         else:
             eval.non_conditional_eval(args)
-        if is_finished_preprocess is False:
-            is_finished_preprocess = True
-            args.preprocess = False
 
     # visualize
     if args.visualize:
         visualize.main(args)
-        if is_finished_preprocess is False:
-            is_finished_preprocess = True
-            args.preprocess = False
+        # ここのpreprocessは動作は他のpreprocessとは動作が違うので常に行うこと
 
 
 
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
     parser.add_argument('--eval_model',action='store')
+    parser.add_argument('--result', action='store')
     parser.add_argument('--visualize', action='store_true')
 
     parser.add_argument('--histogram', action='store_true')

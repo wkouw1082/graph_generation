@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 import torch
 import subprocess
+import yaml
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -54,7 +55,7 @@ def padding(vecs, flow_len, value=0):
         if len(flow.shape)==2:
             diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1]))
         else:
-            diff_vec = np.ones((flow_len-flow.shape[0]))
+            diff_vec = np.ones(flow_len-flow.shape[0])
         diff_vec *= value
         vecs[i] = np.concatenate((flow, diff_vec), 0)
     return np.array(vecs)
@@ -167,6 +168,15 @@ def tsne(multi_vecs, dir):
     ax.set_xlabel('dim1')
     ax.set_ylabel('dim2')
     plt.savefig(dir)
+
+def load_model_param():
+    if os.path.isfile('results/best_tune.yml'):
+        with open('results/best_tune.yml', 'r') as yml:
+            model_param = yaml.load(yml) 
+    else:
+        model_param = model_params
+
+    return model_param
 
 def box_plot(predict, correct, trait_name, directory):
     fig = plt.figure()
