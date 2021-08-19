@@ -57,7 +57,7 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
 
     if condition:
         complex_network = graph_process.complex_networks()
-        complex_network.make_twitter_graph_with_label()
+        graphs_list = complex_network.make_twitter_gcn_dataset()
         
         # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
         train_dfs,train_time_set,train_node_set,train_max_length,train_label = to_dfs_conditional(train_network_detail)
@@ -75,12 +75,12 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
 
         del time_stamp_set, node_label_set
 
-        get_gcn_and_label(train_dfs,time_dict,node_dict,max_sequence_length,train_directory, train_label)
-        get_gcn_and_label(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory, valid_label)
+        get_gcn_and_label(train_dfs,time_dict,node_dict,graphs_list,max_sequence_length,train_directory, train_label)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,graphs_list,max_sequence_length,valid_directory, valid_label)
 
     else:
         complex_network = graph_process.complex_networks()
-        complex_network.make_twitter_graph_with_label()
+        graphs_list = complex_network.make_twitter_graph_with_label()
         
         # 生成時にdfsコードのパラメータが必要となるためdfsコードを生成しparamだけ保存
         train_dfs,train_time_set,train_node_set,train_max_length = to_dfs(train_network_detail)
@@ -97,8 +97,8 @@ def preprocess_gcn(train_network_detail,valid_network_detail, condition, train_d
 
         del time_stamp_set, node_label_set
 
-        get_gcn_and_label(train_dfs,time_dict,node_dict,max_sequence_length,train_directory)
-        get_gcn_and_label(valid_dfs,time_dict,node_dict,max_sequence_length,valid_directory)
+        get_gcn_and_label(train_dfs,time_dict,node_dict,graphs_list,max_sequence_length,train_directory)
+        get_gcn_and_label(valid_dfs,time_dict,node_dict,graphs_list,max_sequence_length,valid_directory)
 
 def get_onehot_and_list_no_conditional(dfs_code,time_dict,node_dict,max_sequence_length,directory):
 
@@ -205,7 +205,37 @@ def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,label_s
     joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
     joblib.dump(label_set,directory+'conditional')
 
-def get_gcn_and_label(graphs,max_sequence_length,directory,label_set=None):
+def get_gcn_and_label(dfs_code,time_dict,node_dict,graphs,max_sequence_length,directory,label_set=None):
+
+    time_end_num = len(time_dict.keys())
+    node_end_num = len(node_dict.keys())
+    t_u_list = []
+    t_v_list = []
+    n_u_list = []
+    n_v_list = []
+    e_list = []
+    for data in dfs_code:
+        data = data.T
+        # IDに振りなおす
+        t_u = [time_dict[t] for t in data[0]]
+        t_u.append(time_end_num)
+        t_u = np.array(t_u)
+        t_u_list.append(t_u)
+        t_v = [time_dict[t] for t in data[1]]
+        t_v.append(time_end_num)
+        t_v = np.array(t_v)
+        t_v_list.append(t_v)
+        n_u = [node_dict[n] for n in data[2]]
+        n_u.append(node_end_num)
+        n_u = np.array(n_u)
+        n_u_list.append(n_u)
+        n_v = [node_dict[n] for n in data[3]]
+        n_v.append(node_end_num)
+        n_v = np.array(n_v)
+        n_v_list.append(n_v)
+        e = data[4]
+        e = np.append(e,1)
+        e_list.append(e)
 
     t_u_list = []
     t_v_list = []
@@ -221,7 +251,7 @@ def get_gcn_and_label(graphs,max_sequence_length,directory,label_set=None):
     # 本来はonehotではないけどt他のデータがonehotなので整合性を取るために名前だけonehotに
     joblib.dump(graphs, directory+'onehot')
     joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
-    if label_set:
+    if label_set is not None:
         joblib.dump(label_set,directory+'conditional')
 
 def to_dfs(detail):
