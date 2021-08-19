@@ -798,7 +798,6 @@ if __name__=='__main__':
     parser.add_argument('--use_model')
 
     args = parser.parse_args()
-<<<<<<< HEAD
     if args.use_model == 'LSTM' or args.use_model == 'lstm':
         if args.condition:
             conditional_train(args)
@@ -806,9 +805,3 @@ if __name__=='__main__':
             train(args)
     elif args.use_model == 'GCN' or args.use_model == 'gcn':
         gcn_train(args)
-=======
-    if args.condition:
-        conditional_train(args)
-    else:
-        train(args)
->>>>>>> f2e28ff3cd9d6a9d979072961f75dea323c4900d

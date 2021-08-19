@@ -23,7 +23,6 @@ def main(args):
         if not os.path.exists("./results/" + run_time + "/csv"):
             required_dirs = ["results/" + run_time + "/csv"]
             utils.make_dir(required_dirs)
-        dd
 
         # visualize_detailをもとにデータセットを作成
         cn = graph_process.complex_networks()

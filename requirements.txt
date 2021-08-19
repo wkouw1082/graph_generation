@@ -18,9 +18,9 @@ dgl==0.6.1
 dgl-cu110==0.6.1
 fernet==1.0.1
 Flask==1.1.2
-google-auth==1.32.1
+google-auth==1.33.1
 google-auth-oauthlib==0.4.4
-grpcio==1.38.1
+grpcio==1.39.0
 idna==2.10
 importlib-metadata==1.7.0
 itsdangerous==1.1.0
