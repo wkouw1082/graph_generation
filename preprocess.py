@@ -44,6 +44,8 @@ def preprocess(train_network_detail,valid_network_detail,train_directory='./data
     max_sequence_length = max(train_max_length,valid_max_length)
     conditional_label_length = condition_size #指定しているパラメータの数
     
+    print(f"max_sequence_length = {max_sequence_length}")
+    
     joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, conditional_label_length], "dataset/param")
 
     time_dict = {time:index for index, time in enumerate(time_stamp_set)}
@@ -204,7 +206,7 @@ def get_onehot_and_list(dfs_code,time_dict,node_dict,max_sequence_length,label_s
     n_u_list = torch.LongTensor(utils.padding(n_u_list,max_sequence_length,ignore_label))
     n_v_list = torch.LongTensor(utils.padding(n_v_list,max_sequence_length,ignore_label))
     e_list = torch.LongTensor(utils.padding(e_list,max_sequence_length,ignore_label))
-
+    
     joblib.dump(dfs_code_onehot_list,directory+'onehot')
     joblib.dump([t_u_list,t_v_list,n_u_list,n_v_list,e_list],directory+'label')
     joblib.dump(label_set,directory+'conditional')
@@ -328,3 +330,8 @@ def to_dfs_conditional(detail):
     
     return dfs_code, time_stamp_set, nodes_label_set,\
         max_sequence_length, labelsets
+
+
+if __name__ == "__main__":
+    # _, _, _, _, _ = to_dfs_conditional(train_generated_detail)
+    pass

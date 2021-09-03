@@ -4,7 +4,7 @@ from networkx.readwrite import json_graph
 import numpy as np
 import networkx as nx
 import torch
-import dgl
+# import dgl
 from collections import OrderedDict
 import networkx.algorithms.approximation.treewidth as nx_tree
 import networkx.algorithms.community as nx_comm
@@ -283,7 +283,7 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 # 小数点第1位で四捨五入する
-                tmp_label.append(round(param,1))
+                tmp_label.append(round(param, round_num))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
@@ -296,7 +296,7 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 # 小数点第1位で四捨五入する
-                tmp_label.append(round(param,1))
+                tmp_label.append(round(param, round_num))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
@@ -734,6 +734,7 @@ class ConvertToDfsCode():
                         self.time_stamp += 1
 
                     self.visited_edges.append((current_node,next_node))
+                    # print(f"{current_node} => {next_node}")
                     self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
                 else:
                     # 現在のノードにタイムスタンプが登録されていなければタイムスタンプを登録
@@ -745,6 +746,7 @@ class ConvertToDfsCode():
                         self.node_time_stamp[next_node] = self.time_stamp
                         self.time_stamp += 1
                     # timeStamp_u, timeStamp_v, nodeLabel u, nodeLable_v ,edgeLable(u,v)の順のリストを作成
+                    # print(f"{current_node} => {next_node}")
                     self.dfs_code.append([self.node_time_stamp[current_node],self.node_time_stamp[next_node],self.G.degree(current_node),self.G.degree(next_node),0])
                     self.visited_edges.append((current_node,next_node))
                     self.dfs(next_node)
@@ -874,14 +876,124 @@ def text2graph(text_datas):
         graph_data.append(G)
     return graph_data
 
+def rewrite_dataset_condition(dataset, time_size, dfs_size, rewrited_condition_dump_name=None, flag_dump=False):
+    """modelに入力するdatasetのcondition値を書き換える
+
+    通常は、あるグラフの特性値がそれに属するdfsの５タプルの末尾に挿入されている。
+    この関数では、LSTMに入力する５タプルと今までに入力した５タプルから構成されるグラフの特徴量を計算して挿入する。
+    EOS以降の５タプルのcondition値は、EOS-1のステップで算出された特性値がずっと挿入される。
+
+    Args:
+        dataset (torch.Tensor [グラフ数, max_seq_len, dfs_size]) : modelに直接渡すdataset
+        time_size (int) : タイムスタンプの種類＋１(EOS)
+        dfs_size (int) : one-hotの５タプルの長さ＋condition_size＋１(EOS)
+        < option > rewrited_condition_dump_name (str or None) : 書き換え後のcondition値をjoblibでダンプする時のファイル名
+        < option > flag_dump (bool) : True なら書き換え後のcondition値を格納したlistをダンプする
+    
+    Returns:
+        rewrited_dataset (torch.Tensor [グラフ数, max_seq_len, dfs_size]) : condition値が書き換えられたdataset
+    """
+    
+    # conditions : 全グラフの５タプルが末尾にもつcondition値を格納したlist
+    conditions = []
+    # max_seq_len : 全グラフの中で最も大きい５タプルの数
+    max_seq_len = 0
+    for i, graph in tqdm(enumerate(dataset)):
+        G = nx.Graph()
+        ## not_connect_cnt : 連結グラフでない状態が続いた回数
+        not_connect_cnt = 0
+        conditions.append([])
+        flag_eos = False
+        for j, dfs_code in enumerate(graph):
+            ## dfs_codeから該当するタイムスタンプone-hotを入手
+            tu_onehot = dfs_code[ : time_size]
+            tv_onehot = dfs_code[time_size : 2*time_size]
+            ## one-hotから１０進数へ変換
+            tu_reconstruct = torch.argmax(tu_onehot, dim=0)
+            tv_reconstruct = torch.argmax(tv_onehot, dim=0)
+            ##  EOSを検知したら(dataset_node_sizeを超えたnode_idなら)、Gに追加しない
+            if (int(tu_reconstruct) >= dataset_node_size) or (int(tv_reconstruct) >= dataset_node_size):
+                # print("datasetのノードサイズをオーバー(End of Sequenceと思われる)") 
+                # print(f"    i={i}, j={j}")
+                if max_seq_len < j:
+                    max_seq_len = j
+                flag_eos = True
+            else:
+                G.add_edge(int(tu_reconstruct), int(tv_reconstruct))
+            
+            ## EOS以降は最新のtmp_conditionと同じ値が付加される
+            if flag_eos:
+                conditions[i].append(tmp_condition)
+                ## rewrite condition
+                dataset[i][j][dfs_size-1] = tmp_condition
+                ## グラフのcondition値の計算をスキップ
+                continue
+            
+            ## get stastistic of G
+            if nx.is_connected(G):
+                GS = graph_statistic()
+                ## networkx形式のグラフから指定したcondition値を取得 
+                tmp_condition = GS.calc_graph_traits2csv([G],["cluster_coefficient"])[0]["cluster_coefficient"]
+                ## condition値を少数第４位で四捨五入
+                tmp_condition = round(tmp_condition, 4)
+                conditions[i].append(tmp_condition)
+            else:
+                ## グラフが連結でない場合
+                not_connect_cnt += 1
+                print(f"j={j} Not connected.")
+                print(f"{int(tu_reconstruct)}, {int(tv_reconstruct)}")
+                tmp_condition = 0.0
+                conditions[i].append(tmp_condition)
+                ## 連結グラフでなくなるノードが追加された際に、そのグラフをsave
+                # import matplotlib.pyplot as plt
+                # plt.figure()
+                # plt.axis("off")
+                # nx.draw_networkx(G)
+                # plt.savefig(f"./plot{not_connect_cnt}.png")
+                if not_connect_cnt >= 3:
+                    print("グラフにnot connectedな５タプルが３回追加されました")
+                    this_is(G.nodes(), name="G.nodes()")
+                    this_is(G.edges(), name="G.edges()")
+                    exit()
+                    
+            ## rewrite condition
+            dataset[i][j][dfs_size-1] = tmp_condition
+        ## グラフ削除
+        del G
+    # 調査用に"conditions"をdump
+    if flag_dump:
+        if rewrited_condition_dump_name is None:
+            from datetime import datetime
+            rewrited_condition_dump_name = '{0:%Y-%m-%d_%H:%M:%S}'.format(datetime.now())
+        joblib.dump(conditions, f"./{rewrited_condition_dump_name}")
+    del conditions
+    # print(f"train_max_seq_len = {max_seq_len}")
+    
+    return dataset
 
 if __name__ == "__main__":
     complex_network = complex_networks()
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    dataset = complex_network.make_twitter_graph()
+    # dataset = complex_network.make_twitter_graph()
     # for graph
-    gs = graph_statistic()
-    print(gs.degree_dist(dataset[0]))
+    # gs = graph_statistic()
+    # print(gs.degree_dist(dataset[0]))
+    
+    ### test用 ###
+    G = nx.read_edgelist('test_graph.txt', nodetype=int)
+    # layout取得
+    pos = nx.spring_layout(G)
+    # 可視化 & savefig
+    plt.figure(figsize=(6, 6))
+    nx.draw_networkx_edges(G, pos)
+    nx.draw_networkx_nodes(G, pos)
+    plt.axis('off')
+    plt.savefig("test_graph.png")
+    # DFSインスタンス
+    dfs_graph = ConvertToDfsCode(G, mode="high_degree_first")
+    print(dfs_graph.get_dfs_code())
+    
 
+    

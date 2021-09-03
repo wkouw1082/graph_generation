@@ -49,6 +49,8 @@ def main(args):
     if args.train:
         if args.condition:
             train.conditional_train(args)
+        elif args.seq_condition:
+            train.train_with_sequential_conditions(args)
         else:
             train.train(args)
         if is_finished_preprocess is False:
@@ -77,6 +79,7 @@ if __name__ == "__main__":
     parser.add_argument('--preprocess',action='store_true')
     parser.add_argument('--classifier',action='store_true')
     parser.add_argument('--condition', action='store_true')
+    parser.add_argument('--seq_condition', action='store_true')
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')

@@ -17,7 +17,7 @@ model_param = {'batch_size': 30,
 # model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
 # model_param = {'batch_size': 16, 'lr': 0.01082131764731544, 'weight_decay': 0.09174137908657536, 'clip_th': 0.0004241902009358986, 'emb_size': 189, 'en_hidden_size': 30, 'de_hidden_size': 247, 'rep_size': 220}
 # model_param = {'batch_size': 28, 'lr': 0.005967467004955157, 'weight_decay': 4.645431458470567e-05, 'clip_th': 0.023132574888566335, 'emb_size': 185, 'en_hidden_size': 40, 'de_hidden_size': 232, 'rep_size': 172}
-model_param = {'batch_size': 21, 'lr': 0.001, 'weight_decay': 0, 'clip_th': 0.00018132953639126497, 'de_hidden_size': 252, 'emb_size': 233, 'en_hidden_size': 108, 'rep_size': 65}
+model_params = {'batch_size': 21, 'lr': 0.001, 'weight_decay': 0, 'clip_th': 0.00018132953639126497, 'de_hidden_size': 252, 'emb_size': 233, 'en_hidden_size': 108, 'rep_size': 65}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
@@ -92,6 +92,8 @@ twitter_valid_path = './data/twitter_eval'
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
 
+# cluster_coefficientを少数第何位で四捨五入するか
+round_num = 4
 
 # config.pyを呼び出しているプログラムを実行した時間(と思われる)
 from datetime import datetime
@@ -111,3 +113,5 @@ DEFAULT_ATTRIBUTES = (
     'utilization.memory'
 )
 
+# datasetのノードサイズ（train_with_sequential_conditions）
+dataset_node_size = 50      # dfs_code(model入力前)からグラフを再構築する時に使用
