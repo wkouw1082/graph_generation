@@ -73,4 +73,3 @@ if __name__=='__main__':
     for data, label in test_dataloader:
         print(data)
         print(label[:,0].shape)
-        dd

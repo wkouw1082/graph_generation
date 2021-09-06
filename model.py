@@ -44,7 +44,7 @@ class Classifier(nn.Module):
 
 # 2層 LSTM
 class Encoder(nn.Module):
-    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=3):
+    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=4):
         super(Encoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
@@ -116,7 +116,7 @@ class Decoder(nn.Module):
         self.emb = nn.Linear(input_size, emb_size)
         # onehot vectorではなく連続値なためサイズは+2
         self.f_rep = nn.Linear(rep_size+condition_size, input_size)
-        self.lstm = nn.LSTM(emb_size+rep_size+condition_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(emb_size+rep_size+condition_size, hidden_size, num_layers=4, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -261,13 +261,14 @@ class DecoderNonConditional(nn.Module):
         super(DecoderNonConditional, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.f_rep = nn.Linear(rep_size, input_size)
-        self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(input_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
         self.f_lv = nn.Linear(hidden_size, node_label_size)
         self.f_le = nn.Linear(hidden_size, edge_label_size)
         self.softmax = nn.Softmax(dim=2)
+        self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(0.5)
 
         self.time_size = time_size
@@ -276,12 +277,12 @@ class DecoderNonConditional(nn.Module):
 
         self.device = device
 
-    def forward(self, rep, x, word_drop=0):
+    def forward(self, z, x):
         """
         学習時のforward
         Args:
-            rep: encoderの出力
-            x: dfs code
+            z: 潜在変数からのベクトル
+            x: 入力のdfs code
         Returns:
             tu: source time
             tv: sink time
@@ -289,17 +290,22 @@ class DecoderNonConditional(nn.Module):
             lv: sink node label
             le: edge label
         """
-
-        rep = self.f_rep(rep)
-        x = torch.cat((rep, x), dim=1)[:,:-1,:]
-        x = self.emb(x)
+        # 潜在変数をLSTMにcatできる形にするために線形層をかます
+        z = self.f_rep(z)
+        # ここでsequenceデータの頭に潜在変数をつける
+        x = torch.cat((z, x), dim=1)
+        # つけた分sequenceデータを短くする
+        x = x[:,:-1,:]
+        # shapeはbatch x sequence_length x 1step ごとのdfs 本来なら5(各要素)だがonehotになっているので
+        # onehotlength をそれぞれ足したものになっている
+        # x = self.emb(x)
         x, (h, c) = self.lstm(x)
         # x = self.dropout(x)
-        tu = self.softmax(self.f_tu(x))
-        tv = self.softmax(self.f_tv(x))
-        lu = self.softmax(self.f_lu(x))
-        lv = self.softmax(self.f_lv(x))
-        le = self.softmax(self.f_le(x))
+        tu = self.f_tu(x)
+        tv = self.f_tv(x)
+        lu = self.f_lu(x)
+        lv = self.f_lv(x)
+        le = self.f_le(x)
         return tu, tv, lu, lv, le
 
     def generate(self, rep, max_size=100, is_output_sampling=True):
@@ -557,8 +563,8 @@ class VAENonConditional(nn.Module):
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma, self.device)
-        tu, tv, lu, lv, le = self.decoder(z, x)
-        return mu, sigma, tu, tv, lu, lv, le
+        x = self.decoder(z, x)
+        return mu, sigma, x
 
     def generate(self, data_num, z=None, max_size=generate_max_len, is_output_sampling=True):
         if z is None:

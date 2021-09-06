@@ -20,7 +20,7 @@ def preprocess_not_conditional(train_network_detail,valid_network_detail,train_d
     node_label_set = train_node_set | valid_node_set
     max_sequence_length = max(train_max_length,valid_max_length)
     
-    joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2], "dataset/param")
+    joblib.dump([len(time_stamp_set)+1, len(node_label_set)+1, 2, max_sequence_length], "dataset/param")
 
     time_dict = {time:index for index, time in enumerate(time_stamp_set)}
     node_dict = {node:index for index, node in enumerate(node_label_set)}
@@ -266,7 +266,7 @@ def get_gcn_and_label(dfs_code,time_dict,node_dict,graphs,max_sequence_length,di
 
 def to_dfs(detail):
     complex_network = graph_process.complex_networks()
-    datasets, _ = complex_network.create_seq_conditional_dataset(detail)
+    datasets = complex_network.create_dataset(detail)
 
     dfs_code = list()
     time_stamp_set = set()

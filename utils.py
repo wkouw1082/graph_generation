@@ -42,6 +42,10 @@ def convert2onehot(vec, dim):
     import torch
     return torch.Tensor(np.identity(dim)[vec])
 
+def onehot2scalar(onehot_vec):
+    onehot_vec = onehot_vec.to('cpu').detach().numpy().copy()
+    return np.argmax(onehot_vec, axis=1)
+
 def padding(vecs, flow_len, value=0):
     """
     flowの長さを最大flow長に合わせるためにzeropadding
