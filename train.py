@@ -23,10 +23,9 @@ from torch.utils.data import DataLoader
 from torch.utils.data import TensorDataset
 from torch.utils.tensorboard import SummaryWriter
 
-# import dgl
-# from dgl.dataloading import GraphDataLoader
+import dgl
+from dgl.dataloading import GraphDataLoader
 
-from aaa import this_is 
 
 def conditional_train(args):
     writer = SummaryWriter(log_dir="./logs")
@@ -894,16 +893,16 @@ def train_with_sequential_conditions(args):
     ## print(train_dataset[1,:,-1*condition_size:])
     
     ## rewrite condition of train_dataset
-    # train_dataset = rewrite_dataset_condition(train_dataset, time_size, dfs_size, rewrited_condition_dump_name=f"train_conditions", flag_dump=True)
-    # joblib.dump(train_dataset, "./train_dataset")
-    with open("./train_dataset", "rb") as f:
-        train_dataset = joblib.load(f)
-    this_is(train_dataset, name="train_dataset")
+    train_dataset = rewrite_dataset_condition(train_dataset, time_size, dfs_size, rewrited_condition_dump_name=f"train_conditions", flag_dump=True)
+    joblib.dump(train_dataset, "./train_dataset")
+    # with open("./train_dataset", "rb") as f:
+    #     train_dataset = joblib.load(f)
+
     ## rewrite condition of valid_dataset
-    # valid_dataset = rewrite_dataset_condition(valid_dataset, time_size, dfs_size, rewrited_condition_dump_name=f"valid_conditions", flag_dump=True)
-    # joblib.dump(valid_dataset, "./valid_dataset")
-    with open("./valid_dataset", "rb") as f:
-        valid_dataset = joblib.load(f)
+    valid_dataset = rewrite_dataset_condition(valid_dataset, time_size, dfs_size, rewrited_condition_dump_name=f"valid_conditions", flag_dump=True)
+    joblib.dump(valid_dataset, "./valid_dataset")
+    # with open("./valid_dataset", "rb") as f:
+    #     valid_dataset = joblib.load(f)
     
     
     print("--------------")

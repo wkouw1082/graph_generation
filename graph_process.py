@@ -565,36 +565,66 @@ class graph_statistic():
         trait_list=[]
         for index, graph in enumerate(graphs):
             tmp_dict = {}
-            try:
-                for key in eval_params:
-                    #if "id" in key:
-                    #    param = index
-                    if "power_degree" in key:
+            for key in eval_params:
+                #if "id" in key:
+                #    param = index
+                if "power_degree" in key:
+                    try:
                         param = self.degree_dist(graph)
-                    if "cluster_coefficient" in key:
+                    except:
+                        param = None
+                if "cluster_coefficient" in key:
+                    try:
                         param = self.cluster_coeff(graph)
-                    if "distance" in key:
+                    except:
+                        param = None
+                if "distance" in key:
+                    try:
                         param = self.ave_dist(graph)
-                    if "average_degree" in key:
+                    except:
+                        param = None
+                if "average_degree" in key:
+                    try:
                         param = self.ave_degree(graph)
-                    if "density" in key:
+                    except:
+                        param = None
+                if "density" in key:
+                    try:
                         param = self.density(graph)
-                    if "modularity" in key:
+                    except:
+                        param = None
+                if "modularity" in key:
+                    try:
                         param = self.modularity(graph)
-                    if "maximum_distance" in key:
+                    except:
+                        param = None
+                if "maximum_distance" in key:
+                    try:
                         param = self.maximum_of_shortest_path_lengths(graph)
-                    if "degree_centrality" in key:
+                    except:
+                        param = None
+                if "degree_centrality" in key:
+                    try:
                         param = self.degree_centrality(graph)
-                    if "betweenness_centrality" in key:
+                    except:
+                        param = None
+                if "betweenness_centrality" in key:
+                    try:
                         param = self.betweenness_centrality(graph)
-                    if "closeness_centrality" in key:
+                    except:
+                        param = None
+                if "closeness_centrality" in key:
+                    try:
                         param = self.closeness_centrality(graph)
-                    if "size" in key:
+                    except:
+                        param = None
+                if "size" in key:
+                    try:
                         param = graph.number_of_nodes()
-                    tmp_dict.update({key:param})
-                trait_list.append(tmp_dict)
-            except:
-                continue
+                    except:
+                        param = None
+                tmp_dict.update({key:param})
+            trait_list.append(tmp_dict)
         return trait_list
 
 # 隣接行列を隣接リストに変換
@@ -976,24 +1006,7 @@ if __name__ == "__main__":
     # datasets,labelsets = complex_network.create_conditional_dataset(train_generate_detail)
     # print(datasets)
     # print(labelsets.unsqueeze(1).size())
-    # dataset = complex_network.make_twitter_graph()
+    dataset = complex_network.make_twitter_graph()
     # for graph
-    # gs = graph_statistic()
-    # print(gs.degree_dist(dataset[0]))
-    
-    ### test用 ###
-    G = nx.read_edgelist('test_graph.txt', nodetype=int)
-    # layout取得
-    pos = nx.spring_layout(G)
-    # 可視化 & savefig
-    plt.figure(figsize=(6, 6))
-    nx.draw_networkx_edges(G, pos)
-    nx.draw_networkx_nodes(G, pos)
-    plt.axis('off')
-    plt.savefig("test_graph.png")
-    # DFSインスタンス
-    dfs_graph = ConvertToDfsCode(G, mode="high_degree_first")
-    print(dfs_graph.get_dfs_code())
-    
-
-    
+    gs = graph_statistic()
+    print(gs.degree_dist(dataset[0]))

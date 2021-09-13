@@ -92,9 +92,6 @@ twitter_valid_path = './data/twitter_eval'
 # 次数分布の冪指数を出すときに大多数のデータに引っ張られるせいで１次元プロットが正しい値から離れてしまうのでいくつかの値を除いて導出するための除く割合
 power_degree_border_line = 0.7
 
-# cluster_coefficientを少数第何位で四捨五入するか
-round_num = 4
-
 # config.pyを呼び出しているプログラムを実行した時間(と思われる)
 from datetime import datetime
 run_time = '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
@@ -115,3 +112,5 @@ DEFAULT_ATTRIBUTES = (
 
 # datasetのノードサイズ（train_with_sequential_conditions）
 dataset_node_size = 50      # dfs_code(model入力前)からグラフを再構築する時に使用
+# cluster_coefficientを少数第何位で四捨五入するか
+round_num = 4

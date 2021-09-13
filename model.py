@@ -544,13 +544,8 @@ class Decoder_PlusConditions(nn.Module):
             le: edge label
             conditions: value of pred graph statistic
         """
-        from aaa import this_is
-        # this_is(rep, name="rep")
-        # this_is(x[:,0,-1*condition_size:], name="ayasiiyatu")
         conditional=x[:,0,-1*condition_size:].unsqueeze(1)
-        # this_is(conditional, name="conditional")
         rep = torch.cat([rep, conditional], dim=2)
-        # this_is(rep, name="rep go")
         
         origin_rep=rep
         rep = self.f_rep(rep)
@@ -567,13 +562,8 @@ class Decoder_PlusConditions(nn.Module):
         rep = torch.cat([origin_rep for _ in range(x.shape[1])],dim=1)
         x = torch.cat((x,rep),dim=2)
 
-        # this_is(x, name="x before lstm")
-
         x, (h, c) = self.lstm(x)
-        # import aaa
-        # aaa.this_is(x, name="lstm(decoder) output")
         x = self.dropout(x)
-        # aaa.this_is(x, name="lstm(decoder) output (after dropout)")
     
         tu = self.softmax(self.f_tu(x))
         tv = self.softmax(self.f_tv(x))
@@ -581,8 +571,6 @@ class Decoder_PlusConditions(nn.Module):
         lv = self.softmax(self.f_lv(x))
         le = self.softmax(self.f_le(x))
         conditions = self.f_conditions(x)
-        this_is(tu, name="tu")
-        this_is(conditions, name="conditions")
         
         return tu, tv, lu, lv, le, conditions
 
@@ -691,24 +679,8 @@ class VAE(nn.Module):
 
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
-        # print(f"mu = {mu}")
-        # print(f"shape(mu) = {mu.shape}")
-        # print(f"sigma = {sigma}")
-        # print(f"shape(sigma) = {sigma.shape}")
         z = transformation(mu, sigma, self.device)
-        # print(f"z = {z}")
-        # print(f"z.shape = {z.shape}")
         tu, tv, lu, lv, le, conditions = self.decoder(z, x)
-        # print(f"shape(tu) = {tu.shape}")
-        # print(f"tu = {tu}")
-        # print(f"shape(tv) = {tv.shape}")
-        # print(f"tv = {tv}")
-        # print(f"shape(lu) = {lu.shape}")
-        # print(f"lu = {lu}")
-        # print(f"shape(lv) = {lv.shape}")
-        # print(f"lv = {lv}")
-        # print(f"shape(le) = {le.shape}")
-        # print(f"le = {le}")
         
         return mu, sigma, tu, tv, lu, lv, le, conditions
 
