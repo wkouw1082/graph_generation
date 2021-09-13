@@ -669,7 +669,8 @@ class VAE(nn.Module):
         self.rep_size = rep_size
         self.device = device
         self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
-        if decoder_type == "+conditions":
+        self.decoder_type = decoder_type
+        if self.decoder_type == "+conditions":
             self.decoder = Decoder_PlusConditions(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
         else:    
             self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
@@ -680,9 +681,12 @@ class VAE(nn.Module):
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma, self.device)
-        tu, tv, lu, lv, le, conditions = self.decoder(z, x)
-        
-        return mu, sigma, tu, tv, lu, lv, le, conditions
+        if self.decoder_type == "+conditions":
+            tu, tv, lu, lv, le, conditions = self.decoder(z, x)
+            return mu, sigma, tu, tv, lu, lv, le, conditions
+        else:
+            tu, tv, lu, lv, le = self.decoder(z, x)
+            return mu, sigma, tu, tv, lu, lv, le
 
     def generate(self, data_num, conditional_label, z=None, max_size=generate_max_len, is_output_sampling=True):
         if z is None:
