@@ -446,18 +446,12 @@ def non_conditional_eval(args):
     print("edge size: %d"%(edge_size))
     print("--------------")
 
-    # load model_param
-    model_param = utils.load_model_param(file_path=args.model_param)
-    print(f"model_param = {model_param}")
-
-    is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
-
-    vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
-    # if args.eval_model:
-    #     vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
-    # else:
+    if args.eval_model:
+        vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
+    else:
         # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-    vae.load_state_dict(torch.load(train_dir + "weight", map_location="cpu"))
+        vae.load_state_dict(torch.load(train_dir + "weight", map_location="cpu"))
+
     vae = utils.try_gpu(device,vae)
     vae.eval()
 
