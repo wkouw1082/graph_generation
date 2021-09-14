@@ -188,8 +188,11 @@ def tsne(multi_vecs, dir):
     ax.set_ylabel('dim2')
     plt.savefig(dir)
 
-def load_model_param():
-    if os.path.isfile('results/best_tune.yml'):
+def load_model_param(file_path=None):
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as yml:
+            model_param = yaml.load(yml) 
+    elif os.path.isfile('results/best_tune.yml'):
         with open('results/best_tune.yml', 'r') as yml:
             model_param = yaml.load(yml) 
     else:

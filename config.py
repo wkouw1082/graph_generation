@@ -94,8 +94,7 @@ power_degree_border_line = 0.7
 
 # config.pyを呼び出しているプログラムを実行した時間(と思われる)
 from datetime import datetime
-run_time = '{0:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-#run_time = '2021-07-26 16:01:01'
+run_time = '{0:%Y%m%d_%H%M}'.format(datetime.now())
 
 # gpuの情報用
 DEFAULT_ATTRIBUTES = (

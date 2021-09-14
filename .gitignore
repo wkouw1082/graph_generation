@@ -26,3 +26,6 @@ default.png
 /logs/*
 *.zip
 *.csv
+/data/result_graph
+/data/csv/
+generated_graph_*
