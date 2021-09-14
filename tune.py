@@ -24,8 +24,16 @@ def conditional_tune(args):
 
     device = utils.get_gpu_info()
 
-    required_dirs = ["param", "dataset"]
-    utils.make_dir(required_dirs)
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
@@ -222,14 +230,27 @@ def conditional_tune(args):
     f = open("results/best_tune.yml", "w+")
     f.write(yaml.dump(study.best_params))
     f.close()
+    if not os.path.exists("results/" + run_time):
+        utils.make_dir(["results/" + run_time])
+    f = open("results/"+run_time+"/best_tune.yml", "w+")
+    f.write(yaml.dump(study.best_params))
+    f.close()
     writer.close()
 
 def tune(args):
 
     device = utils.get_gpu_info()
 
-    required_dirs = ["param", "dataset"]
-    utils.make_dir(required_dirs)
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
@@ -354,6 +375,11 @@ def tune(args):
     print("--------------------------")
     
     f = open("results/best_tune.yml", "w+")
+    f.write(yaml.dump(study.best_params))
+    f.close()
+    if not os.path.exists("results/" + run_time):
+        utils.make_dir(["results/" + run_time])
+    f = open("results/"+run_time+"/best_tune.yml", "w+")
     f.write(yaml.dump(study.best_params))
     f.close()
 

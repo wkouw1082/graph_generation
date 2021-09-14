@@ -3,10 +3,10 @@ import yaml
 import os
 
 import utils
-import tune
-import train
-import eval
-import visualize
+# import tune
+# import train
+# import eval
+# import visualize
 import config
 from config import *
 
@@ -21,7 +21,7 @@ def main(args):
     device = utils.get_gpu_info()
     print('using device is {}.'.format(device))
 
-    # preprocee が必要か、既に終了したかを意味するフラグを作成
+    # preprocess が必要か、既に終了したかを意味するフラグを作成
     if args.preprocess is False:
         # preprocessは不要
         is_finished_preprocess = True
@@ -30,10 +30,19 @@ def main(args):
         is_finished_preprocess = False
 
     # 大まかなディレクトリ作成. より細かいディレクトリは各関数で作成
-    required_dirs = ["dataset", "param", "results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
-    if not os.path.exists("./results"):
-        required_dirs.remove("results")
-    #utils.make_dir(required_dirs)
+    ## 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+    ## 指定したresult_dir の存在を確認
+    if args.result_dir:
+        if not os.path.exists("./" + args.result_dir):
+            print(f"{args.result_dir} が存在しません.")
+            exit()
+    
 
     # tune
     if args.tune:
@@ -83,9 +92,11 @@ if __name__ == "__main__":
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
-    parser.add_argument('--eval_model',action='store')
-    parser.add_argument('--result', action='store')
     parser.add_argument('--visualize', action='store_true')
+
+    parser.add_argument('--model_param',action='store', help="ハイパーパラメータのパス")
+    parser.add_argument('--eval_model',action='store', help="eval時に読み込むweightのパス")
+    parser.add_argument('--result_dir', action='store', help="results/ 直下に存在するディレクトリのパス")
 
     parser.add_argument('--histogram', action='store_true')
     parser.add_argument('--scatter',   action='store_true')

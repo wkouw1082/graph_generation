@@ -24,7 +24,7 @@ def graph_visualize(graph):
     plt.axis("off")
     plt.savefig("default.png")
 
-def convert_csv2image(csv_path):
+def convert_csv2image(csv_path, output_path=None):
     '''
     csvファイルからeval_paramsのパラメータの棒グラフを作成する関数
 
@@ -32,20 +32,28 @@ def convert_csv2image(csv_path):
     ----------
     csv_path : string
         読み込むcsvファイルを指定する変数
+    output_path : str
+        png形式の棒グラフを出力するディレクトリのパス
     '''
     data = pd.read_csv(csv_path, encoding = 'UTF8')
     for param in eval_params:
         sns.histplot(data[param], kde=False)
-        plt.savefig('results/'+run_time+'/visualize/' + param + '.png')
+        if output_path is None:
+            plt.savefig('results/'+run_time+'/visualize/' + param + '.png')
+        else:
+            plt.savefig(output_path + param + '.png')
         plt.clf()
 
-def histogram_visualize(csv_path):
+def histogram_visualize(csv_path, output_path=None):
     """ヒストグラムを作成する関数
 
     Parameters
     ----------
     csv_path : str
         ヒストグラムを作成したいcsvファイルのパス
+    output_path : str
+        png形式のヒストグラムを保存するディレクトリのパス
+        (例) output_path = "results/2021-01-01_00-00/visualize/"
     """
     dir_name = os.path.splitext(os.path.basename(csv_path))[0]
     df = pd.read_csv(csv_path)
@@ -63,12 +71,14 @@ def histogram_visualize(csv_path):
             if eval_params_limit[param] is not None:
                 plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
             sns.histplot(df[param],kde=False)
-
-        plt.savefig('results/'+run_time+'/visualize/histogram/'+dir_name+'/'+ param + '.png')
+        if output_path is None:
+            plt.savefig('results/'+run_time+'/visualize/histogram/'+dir_name+'/'+ param + '.png')
+        else:
+            plt.savefig(output_path + 'histogram/'+dir_name+'/'+ param + '.png')
         plt.clf()
         plt.close('all')
 
-def concat_histogram_visualize(save_dir,csv_paths):
+def concat_histogram_visualize(save_dir,csv_paths, output_path=None):
     """複数のデータを結合したヒストグラムを作成する関数
 
     Parameters
@@ -77,6 +87,9 @@ def concat_histogram_visualize(save_dir,csv_paths):
         保存するディレクトリの名前
     csv_paths : list
         ヒストグラムを作成するcsvファイルパスのリスト
+    output_path : str
+        png形式の結合ヒストグラムを保存するディレクトリのパス
+        (例) output_path = "results/2021-01-01_00-00/visualize/"
     """
     color_list = ['blue','red','green','gray']
     for param in eval_params:
@@ -99,11 +112,14 @@ def concat_histogram_visualize(save_dir,csv_paths):
                 sns.histplot(df[param],label=label_name, kde=False, color=color)
 
         plt.legend(frameon=True)
-        plt.savefig('results/'+run_time+'/visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
+        if output_path is None:
+            plt.savefig('results/'+run_time+'/visualize/concat_histogram/'+save_dir+'/'+ param + '.png')
+        else:
+            plt.savefig(output_path + 'concat_histogram/'+save_dir+'/'+ param + '.png')
         plt.clf()
         plt.close('all')
 
-def scatter_diagram_visualize(csv_path):
+def scatter_diagram_visualize(csv_path, output_path=None):
     """散布図を作成する関数
        なお、作成時にはeval paramsの全ての組み合わせが作成される
 
@@ -111,6 +127,9 @@ def scatter_diagram_visualize(csv_path):
     ----------
     csv_path : str
         散布図を作成したいcsvfileのpath
+    output_path : str
+        png形式の散布図を保存するディレクトリのpath
+        (例) output_path = "results/2021-01-01_00-00/visualize/"
 
     >>> scatter_diagram_visualize('./data/Twitter/twitter.csv')
     """
@@ -124,11 +143,14 @@ def scatter_diagram_visualize(csv_path):
             x_data = df[param_v]
             y_data = df[param_u]
             sns.jointplot(x=x_data,y=y_data,data=df)
-            plt.savefig('results/'+run_time+'/visualize/scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
+            if output_path is None:
+                plt.savefig('results/'+run_time+'/visualize/scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
+            else:
+                plt.savefig(output_path + 'scatter_diagram/'+dir_name+'/'+param_v+'_'+param_u+'.png')
             fig.clf()
             plt.close('all')
 
-def concat_scatter_diagram_visualize(save_dir,csv_paths):
+def concat_scatter_diagram_visualize(save_dir,csv_paths, output_path=None):
     for param_v in eval_params:
         for param_u in eval_params:
             if re.search('centrality', param_v) or re.search('centrality', param_u) or param_v == param_u:
@@ -136,16 +158,21 @@ def concat_scatter_diagram_visualize(save_dir,csv_paths):
             fig = plt.figure()
             df = utils.concat_csv(csv_paths)
             sns.jointplot(x=df[param_v],y=df[param_u],data=df,hue='type')
-
-            plt.savefig('results/'+run_time+'/visualize/concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
+            if output_path is None:
+                plt.savefig('results/'+run_time+'/visualize/concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
+            else:
+                plt.savefig(output_path + 'concat_scatter_diagram/'+save_dir+'/'+param_v+'_'+param_u+'.png')
             fig.clf()
             plt.close('all')
 
-def pair_plot(csv_paths, do_time=None):
+def pair_plot(csv_paths, do_time=None, output_path=None):
     fig = plt.figure()
     df = utils.concat_csv(csv_paths)
     sns.pairplot(df,data=df,hue='type')
-    if do_time:
+    if output_path is not None:
+        plt.savefig(output_path + 'pair_plot/pair_plot.pdf')
+        plt.savefig(output_path + 'pair_plot/pair_plot.png')
+    elif do_time:
         plt.savefig('results/'+do_time+'/visualize/pair_plot/pair_plot.pdf')
         plt.savefig('results/'+do_time+'/visualize/pair_plot/pair_plot.png')
     else:
@@ -210,10 +237,14 @@ def log_plot():
 
 def log_log():
     cx = graph_process.complex_networks()
-    required_dirs = ['results/'+run_time+"/visualize/power_degree_line"]
+    result_dir_name = input("resultsディレクトリ直下にあるディレクトリ名を入力してください。")
+    if not os.path.exists("./results/" + result_dir_name):
+        print(f"./results/{result_dir_name} が存在しません。")
+        exit()
+    required_dirs = ['results/'+result_dir_name+"/visualize/power_degree_line"]
     names = ["NN_0.1","NN_0.5","NN_0.9","twitter"]
-    if os.path.isdir('results/'+run_time+"/visualize/power_degree_line/"):
-        shutil.rmtree('results/'+run_time+"/visualize/power_degree_line")
+    if os.path.isdir('results/'+result_dir_name+"/visualize/power_degree_line/"):
+        shutil.rmtree('results/'+result_dir_name+"/visualize/power_degree_line")
     utils.make_dir(required_dirs)
 
     for detail,name in zip([{"NN":[1,10000,[0.1]]},{"NN":[1,10000,[0.5]]},{"NN":[1,10000,[0.9]]},{"twitter":[1,10000,[0.1]]}],names):
@@ -260,7 +291,7 @@ def log_log():
         # plt.xscale('log')
         plt.yticks(fontsize=20)
         plt.xlabel('degree', fontsize=24)
-        plt.savefig('results/'+run_time+"/visualize/power_degree_line/" + name + ".png")
+        plt.savefig('results/'+result_dir_name+"/visualize/power_degree_line/" + name + ".png")
         plt.clf()
 
 def generate_result2csv(result_path=None):
@@ -277,7 +308,7 @@ def generate_result2csv(result_path=None):
         cn.graph2csv(result, 'generated_graph_'+str(index))
 
 if __name__ == '__main__':
-    graphs = joblib.load('results/'+run_time+'/eval/generated_graph_0')
+    graphs = joblib.load('results/2021-01-01_00-00/eval/generated_graph_0')
     for graph in graphs:
         print(graph.number_of_nodes())
     print(len(graphs))

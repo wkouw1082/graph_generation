@@ -26,34 +26,49 @@ def eval(args):
         print("- eval_result")
         shutil.rmtree("./eval_result")
 
-    # required_dirs = [
-    #         "param",
-    #         "eval_result",
-    #         "eval_result/statistic",
-    #         "eval_result/tsne",
-    #         "eval_result/dist_compare",
-    #         "eval_result/generated_normal",
-    #         "eval_result/generated_encoded",
-    #         "eval_result/reconstruct",
-    #         "dataset"]
-    required_dirs = [
-                "results",
-                "results/"+run_time,
-                "results/"+run_time+"/eval",
-                "results/"+run_time+"/eval/statistic",
-                "results/"+run_time+"/eval/tsne",
-                "results/"+run_time+"/eval/dist_compare",
-                "results/"+run_time+"/eval/generated_normal",
-                "results/"+run_time+"/eval/generated_encoded",
-                "results/"+run_time+"/eval/reconstruct"]
-    # 必要となるdirがすでに存在していたら、リストから削除
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
     remove_dirs = []
-    for req_dir in required_dirs:
-        if os.path.exists(req_dir):
-            remove_dirs.append(req_dir)
-    for remove_dir in remove_dirs:
-        required_dirs.remove(remove_dir)
-    utils.make_dir(required_dirs)
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+
+    # results内のディレクトリの候補を作成
+    if args.result_dir:
+        if not os.path.exists("./" + args.result_dir):
+            print(f"{args.result_dir} が存在しません.")
+            exit()
+        result_dirs = [args.result_dir, args.result_dir+"/train", args.result_dir+"/eval", args.result_dir+"/visualize"]
+    else:
+        result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    eval_dir = "./" + result_dirs[2] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
+
+    # evalディレクトリ内のディレクトリ候補を作成
+    eval_dirs = [
+                eval_dir + "statistic",
+                eval_dir + "tsne",
+                eval_dir + "dist_compare",
+                eval_dir + "generated_normal",
+                eval_dir + "generated_encoded",
+                eval_dir + "reconstruct"]
+    remove_dirs = []
+    for dir in eval_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        eval_dirs.remove(dir)
+
 
     train_label = joblib.load("dataset/train/label")
     time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
@@ -66,8 +81,8 @@ def eval(args):
     print("--------------")
 
     # load model_param
-    model_param = utils.load_model_param()
-    # print(f"model_param = {model_param}")
+    model_param = utils.load_model_param(file_path=args.model_param)
+    print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
@@ -77,7 +92,7 @@ def eval(args):
         vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
     else:
         # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-        vae.load_state_dict(torch.load("results/" + run_time + "/train/weight_1000", map_location="cpu"))
+        vae.load_state_dict(torch.load(train_dir + "weight", map_location="cpu"))
 
     vae = utils.try_gpu(device,vae)
 
@@ -114,8 +129,16 @@ def eval(args):
             #if gp.is_connect(graph):
             if gp.is_connect(graph) and is_sufficient_size(graph):
                 generated_graph.append(graph)
+        
+        # make result_dirs, eval_dirs once
+        if len(result_dirs) > 0:
+            utils.make_dir(result_dirs)
+            result_dirs = []
+        if len(eval_dirs) > 0:
+            utils.make_dir(eval_dirs)
+            eval_dirs = []
 
-        joblib.dump(generated_graph, 'results/'+run_time+'/eval/generated_graph_'+str(index))
+        joblib.dump(generated_graph, eval_dir + 'generated_graph_'+str(index))
 
     #     gs = gp.graph_statistic()
     #     dict_tmp = {"correct"+str(power_degree_label[index])+" "+str(cluster_coefficient_label[index]): {key: [] for key in eval_params}}
@@ -368,38 +391,53 @@ def non_conditional_eval(args):
         print("- eval_result")
         shutil.rmtree("./eval_result")
 
-    # required_dirs = [
-    #         "param",
-    #         "eval_result",
-    #         "eval_result/statistic",
-    #         "eval_result/tsne",
-    #         "eval_result/dist_compare",
-    #         "eval_result/generated_normal",
-    #         "eval_result/generated_encoded",
-    #         "eval_result/reconstruct",
-    #         "dataset"]
-    required_dirs = [
-                "results",
-                "results/"+run_time,
-                "results/"+run_time+"/eval",
-                "results/"+run_time+"/eval/statistic",
-                "results/"+run_time+"/eval/tsne",
-                "results/"+run_time+"/eval/dist_compare",
-                "results/"+run_time+"/eval/generated_normal",
-                "results/"+run_time+"/eval/generated_encoded",
-                "results/"+run_time+"/eval/reconstruct"]
-    # 必要となるdirがすでに存在していたら、リストから削除
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
     remove_dirs = []
-    for req_dir in required_dirs:
-        if os.path.exists(req_dir):
-            remove_dirs.append(req_dir)
-    for remove_dir in remove_dirs:
-        required_dirs.remove(remove_dir)
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+        
+    # results内のディレクトリの候補を作成
+    if args.result_dir:
+        if not os.path.exists("./" + args.result_dir):
+            print(f"{args.result_dir} が存在しません.")
+            exit()
+        result_dirs = [args.result_dir, args.result_dir+"/train", args.result_dir+"/eval", args.result_dir+"/visualize"]
+    else:
+        result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    eval_dir = "./" + result_dirs[2] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
 
-    utils.make_dir(required_dirs)
+    # evalディレクトリ内のディレクトリ候補を作成
+    eval_dirs = [
+                eval_dir + "statistic",
+                eval_dir + "tsne",
+                eval_dir + "dist_compare",
+                eval_dir + "generated_normal",
+                eval_dir + "generated_encoded",
+                eval_dir + "reconstruct",
+                eval_dir + "result_csv"]
+    remove_dirs = []
+    for dir in eval_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        eval_dirs.remove(dir)
+
 
     # train_label = joblib.load("dataset/train/label")
-    time_size, node_size, edge_size = joblib.load("dataset/param")
+    time_size, node_size, edge_size, _ = joblib.load("dataset/param")
     dfs_size = 2*time_size + 2*node_size + edge_size
 
     print("--------------")
@@ -408,11 +446,9 @@ def non_conditional_eval(args):
     print("edge size: %d"%(edge_size))
     print("--------------")
 
-    # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    # load model_param
+    model_param = utils.load_model_param(file_path=args.model_param)
+    print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
@@ -421,7 +457,7 @@ def non_conditional_eval(args):
         vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
     else:
         # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-        vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
+        vae.load_state_dict(torch.load(train_dir + "weight", map_location="cpu"))
     vae = utils.try_gpu(device,vae)
     vae.eval()
 
@@ -451,21 +487,20 @@ def non_conditional_eval(args):
             if gp.is_connect(graph) and is_sufficient_size(graph):
                 generated_graph.append(graph)
 
-        # if os.path.isdir("data/result_csv/"):
-        #     shutil.rmtree("data/result_csv")
-        # required_dirs = ["data/result_csv"]
-        # utils.make_dir(required_dirs)
-        if os.path.isdir('results/' + run_time + "/eval/result_csv/"):
-            shutil.rmtree('results/' + run_time + "/eval/result_csv/")
-        required_dirs = ['results/' + run_time + "/eval/result_csv/"]
-        utils.make_dir(required_dirs)
+    # make result_dirs, eval_dirs once
+    if len(result_dirs) > 0:
+        utils.make_dir(result_dirs)
+        result_dirs = []
+    if len(eval_dirs) > 0:
+        utils.make_dir(eval_dirs)
+        eval_dirs = []
 
     # joblib.dump(generated_graph,'./data/result_graph')
-    joblib.dump(generated_graph,'results/' + run_time + '/eval/result_graph')
+    joblib.dump(generated_graph, eval_dir + 'result_graph')
 
     # 生成グラフをcsvファイルに書き出し
-    # cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
-    cx.graph2csv(generated_graph, 'eval/result_csv/twitter_result')
+    # cx.graph2csv(generated_graph, 'result_csv/twitter_result')
+    cx.graph2csv(generated_graph, 'twitter_result', result_csv_dir=eval_dir+"result_csv/")
                     
     # display result
     # with open('eval_result/statistic/log.txt', 'w') as f:
@@ -686,6 +721,10 @@ if __name__ == '__main__':
     parser.add_argument('--preprocess',action='store_true')
     parser.add_argument('--classifier',action='store_true')
     parser.add_argument('--condition', action='store_true')
+
+    parser.add_argument('--model_param')
+    parser.add_argument('--result_dir')
+    parser.add_argument('--eval_model')
 
     args = parser.parse_args()
     if args.condition:

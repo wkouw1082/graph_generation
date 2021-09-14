@@ -15,6 +15,7 @@ import joblib
 import numpy as np
 import shutil
 from tqdm import tqdm
+import os
 
 import torch
 from torch import nn
@@ -41,12 +42,30 @@ def conditional_train(args):
         print("- train_result")
         shutil.rmtree("./train_result")
 
-    # required_dirs = ["param", "train_result", "dataset"]
-    # utils.make_dir(required_dirs)
-    print("start preprocess...")
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+
+    # results内のディレクトリの候補を作成
+    result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
 
     # preprocess
     if is_preprocess:
+        print("start preprocess...")
         shutil.rmtree("dataset")
         required_dirs = ["dataset", "dataset/train", "dataset/valid"]
         utils.make_dir(required_dirs)
@@ -60,10 +79,7 @@ def conditional_train(args):
     valid_label = joblib.load("dataset/valid/label")
     valid_conditional = joblib.load("dataset/valid/conditional")
     time_size, node_size, edge_size, conditional_size = joblib.load("dataset/param")
-    
-    # this_is(train_dataset, name="train_dataset (after load)")
-    # this_is(train_label[0], name="train_label[0] (after load)")
-    # this_is(train_conditional, name="train_conditional (after load)")
+
 
     dfs_size = 2*time_size+2*node_size+edge_size+conditional_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
@@ -89,13 +105,11 @@ def conditional_train(args):
     train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
     valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
     
-    # this_is(train_conditional, name="train_conditional")    
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
     # print(train_dataset[1,:,-1*condition_size:])
     
-    # this_is(train_dataset, name="train_dataset (after cat)")
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -105,8 +119,8 @@ def conditional_train(args):
     print("--------------")
 
     # model_param load
-    model_param = utils.load_model_param()
-    # print(f"model_param = {model_param}")
+    model_param = utils.load_model_param(file_path=args.model_param)
+    print(f"model_param = {model_param}")
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
@@ -119,9 +133,6 @@ def conditional_train(args):
     valid_data_num = valid_dataset.shape[0]
     valid_label_args = torch.LongTensor(list(range(valid_data_num)))
 
-    # this_is(train_data_num, name="train_data_num")
-    # this_is(train_label_args, name="train_label_args")
-
     train_dl = DataLoader(
             TensorDataset(train_label_args, train_dataset),\
             shuffle=True, batch_size=model_param["batch_size"])
@@ -129,7 +140,6 @@ def conditional_train(args):
             TensorDataset(valid_label_args, valid_dataset),\
             shuffle=False, batch_size=model_param["batch_size"])
     
-    # this_is(train_dl, name="train_dl")
 
     keys = ["tu", "tv", "lu", "lv", "le"]
     if is_classifier:
@@ -146,6 +156,7 @@ def conditional_train(args):
     criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
+    best_epoch = 0
 
     print("start conditional train...")
 
@@ -159,9 +170,6 @@ def conditional_train(args):
         train_loss_sum = 0
         for i, (args, datas) in enumerate(train_dl, 1):
             
-            # this_is(args, name="args")
-            # this_is(datas, name="datas")
-            
             if i%100==0:
                 print("step: [%d/%d]"%(i, train_data_num))
             vae.train()
@@ -172,22 +180,15 @@ def conditional_train(args):
             #mu, sigma, *result = vae(datas, timestep)
             mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
-            this_is(encoder_loss, name="encoder_loss")
-            this_is(encoder_loss.item(), name="encoder_loss.item()")
             current_train_loss["encoder"].append(encoder_loss.item())
             loss = encoder_loss
             for j, pred in enumerate(result):
-                this_is(pred, name="pred")
                 current_key = keys[j]
                 # loss calc
                 correct = train_label[j]
-                this_is(train_label[j], name=f"train_label[{j}]")
                 correct = correct[args]
-                this_is(correct, name=f"correct")
                 correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
-                this_is(pred.transpose(2, 1), name="transpose(pred) (2, 1)")
-                this_is(tmp_loss, name="tmp_loss")
                 loss+=tmp_loss
 
                 # save
@@ -339,34 +340,39 @@ def conditional_train(args):
         print("----------------------------")
         writer.add_scalar("train/vallid_loss", loss, epoch)
 
+        # make result_dirs once
+        if len(result_dirs) > 0:
+            utils.make_dir(result_dirs)
+            result_dirs = []
+
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, train_dir + "train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, train_dir + "train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_loss, train_dir + "valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, train_dir + "valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
         train_loss_sums.append(train_loss_sum/train_data_num)
         valid_loss_sums.append(valid_loss_sum/valid_data_num)
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                train_dir + "loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight each 1000 epochs
-        # if epoch % 1000 == 0:
-        if epoch % 200 == 0:
+        if epoch % 1000 == 0:
             torch.save(vae.state_dict(), "param/weight_"+str(epoch))
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
+            torch.save(vae.state_dict(), train_dir + "weight_" + str(epoch))
 
         # 最も性能のいいモデルを保存
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            torch.save(vae.state_dict(), train_dir + "weight")
+            best_epoch = epoch
 
         print("\n")
-    
+    print(f"best weight epoch = {best_epoch}")    
     writer.close()
 
 def train(args):
@@ -381,12 +387,30 @@ def train(args):
         print("- train_result")
         shutil.rmtree("./train_result")
 
-    # required_dirs = ["param", "train_result", "dataset"]
-    # utils.make_dir(required_dirs)
-    print("start preprocess...")
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+
+    # results内のディレクトリの候補を作成
+    result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
 
     # preprocess
     if is_preprocess:
+        print("start preprocess...")
         shutil.rmtree("dataset")
         required_dirs = ["dataset", "dataset/train", "dataset/valid"]
         utils.make_dir(required_dirs)
@@ -409,10 +433,8 @@ def train(args):
     print("--------------")
     
     # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    model_param = utils.load_model_param(file_path=args.model_param)
+    print(f"model_param = {model_param}")
 
     vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
@@ -446,6 +468,7 @@ def train(args):
     criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
+    best_epoch = 0
 
     for epoch in range(1, epochs+1):
         print("Epoch: [%d/%d]:"%(epoch, epochs))
@@ -576,29 +599,64 @@ def train(args):
         print("     loss:%lf"%(loss))
         print("----------------------------")
 
+        # make result_dirs once
+        if len(result_dirs) > 0:
+            utils.make_dir(result_dirs)
+            result_dirs = []
+
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, train_dir + "train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, train_dir + "train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_loss, train_dir + "valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, train_dir + "valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
         train_loss_sums.append(train_loss_sum/train_data_num)
         valid_loss_sums.append(valid_loss_sum/valid_data_num)
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                train_dir + "loss_transition.png", xlabel="Epoch", ylabel="Loss")
+
+        # output weight each 1000 epochs
+        if epoch % 1000 == 0:
+            torch.save(vae.state_dict(), "param/weight_"+str(epoch))
+            torch.save(vae.state_dict(), train_dir + "weight_" + str(epoch))
 
         # output weight if train loss is min
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
             torch.save(vae.state_dict(), "param/weight")
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            torch.save(vae.state_dict(), train_dir + "weight")
+            best_epoch = epoch
         print("\n")
+    print(f"best weight epoch = {best_epoch}")
 
 def gcn_train(args):
+
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+
+    # results内のディレクトリの候補を作成
+    result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
+
+
     if args.preprocess:
         print("start preprocess...")
         pp.preprocess_gcn(train_generate_detail, valid_generate_detail,condition=args.condition)
@@ -620,7 +678,7 @@ def gcn_train(args):
     print("--------------")
 
     # model_param load
-    model_param = utils.load_model_param()
+    model_param = utils.load_model_param(file_path=args.model_param)
     model_param = {'batch_size':8, 'clip_th': 0.03,'emb_size':150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
     # print(f"model_param = {model_param}")
 
@@ -781,31 +839,36 @@ def gcn_train(args):
         print("----------------------------")
         writer.add_scalar("train_condition/vallid_loss", loss, epoch)
 
+        # make result_dirs once
+        if len(result_dirs) > 0:
+            utils.make_dir(result_dirs)
+            result_dirs = []
+
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, train_dir + "train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, train_dir + "train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_loss, train_dir + "valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, train_dir + "valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
 
         train_loss_sums.append(train_loss_sum/len(train_dataset))
         valid_loss_sums.append(valid_loss_sum/len(valid_dataset))
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                train_dir + "loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight each 1000 epochs
         # if epoch % 1000 == 0:
         if epoch % 200 == 0:
             torch.save(vae.state_dict(), "param/weight_"+str(epoch))
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
+            torch.save(vae.state_dict(), train_dir + "weight_" + str(epoch))
 
         # 最も性能のいいモデルを保存
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            torch.save(vae.state_dict(), train_dir + "weight")
 
         print("\n")
     
@@ -838,9 +901,27 @@ def train_with_sequential_conditions(args):
         print("- train_result")
         shutil.rmtree("./train_result")
 
-    # required_dirs = ["param", "train_result", "dataset"]
-    # utils.make_dir(required_dirs)
-
+    # 必須ディレクトリの作成
+    required_dirs = ["dataset", "param", "results"]
+    remove_dirs = []
+    for dir in required_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        required_dirs.remove(dir)
+    if len(required_dirs) > 0:
+        utils.make_dir(required_dirs)
+        
+    # results内のディレクトリの候補を作成
+    result_dirs = ["results/"+run_time, "results/"+run_time+"/train", "results/"+run_time+"/eval", "results/"+run_time+"/visualize"]
+    train_dir = "./" + result_dirs[1] + "/"
+    remove_dirs = []
+    for dir in result_dirs:
+        if os.path.exists("./" + dir):
+            remove_dirs.append(dir)
+    for dir in remove_dirs:
+        result_dirs.remove(dir)
+    
     # preprocess
     if is_preprocess:
         print("start preprocess...")
@@ -913,15 +994,15 @@ def train_with_sequential_conditions(args):
     print("--------------")
 
     # model_param load
-    model_param = utils.load_model_param()
-    ## print(f"model_param = {model_param}")
+    model_param = utils.load_model_param(file_path=args.model_param)
+    print(f"model_param = {model_param}")
 
     # create VAE model
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device, decoder_type="+conditions")
     vae = utils.try_gpu(device,vae)
 
     # set optimizer
-    opt = optim.Adam(vae.parameters(), lr=0.001)
+    opt = optim.Adam(vae.parameters(), lr=model_param["lr"])
 
     # train_data_num = グラフの数
     train_data_num = train_dataset.shape[0]
@@ -961,6 +1042,8 @@ def train_with_sequential_conditions(args):
     ## encoderの誤差関数（KL-divercity）
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
+    ## best weightのepoch
+    best_epoch = 0
 
     print("start train_with_sequential_conditions ...")
     for epoch in range(1, epochs+1):
@@ -990,25 +1073,18 @@ def train_with_sequential_conditions(args):
             mu, sigma, *result, conds = vae(datas, word_drop=word_drop_rate)
             
             # generate graphs
-            # bbb
             # ans = vae.generate(3, torch.tensor([[0.1]])[0])
-            # this_is(ans,name="generated")
             # result = [code.unsqueeze(2) for code in ans]
-            # this_is(result[0], name="result[0]")
             # dfs_code = torch.cat(result, dim=2)
-            # this_is(dfs_code, name="dfs_code")
             # generated_graph = []
             # for code in dfs_code:
-            #     this_is(code, name="code (in for loop)")
             #     import graph_process
             #     graph = graph_process.dfs_code_to_graph_obj(
             #             code.cpu().detach().numpy(),
             #             [time_size, time_size, node_size, node_size, edge_size])
-            #     this_is(graph, name="graph")
             #     #if gp.is_connect(graph):
             #     if gp.is_connect(graph) and is_sufficient_size(graph):
             #         generated_graph.append(graph)
-            # qqq
             
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             ## encoder_loss.item() = loss値
@@ -1209,14 +1285,19 @@ def train_with_sequential_conditions(args):
         print("----------------------------")
         writer.add_scalar("train/vallid_seq_conds_loss", loss, epoch)
 
+        # make result_dirs once
+        if len(result_dirs) > 0:
+            utils.make_dir(result_dirs)
+            result_dirs = []
+
         # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), train_loss, train_dir + "train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]+["conditions"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
+            utils.time_draw(range(epoch), {key: train_loss[key]}, train_dir + "train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
             writer.add_scalar(f"train/{key}", train_loss[key], epoch)
-        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        utils.time_draw(range(epoch), valid_loss, train_dir + "valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
+        utils.time_draw(range(epoch), valid_acc, train_dir + "valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         writer.add_scalar("train/train_seq_acc", train_acc, epoch)
         writer.add_scalar("train/valid_seq_acc", valid_acc, epoch)
 
@@ -1225,20 +1306,21 @@ def train_with_sequential_conditions(args):
         utils.time_draw(
                 range(epoch),
                 {"train": train_loss_sums, "valid": valid_loss_sums},
-                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
+                train_dir + "loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
-        # output weight each 200 epochs
-        if epoch % 200 == 0:
+        # output weight each 1000 epochs
+        if epoch % 1000 == 0:
             torch.save(vae.state_dict(), "param/weight_"+str(epoch))
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight_" + str(epoch))
+            torch.save(vae.state_dict(), train_dir + "weight_" + str(epoch))
 
         # 最も性能のいいモデルを保存
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            torch.save(vae.state_dict(), train_dir + "weight")
+            best_epoch = epoch
 
         print("\n")
-    
+    print(f"best_weight_epoch = {best_epoch}")
     writer.close()
 
 if __name__=='__main__':
@@ -1247,7 +1329,10 @@ if __name__=='__main__':
     parser.add_argument('--classifier',action='store_true')
     parser.add_argument('--condition', action='store_true')
     parser.add_argument('--seq_condition', action='store_true')
+
     parser.add_argument('--use_model')
+    parser.add_argument('--model_param')
+    parser.add_argument('--result_dir')
 
     args = parser.parse_args()
     if args.use_model == 'LSTM' or args.use_model == 'lstm':

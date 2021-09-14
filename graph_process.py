@@ -328,7 +328,7 @@ class complex_networks():
 
         return sample_datas
 
-    def graph2csv(self, graph_datas, file_name):
+    def graph2csv(self, graph_datas, file_name, result_csv_dir=None):
         '''
         各グラフデータのパラメータをcsvファイルに出力する関数
 
@@ -341,14 +341,16 @@ class complex_networks():
         '''
         statistic = graph_statistic()
         trait_dict = statistic.calc_graph_traits2csv(graph_datas, eval_params)
-        with open('./data/csv/' + file_name + '.csv', 'w') as f:
-            writer = csv.DictWriter(f, fieldnames=eval_params)
-            writer.writeheader()
-            writer.writerows(trait_dict)
-        # with open('./results/'+ run_time + '/' + file_name + '.csv', 'w') as f:
-        #     writer = csv.DictWriter(f, fieldnames=eval_params)
-        #     writer.writeheader()
-        #     writer.writerows(trait_dict)
+        if result_csv_dir is None:
+            with open('./data/csv/' + file_name + '.csv', 'w') as f:
+                writer = csv.DictWriter(f, fieldnames=eval_params)
+                writer.writeheader()
+                writer.writerows(trait_dict)
+        else:
+            with open(result_csv_dir + file_name + '.csv', 'w') as f:
+                writer = csv.DictWriter(f, fieldnames=eval_params)
+                writer.writeheader()
+                writer.writerows(trait_dict)
 
     def graph_data_compress(datas,file_name):
         joblib.dump(datas,'./data/graph_datas/'+file_name+'.pkl.cmp',compress=True)
