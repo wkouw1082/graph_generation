@@ -283,7 +283,14 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 # 小数点第1位で四捨五入する
-                tmp_label.append(round(param, round_num))
+                if round(param,1) == cluster_coefficient_label[0]:
+                    tmp_label.append([1,0,0])
+                elif round(param,1) == cluster_coefficient_label[1]:
+                    tmp_label.append([0,1,0])
+                elif round(param,1) == cluster_coefficient_label[2]:
+                    tmp_label.append([0,0,1])
+                else:
+                    tmp_label.append([0,0,0])
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
@@ -296,7 +303,14 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 # 小数点第1位で四捨五入する
-                tmp_label.append(round(param, round_num))
+                if round(param,1) == cluster_coefficient_label[0]:
+                    tmp_label.append([1,0,0])
+                elif round(param,1) == cluster_coefficient_label[1]:
+                    tmp_label.append([0,1,0])
+                elif round(param,1) == cluster_coefficient_label[2]:
+                    tmp_label.append([0,0,1])
+                else:
+                    tmp_label.append([0,0,0])
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)

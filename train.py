@@ -1,7 +1,6 @@
 # from data_input import GCNDataset
 from typing_extensions import runtime
 
-from matplotlib.pyplot import winter
 import utils
 import argparse
 import preprocess as pp
@@ -86,16 +85,14 @@ def conditional_train(args):
         train_classifier_correct = utils.try_gpu(device,train_classifier_correct)
         valid_classifier_correct = utils.try_gpu(device,valid_classifier_correct)
 
-    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
-    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
-    
-    # this_is(train_conditional, name="train_conditional")    
+    # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
+    # valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
+    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
+    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    # print(train_dataset[1,:,-1*condition_size:])
-    
-    # this_is(train_dataset, name="train_dataset (after cat)")
+    print(train_dataset[1,:,-1*condition_size:])
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -106,7 +103,7 @@ def conditional_train(args):
 
     # model_param load
     model_param = utils.load_model_param()
-    # print(f"model_param = {model_param}")
+    print(f"model_param = {model_param}")
 
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
@@ -373,7 +370,8 @@ def train(args):
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
-    device = utils.get_gpu_info()
+    # device = utils.get_gpu_info()
+    device = 'cpu'
 
     # recreate directory
     if utils.is_dir_existed("train_result"):
@@ -397,10 +395,17 @@ def train(args):
     train_label = joblib.load("dataset/train/label") 
     valid_dataset = joblib.load("dataset/valid/onehot")
     valid_label = joblib.load("dataset/valid/label")
-    time_size, node_size, edge_size = joblib.load("dataset/param")
+    time_size, node_size, edge_size, max_sequence_length = joblib.load("dataset/param")
 
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
+    dfs_split_list = []
+
+    tmp_split = 0
+    for size in dfs_size_list:
+        dfs_split_list.append([tmp_split, tmp_split + size])
+        tmp_split += size
+        
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -409,14 +414,12 @@ def train(args):
     print("--------------")
     
     # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    model_param = utils.load_model_param()
+    print(f"model_param = {model_param}")
 
     vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
-    opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
+    opt = optim.Adam(vae.parameters(), lr=0.001)
 
 
     train_data_num = train_dataset.shape[0]
@@ -443,7 +446,8 @@ def train(args):
     valid_acc = {key:[] for key in keys}
     train_min_loss = 1e10
 
-    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
+    # pos_weight = torch.ones((max_sequence_length, dfs_size)).cuda(device)
+    criterion = nn.BCEWithLogitsLoss(reduction='mean')
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
 
@@ -463,56 +467,46 @@ def train(args):
             datas = utils.try_gpu(device,datas)
 
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-            #mu, sigma, *result = vae(datas, timestep)
-            mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
+            mu, sigma, outputs, *result= vae(datas, timestep)
+            # mu, sigma, outputs = vae(datas, word_drop=word_drop_rate)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
-            current_train_loss["encoder"].append(encoder_loss.item())
             loss = encoder_loss
+            current_train_loss["encoder"].append(encoder_loss.item())
+            # bce_loss = criterion(outputs, datas)
+            # loss = encoder_loss + bce_loss
+            accuracy = utils.classification_metric(outputs, datas)
+            # train_loss_sum+=loss.item()
+
+                
             for j, pred in enumerate(result):
                 current_key = keys[j]
+                correct_split = dfs_split_list[j]
+                correct = datas[:,:,correct_split[0]:correct_split[1]]
                 # loss calc
-                correct = train_label[j]
-                correct = correct[args]
+
                 correct = utils.try_gpu(device,correct)
-                tmp_loss = criterion(pred.transpose(2, 1), correct)
+                tmp_loss = criterion(pred, correct).sum(axis=0)
+                # tmp_loss = criterion(pred, correct)
                 loss+=tmp_loss
 
                 # save
                 current_train_loss[current_key].append(tmp_loss.item())
 
                 # acc calc
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                correct = correct.view(-1)
-                score = utils.calc_calssification_acc(pred, correct, ignore_label)
+                # pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+                # pred = pred.view(-1)
+                # correct = correct.reshape(-1)
+                # score = utils.calc_calssification_acc(pred, correct, ignore_label)
 
-                # save
-                current_train_acc[current_key].append(score)
-
-            timestep+=1
-
+                # # save
+                # current_train_acc[current_key].append(score)
             loss.backward()
-            train_loss_sum+=loss.item()
             opt.step()
-
-            torch.nn.utils.clip_grad_norm_(vae.parameters(), model_param["clip_th"])
 
         # loss, acc save
         print("----------------------------")
-        for key in keys:
-            loss = np.average(current_train_loss[key])
-            train_loss[key].append(loss)
-            acc = np.average(current_train_acc[key])
-            train_acc[key].append(acc)
-
-            print(" %s:"%(key))
-            print("     loss:%lf"%(loss))
-            print("     acc:%lf"%(acc))
-        ekey = "encoder"
-        loss = np.average(current_train_loss[ekey])
-        train_loss[ekey].append(loss)
-        print(" %s:"%(ekey))
-        print("     loss:%lf"%(loss))
+        print('loss    : {}'.format(loss))
+        print('accracy : {}'.format(accuracy))
         print("----------------------------")
 
         # memory free
@@ -530,72 +524,24 @@ def train(args):
             opt.zero_grad()
             datas = utils.try_gpu(device,datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-            mu, sigma, *result = vae(datas)
+            mu, sigma, outputs, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             current_valid_loss["encoder"].append(encoder_loss.item())
             loss = encoder_loss
-            for j, pred in enumerate(result):
-                current_key = keys[j]
-                # loss calc
-                correct = valid_label[j]
-                correct = correct[args]
-                correct = utils.try_gpu(device,correct)
-                tmp_loss = criterion(pred.transpose(2, 1), correct)
-                loss+=tmp_loss.item()
-
-                # save
-                current_valid_loss[current_key].append(tmp_loss.item())
-
-                # acc calc
-                pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                pred = pred.view(-1)
-                correct = correct.view(-1)
-                score = utils.calc_calssification_acc(pred, correct, ignore_label)
-
-                # save
-                current_valid_acc[current_key].append(score)
+            loss += criterion(outputs, datas)
 
             valid_loss_sum+=loss.item()
 
         # loss, acc save
         print("----------------------------")
-        for key in keys:
-            loss = np.average(current_valid_loss[key])
-            valid_loss[key].append(loss)
-            acc = np.average(current_valid_acc[key])
-            valid_acc[key].append(acc)
-
-            print(" %s:"%(key))
-            print("     loss:%lf"%(loss))
-            print("     acc:%lf"%(acc))
-
-        ekey = "encoder"
-        loss = np.average(current_valid_loss[ekey])
-        valid_loss[ekey].append(loss)
-        print(" %s:"%(ekey))
-        print("     loss:%lf"%(loss))
+        print('loss : {}'.format(loss))
         print("----------------------------")
-
-        # output loss/acc transition
-        utils.time_draw(range(epoch), train_loss, "results/"+run_time+"/train/train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, "results/"+run_time+"/train/train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
-        for key in keys+["encoder"]:
-            utils.time_draw(range(epoch), {key: train_loss[key]}, "results/"+run_time+"/train/train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_loss, "results/"+run_time+"/train/valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), valid_acc, "results/"+run_time+"/train/valid_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
-
-        train_loss_sums.append(train_loss_sum/train_data_num)
-        valid_loss_sums.append(valid_loss_sum/valid_data_num)
-        utils.time_draw(
-                range(epoch),
-                {"train": train_loss_sums, "valid": valid_loss_sums},
-                "results/"+run_time+"/train/loss_transition.png", xlabel="Epoch", ylabel="Loss")
 
         # output weight if train loss is min
         if train_loss_sum<train_min_loss:
             train_min_loss = train_loss_sum
             torch.save(vae.state_dict(), "param/weight")
-            torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
+            # torch.save(vae.state_dict(), "results/" + run_time + "/train/weight")
         print("\n")
 
 def gcn_train(args):

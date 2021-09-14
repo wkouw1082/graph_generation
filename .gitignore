@@ -25,3 +25,4 @@ default.png
 /results/*
 /logs/*
 *.zip
+*.csv

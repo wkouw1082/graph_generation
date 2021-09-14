@@ -44,7 +44,7 @@ class Classifier(nn.Module):
 
 # 2層 LSTM
 class Encoder(nn.Module):
-    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=3):
+    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=4):
         super(Encoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
@@ -116,7 +116,7 @@ class Decoder(nn.Module):
         self.emb = nn.Linear(input_size, emb_size)
         # onehot vectorではなく連続値なためサイズは+2
         self.f_rep = nn.Linear(rep_size+condition_size, input_size)
-        self.lstm = nn.LSTM(emb_size+rep_size+condition_size, hidden_size, num_layers=num_layer, batch_first=True)
+        self.lstm = nn.LSTM(emb_size+rep_size+condition_size, hidden_size, num_layers=1, batch_first=True)
         self.f_tu = nn.Linear(hidden_size, time_size)
         self.f_tv = nn.Linear(hidden_size, time_size)
         self.f_lu = nn.Linear(hidden_size, node_label_size)
@@ -269,6 +269,7 @@ class DecoderNonConditional(nn.Module):
         self.f_lv = nn.Linear(hidden_size, node_label_size)
         self.f_le = nn.Linear(hidden_size, edge_label_size)
         self.softmax = nn.Softmax(dim=2)
+        self.sigmoid = nn.Sigmoid()
         self.dropout = nn.Dropout(0.5)
 
         self.time_size = time_size
@@ -277,12 +278,12 @@ class DecoderNonConditional(nn.Module):
 
         self.device = device
 
-    def forward(self, rep, x, word_drop=0):
+    def forward(self, z, x):
         """
         学習時のforward
         Args:
-            rep: encoderの出力
-            x: dfs code
+            z: 潜在変数からのベクトル
+            x: 入力のdfs code
         Returns:
             tu: source time
             tv: sink time
@@ -290,18 +291,24 @@ class DecoderNonConditional(nn.Module):
             lv: sink node label
             le: edge label
         """
-
-        rep = self.f_rep(rep)
-        x = torch.cat((rep, x), dim=1)[:,:-1,:]
+        # 潜在変数をLSTMにcatできる形にするために線形層をかます
+        z = self.f_rep(z)
+        # ここでsequenceデータの頭に潜在変数をつける
+        x = torch.cat((z, x), dim=1)
+        # つけた分sequenceデータを短くする
+        x = x[:,:-1,:]
+        # shapeはbatch x sequence_length x 1step ごとのdfs 本来なら5(各要素)だがonehotになっているので
+        # onehotlength をそれぞれ足したものになっている
         x = self.emb(x)
         x, (h, c) = self.lstm(x)
         # x = self.dropout(x)
-        tu = self.softmax(self.f_tu(x))
-        tv = self.softmax(self.f_tv(x))
-        lu = self.softmax(self.f_lu(x))
-        lv = self.softmax(self.f_lv(x))
-        le = self.softmax(self.f_le(x))
-        return tu, tv, lu, lv, le
+        tu = self.f_tu(x)
+        tv = self.f_tv(x)
+        lu = self.f_lu(x)
+        lv = self.f_lv(x)
+        le = self.f_le(x)
+        # return torch.cat((tu, tv, lu, lv, le), dim=2)
+        return tu, tv, lu, lv, le, torch.cat((tu, tv, lu, lv, le), dim=2)
 
     def generate(self, rep, max_size=100, is_output_sampling=True):
         """
@@ -316,18 +323,12 @@ class DecoderNonConditional(nn.Module):
         rep = self.f_rep(rep)
         rep = self.emb(rep)
         x = rep
-        batch_size = x.shape[0]
 
-        tus = torch.LongTensor()
-        tus = try_gpu(self.device,tus)
-        tvs = torch.LongTensor()
-        tvs = try_gpu(self.device,tvs)
-        lus = torch.LongTensor()
-        lus = try_gpu(self.device,lus)
-        lvs = torch.LongTensor()
-        lvs = try_gpu(self.device,lvs)
-        les = torch.LongTensor()
-        les = try_gpu(self.device,les)
+        tus = try_gpu(self.device, torch.LongTensor())
+        tvs = try_gpu(self.device, torch.LongTensor())
+        lus = try_gpu(self.device, torch.LongTensor())
+        lvs = try_gpu(self.device, torch.LongTensor())
+        les = try_gpu(self.device, torch.LongTensor())
 
         tus_dist=try_gpu(self.device,torch.Tensor())
         tvs_dist=try_gpu(self.device,torch.Tensor())
@@ -339,38 +340,39 @@ class DecoderNonConditional(nn.Module):
             if i == 0:
                 x, (h, c) = self.lstm(x)
             else:
-                x = self.emb(x)
+                # x = self.emb(x)
                 x, (h, c) = self.lstm(x, (h, c))
 
-            tus_dist = torch.cat([tus_dist,self.softmax(self.f_tu(x))], dim=1)
-            tvs_dist = torch.cat([tvs_dist,self.softmax(self.f_tv(x))], dim=1)
-            lus_dist = torch.cat([lus_dist,self.softmax(self.f_lu(x))], dim=1)
-            lvs_dist = torch.cat([lvs_dist,self.softmax(self.f_lv(x))], dim=1)
-            les_dist = torch.cat([les_dist,self.softmax(self.f_le(x))], dim=1)
+            tus_dist = torch.cat([tus_dist,self.f_tu(x)], dim=1)
+            tvs_dist = torch.cat([tvs_dist,self.f_tv(x)], dim=1)
+            lus_dist = torch.cat([lus_dist,self.f_lu(x)], dim=1)
+            lvs_dist = torch.cat([lvs_dist,self.f_lv(x)], dim=1)
+            les_dist = torch.cat([les_dist,self.f_le(x)], dim=1)
 
-            tu = torch.argmax(self.softmax(self.f_tu(x)), dim=2)
-            tv = torch.argmax(self.softmax(self.f_tv(x)), dim=2)
-            lu = torch.argmax(self.softmax(self.f_lu(x)), dim=2)
-            lv = torch.argmax(self.softmax(self.f_lv(x)), dim=2)
-            le = torch.argmax(self.softmax(self.f_le(x)), dim=2)
+            tu = self.f_tu(x)
+            tv = self.f_tv(x)
+            lu = self.f_lu(x)
+            lv = self.f_lv(x)
+            le = self.f_le(x)
 
             tus = torch.cat((tus, tu), dim=1)
             tvs = torch.cat((tvs, tv), dim=1)
             lus = torch.cat((lus, lu), dim=1)
             lvs = torch.cat((lvs, lv), dim=1)
             les = torch.cat((les, le), dim=1)
-            tu = tu.squeeze().cpu().detach().numpy()
-            tv = tv.squeeze().cpu().detach().numpy()
-            lu = lu.squeeze().cpu().detach().numpy()
-            lv = lv.squeeze().cpu().detach().numpy()
-            le = le.squeeze().cpu().detach().numpy()
+            # tu = tu.squeeze().cpu().detach().numpy()
+            # tv = tv.squeeze().cpu().detach().numpy()
+            # lu = lu.squeeze().cpu().detach().numpy()
+            # lv = lv.squeeze().cpu().detach().numpy()
+            # le = le.squeeze().cpu().detach().numpy()
 
-            tu = utils.convert2onehot(tu, self.time_size)
-            tv = utils.convert2onehot(tv, self.time_size)
-            lu = utils.convert2onehot(lu, self.node_label_size)
-            lv = utils.convert2onehot(lv, self.node_label_size)
-            le = utils.convert2onehot(le, self.edge_label_size)
-            x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+            # tu = utils.convert2onehot(tu, self.time_size)
+            # tv = utils.convert2onehot(tv, self.time_size)
+            # lu = utils.convert2onehot(lu, self.node_label_size)
+            # lv = utils.convert2onehot(lv, self.node_label_size)
+            # le = utils.convert2onehot(le, self.edge_label_size)
+            # x = torch.cat((tu, tv, lu, lv, le), dim=1).unsqueeze(1)
+            x = torch.cat((tu, tv, lu, lv, le), dim=2)
             x = try_gpu(self.device,x)
 
         if is_output_sampling:
@@ -715,8 +717,8 @@ class VAENonConditional(nn.Module):
     def forward(self, x, word_drop=0):
         mu, sigma = self.encoder(x)
         z = transformation(mu, sigma, self.device)
-        tu, tv, lu, lv, le = self.decoder(z, x)
-        return mu, sigma, tu, tv, lu, lv, le
+        tu, tv, lu, lv, le, outputs = self.decoder(z, x)
+        return mu, sigma, outputs, tu, tv, lu, lv, le
 
     def generate(self, data_num, z=None, max_size=generate_max_len, is_output_sampling=True):
         if z is None:
