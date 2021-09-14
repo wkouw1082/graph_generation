@@ -76,8 +76,8 @@ def eval(args):
     if args.eval_model:
         vae.load_state_dict(torch.load(args.eval_model, map_location="cpu"))
     else:
-        # vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
-        vae.load_state_dict(torch.load("results/" + run_time + "/train/weight", map_location="cpu"))
+        vae.load_state_dict(torch.load("param/weight", map_location="cpu"))
+    # vae.load_state_dict(torch.load("results/" + '2021-09-13_17:48:07' + "/train/weight_10000", map_location="cpu"))
     vae = utils.try_gpu(device,vae)
 
     vae.eval()
@@ -89,9 +89,9 @@ def eval(args):
         for i in range(len(cluster_coefficient_label))]
     conditional_label = torch.tensor(conditional_label)
 
-    result_low = vae.generate(300,conditional_label[0])
-    result_middle = vae.generate(300,conditional_label[1])
-    result_high = vae.generate(300,conditional_label[2])
+    result_low = vae.generate(300,torch.tensor([1,0,0]))
+    result_middle = vae.generate(300,torch.tensor([0,1,0]))
+    result_high = vae.generate(300,torch.tensor([0,0,1]))
 
     result_all = [result_low,result_middle,result_high]
 
@@ -398,10 +398,8 @@ def non_conditional_eval(args):
     print("--------------")
 
     # model_param load
-    import yaml
-    with open('results/best_tune.yml', 'r') as yml:
-        model_param = yaml.load(yml) 
-    # print(f"model_param = {model_param}")
+    model_param = utils.load_model_param()
+    print(f"model_param = {model_param}")
 
     is_sufficient_size=lambda graph: True if graph.number_of_nodes()>size_th else False
 
@@ -430,8 +428,14 @@ def non_conditional_eval(args):
 
     for index,result in enumerate(result_all):
     # generated graphs
-        result = [code.unsqueeze(2) for code in result]
-        dfs_code = torch.cat(result, dim=2)
+        # convert onehot to scalar
+        scalar_graph = []
+        for code in result:
+            print(code)
+            code = torch.argmax(code, dim=2)
+            scalar_graph.append(code)
+        scalar_graph = [code.unsqueeze(2) for code in scalar_graph]
+        dfs_code = torch.cat(scalar_graph, dim=2)
         generated_graph = []
         for code in dfs_code:
             graph = gp.dfs_code_to_graph_obj(
@@ -441,6 +445,7 @@ def non_conditional_eval(args):
             if gp.is_connect(graph) and is_sufficient_size(graph):
                 generated_graph.append(graph)
 
+        print(generated_graph[0].nodes())
         # if os.path.isdir("data/result_csv/"):
         #     shutil.rmtree("data/result_csv")
         # required_dirs = ["data/result_csv"]
@@ -455,7 +460,7 @@ def non_conditional_eval(args):
 
     # 生成グラフをcsvファイルに書き出し
     # cx.graph2csv(generated_graph, 'result_csv/twitter_result.csv')
-    cx.graph2csv(generated_graph, 'eval/result_csv/twitter_result')
+    cx.graph2csv(generated_graph, './result.csv')
 
 if __name__ == '__main__':
     import argparse

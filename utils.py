@@ -28,9 +28,10 @@ def cpu(x):
 
 def try_gpu(device,obj):
     import torch
-    if torch.cuda.is_available():
-        return obj.cuda(device)
-    return obj
+    return obj.to(device)
+    # if torch.cuda.is_available():
+    #     return obj.cuda(device)
+    # return obj
 
 def convert2onehot(vec, dim):
     """
@@ -58,6 +59,8 @@ def padding(vecs, flow_len, value=0):
         flow = vecs[i]
         if len(flow.shape)==2:
             diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1]))
+        elif len(flow.shape) == 3:
+            diff_vec = np.ones((flow_len-flow.shape[0], flow.shape[1], flow.shape[2]))
         else:
             diff_vec = np.ones(flow_len-flow.shape[0])
         diff_vec *= value
@@ -84,6 +87,18 @@ def calc_calssification_acc(pred_label, correct_label, ignore_label=None):
         score[ignore_args] = 0
     score = torch.sum(score)/data_len
     return score
+
+def classification_metric(preds, labels):
+    total = 0
+    correct = 0
+    for pred, label in zip(preds, labels):
+        pred = torch.gt(pred, 0)
+        label = torch.gt(label, 0)
+        if torch.equal(pred, label):
+            correct += 1
+        total += 1
+
+    return correct/total
 
 # ---汎用的---
 def make_dir(required_dirs):

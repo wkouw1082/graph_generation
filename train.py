@@ -1,7 +1,6 @@
 from data_input import GCNDataset
 from typing_extensions import runtime
 
-from matplotlib.pyplot import winter
 import utils
 import argparse
 import preprocess as pp
@@ -81,12 +80,14 @@ def conditional_train(args):
         train_classifier_correct = utils.try_gpu(device,train_classifier_correct)
         valid_classifier_correct = utils.try_gpu(device,valid_classifier_correct)
 
-    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
-    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
+    # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
+    # valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
+    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
+    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    # print(train_dataset[1,:,-1*condition_size:])
+    print(train_dataset[1,:,-1*condition_size:])
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -348,7 +349,8 @@ def train(args):
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
-    device = utils.get_gpu_info()
+    # device = utils.get_gpu_info()
+    device = 'cpu'
 
     # recreate directory
     if utils.is_dir_existed("train_result"):
@@ -376,6 +378,13 @@ def train(args):
 
     dfs_size = 2*time_size+2*node_size+edge_size
     dfs_size_list = [time_size, time_size, node_size, node_size, edge_size]
+    dfs_split_list = []
+
+    tmp_split = 0
+    for size in dfs_size_list:
+        dfs_split_list.append([tmp_split, tmp_split + size])
+        tmp_split += size
+        
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -389,7 +398,7 @@ def train(args):
 
     vae = model.VAENonConditional(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
-    opt = optim.Adam(vae.parameters(), lr=model_param["lr"], weight_decay=model_param["weight_decay"])
+    opt = optim.Adam(vae.parameters(), lr=0.001)
 
 
     train_data_num = train_dataset.shape[0]
@@ -437,40 +446,46 @@ def train(args):
             datas = utils.try_gpu(device,datas)
 
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-            # mu, sigma, *result = vae(datas, timestep)
-            mu, sigma, outputs = vae(datas, word_drop=word_drop_rate)
+            mu, sigma, outputs, *result= vae(datas, timestep)
+            # mu, sigma, outputs = vae(datas, word_drop=word_drop_rate)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
+            loss = encoder_loss
             current_train_loss["encoder"].append(encoder_loss.item())
-            bce_loss = criterion(outputs, datas)
-            loss = encoder_loss + bce_loss
+            # bce_loss = criterion(outputs, datas)
+            # loss = encoder_loss + bce_loss
+            accuracy = utils.classification_metric(outputs, datas)
+            # train_loss_sum+=loss.item()
 
-            train_loss_sum+=loss.item()
-            # dfs_splits = []
-            # for size in dfs_size_list:
                 
-            # for j, pred in enumerate(result):
-            #     current_key = keys[j]
-            #     # loss calc
+            for j, pred in enumerate(result):
+                current_key = keys[j]
+                correct_split = dfs_split_list[j]
+                correct = datas[:,:,correct_split[0]:correct_split[1]]
+                # loss calc
 
-            #     correct = utils.try_gpu(device,correct)
-            #     tmp_loss = criterion(pred.transpose(2, 1), correct)
-            #     loss+=tmp_loss
+                correct = utils.try_gpu(device,correct)
+                tmp_loss = criterion(pred, correct).sum(axis=0)
+                # tmp_loss = criterion(pred, correct)
+                loss+=tmp_loss
 
-            #     # save
-            #     current_train_loss[current_key].append(tmp_loss.item())
+                # save
+                current_train_loss[current_key].append(tmp_loss.item())
 
-            #     # acc calc
-            #     pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-            #     pred = pred.view(-1)
-            #     correct = correct.view(-1)
-            #     score = utils.calc_calssification_acc(pred, correct, ignore_label)
+                # acc calc
+                # pred = torch.argmax(pred, dim=2)  # predicted onehot->label
+                # pred = pred.view(-1)
+                # correct = correct.reshape(-1)
+                # score = utils.calc_calssification_acc(pred, correct, ignore_label)
 
-            #     # save
-            #     current_train_acc[current_key].append(score)
+                # # save
+                # current_train_acc[current_key].append(score)
+            loss.backward()
+            opt.step()
 
         # loss, acc save
         print("----------------------------")
-        print('loss : {}'.format(loss))
+        print('loss    : {}'.format(loss))
+        print('accracy : {}'.format(accuracy))
         print("----------------------------")
 
         # memory free
@@ -488,7 +503,7 @@ def train(args):
             opt.zero_grad()
             datas = utils.try_gpu(device,datas)
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
-            mu, sigma, outputs = vae(datas)
+            mu, sigma, outputs, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             current_valid_loss["encoder"].append(encoder_loss.item())
             loss = encoder_loss

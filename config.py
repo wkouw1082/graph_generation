@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 1000
+epochs = 10000
 dropout = 0.5
 word_drop_rate=0
 
@@ -17,7 +17,7 @@ model_param = {'batch_size': 30,
 # model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
 # model_param = {'batch_size': 16, 'lr': 0.01082131764731544, 'weight_decay': 0.09174137908657536, 'clip_th': 0.0004241902009358986, 'emb_size': 189, 'en_hidden_size': 30, 'de_hidden_size': 247, 'rep_size': 220}
 # tuneされていない場合に指定されるハイパーパラメータ
-model_params = {'batch_size': 30, 'clip_th': 0.03, 'emb_size': 150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
+model_params = {'batch_size': 32, 'clip_th': 0.03, 'emb_size': 150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
 
 classifier_epochs=200
 classifier_param={'batch_size': 26, 'lr': 0.00640815633081063, 'emb_size': 43, 'hidden_size': 92}
@@ -67,7 +67,7 @@ maximum_shortest_path_label = [7.0, 14.0, 20.0]
 interpolation_cluster_cofficient = [0.2, 0.3]
 interpolation_maximum_path = [10.0, 16.0]
 
-condition_size = 1
+condition_size = 3
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
