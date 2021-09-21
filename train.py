@@ -101,10 +101,10 @@ def conditional_train(args):
         train_classifier_correct = utils.try_gpu(device,train_classifier_correct)
         valid_classifier_correct = utils.try_gpu(device,valid_classifier_correct)
 
-    # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
-    # valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
-    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
-    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
+    train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1).unsqueeze(2)
+    valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1).unsqueeze(2)
+    # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
+    # valid_conditional = torch.cat([valid_conditional for _  in range(valid_dataset.shape[1])],dim=1)
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
@@ -152,7 +152,7 @@ def conditional_train(args):
     valid_acc = {key:[] for key in keys}
     train_min_loss = 1e10
     
-    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
+    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="mean")
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
     best_epoch = 0

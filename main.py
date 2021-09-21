@@ -3,10 +3,10 @@ import yaml
 import os
 
 import utils
-# import tune
-# import train
-# import eval
-# import visualize
+import tune
+import train
+import eval
+import visualize
 import config
 from config import *
 

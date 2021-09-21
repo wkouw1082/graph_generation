@@ -1,5 +1,6 @@
 import glob
 import argparse
+from operator import index
 import os
 import shutil
 from config import *
@@ -188,15 +189,28 @@ def tsne(multi_vecs, dir):
     ax.set_ylabel('dim2')
     plt.savefig(dir)
 
+def dfs_tsne(dfs_codes):
+    f, ax = plt.subplots(1, 1, figsize=(10, 10))
+    dfs_codes = torch.flatten(dfs_codes.cpu(), 1, 2)
+    dfs_codes = TSNE(n_components=2).fit_transform(dfs_codes)
+    split_list = [[0,300], [301,600], [601,900]]
+    color_list = ["r", "g", "b"]
+    for index,(i,c )in enumerate(zip(split_list, color_list)):
+        target = dfs_codes[i[0]:i[1]]
+        ax.scatter(x=target[:, 0], y=target[:, 1], c=c, label=index)
+    plt.legend(bbox_to_anchor=(1.02, 1), loc='upper left')
+    plt.savefig('./test.png')
+
+
 def load_model_param(file_path=None):
-    if os.path.exists(file_path):
+    if file_path is None:
+        model_param = model_params
+    elif os.path.exists(file_path):
         with open(file_path, 'r') as yml:
             model_param = yaml.load(yml) 
     elif os.path.isfile('results/best_tune.yml'):
         with open('results/best_tune.yml', 'r') as yml:
             model_param = yaml.load(yml) 
-    else:
-        model_param = model_params
 
     return model_param
 
@@ -283,7 +297,18 @@ def get_latest_dir_name(path="./results"):
 
     return latest_folder
 
-def get_gpu_info(nvidia_smi_path='nvidia-smi', keys=DEFAULT_ATTRIBUTES, no_units=True):
+def get_gpu_info(nvidia_smi_path='nvidia-smi', no_units=True):
+    keys = (
+    'index',
+    'uuid',
+    'name',
+    'timestamp',
+    'memory.total',
+    'memory.free',
+    'memory.used',
+    'utilization.gpu',
+    'utilization.memory'
+    )   
     if torch.cuda.is_available():
         nu_opt = '' if not no_units else ',nounits'
         cmd = '%s --query-gpu=%s --format=csv,noheader%s' % (nvidia_smi_path, ','.join(keys), nu_opt)

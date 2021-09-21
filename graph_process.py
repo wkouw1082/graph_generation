@@ -269,6 +269,8 @@ class complex_networks():
         graph_datas = text2graph(text_datas)
         train_data, valid_data = train_test_split(graph_datas, test_size=0.1)
 
+        condition_params = ["maximum_distance"]
+
         train_labels = torch.Tensor()
         valid_labels = torch.Tensor()
 
@@ -279,18 +281,10 @@ class complex_networks():
         for graph in tqdm(train_data):
             # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
             # paramsはリスト型で渡されるのでindex[0]をつける
-            params = st.calc_graph_traits2csv([graph],["cluster_coefficient"])[0]
+            params = st.calc_graph_traits2csv([graph],condition_params)[0]
             tmp_label = []
             for param in params.values():
-                # 小数点第1位で四捨五入する
-                if round(param,1) == cluster_coefficient_label[0]:
-                    tmp_label.append([1,0,0])
-                elif round(param,1) == cluster_coefficient_label[1]:
-                    tmp_label.append([0,1,0])
-                elif round(param,1) == cluster_coefficient_label[2]:
-                    tmp_label.append([0,0,1])
-                else:
-                    tmp_label.append([0,0,0])
+                tmp_label.append(param)
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
@@ -299,18 +293,10 @@ class complex_networks():
         for graph in tqdm(valid_data):
             # クラスタ係数と最長距離を指定するためにパラメータを取得してlabelとする
             # paramsはリスト型で渡されるのでindex[0]をつける
-            params = st.calc_graph_traits2csv([graph],["cluster_coefficient"])[0]
+            params = st.calc_graph_traits2csv([graph],condition_params)[0]
             tmp_label = []
             for param in params.values():
-                # 小数点第1位で四捨五入する
-                if round(param,1) == cluster_coefficient_label[0]:
-                    tmp_label.append([1,0,0])
-                elif round(param,1) == cluster_coefficient_label[1]:
-                    tmp_label.append([0,1,0])
-                elif round(param,1) == cluster_coefficient_label[2]:
-                    tmp_label.append([0,0,1])
-                else:
-                    tmp_label.append([0,0,0])
+                tmp_label.append(param)
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
