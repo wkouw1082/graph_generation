@@ -203,14 +203,33 @@ def dfs_tsne(dfs_codes):
 
 
 def load_model_param(file_path=None):
-    if file_path is None:
-        model_param = model_params
-    elif os.path.exists(file_path):
-        with open(file_path, 'r') as yml:
-            model_param = yaml.load(yml) 
-    elif os.path.isfile('results/best_tune.yml'):
+    """ハイパーパラメータを読み込む関数
+
+    file_pathを指定しなければ, results/best_tune.yml, config.pyのmodel_params の順に探して読み込む。
+
+    Args:
+        file_path (str, optional): 指定したいハイパーパラメータが保存されているymlファイルのパス. Defaults to None.
+        （例）file_path = "results/20210101_0000/best_tune.yml"
+
+    Returns:
+        model_param (dict): ハイパーパラメータの名前がkey, 値がvalue
+    """
+    if file_path is not None:
+        if os.path.exists(file_path):
+            with open(file_path, 'r') as yml:
+                model_param = yaml.load(yml) 
+            print(f"load model_param from '{file_path}'")
+            return model_param
+        else:
+            print(f"{file_path} が存在しません。")
+    
+    if os.path.isfile('results/best_tune.yml'):
         with open('results/best_tune.yml', 'r') as yml:
-            model_param = yaml.load(yml) 
+            model_param = yaml.load(yml)
+        print("load model_param from 'results/best_tune.yml.'")
+    else:
+        print("load model_param from config.")
+        model_param = model_params
 
     return model_param
 

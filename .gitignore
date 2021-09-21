@@ -29,3 +29,5 @@ default.png
 /data/result_graph
 /data/csv/
 generated_graph_*
+log.txt
+log_BCE.txt

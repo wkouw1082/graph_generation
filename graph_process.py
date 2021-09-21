@@ -28,6 +28,7 @@ import csv
 import os
 from sklearn.model_selection import train_test_split
 from config import *
+import powerlaw
 
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
@@ -401,6 +402,22 @@ class graph_statistic():
         y_split_plot = y_log[border_index:]
         param =  np.polyfit(x_split_plot,y_split_plot,1)
         return param[0]
+    
+    def power_law_alpha(self, graph):
+        """
+        Compute the power law coefficient of the degree distribution of the input graph
+
+        Parameters
+        ----------
+        graph (nx.graph) :  networkx形式のグラフオブジェクト
+
+        Returns
+        -------
+        Power law coefficient
+        """
+        A_in = graph_obj2mat(graph)
+        degrees = A_in.sum(axis=0).flatten()
+        return powerlaw.Fit(degrees, xmin=max(np.min(degrees),1)).power_law.alpha
 
     def cluster_coeff(self, graph):
         #graph = np.array(graph)
@@ -572,7 +589,8 @@ class graph_statistic():
                 #    param = index
                 if "power_degree" in key:
                     try:
-                        param = self.degree_dist(graph)
+                        # param = self.degree_dist(graph)
+                        param = self.power_law_alpha(graph)
                     except:
                         param = None
                 if "cluster_coefficient" in key:
@@ -984,8 +1002,6 @@ def rewrite_dataset_condition(dataset, time_size, dfs_size, rewrited_condition_d
                 # plt.savefig(f"./plot{not_connect_cnt}.png")
                 if not_connect_cnt >= 3:
                     print("グラフにnot connectedな５タプルが３回追加されました")
-                    this_is(G.nodes(), name="G.nodes()")
-                    this_is(G.edges(), name="G.edges()")
                     exit()
                     
             ## rewrite condition
