@@ -286,7 +286,7 @@ class complex_networks():
             params = st.calc_graph_traits2csv([graph],condition_params)[0]
             tmp_label = []
             for param in params.values():
-                tmp_label.append(round(param,1))
+                tmp_label.append(round(param,2))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
@@ -298,7 +298,7 @@ class complex_networks():
             params = st.calc_graph_traits2csv([graph],condition_params)[0]
             tmp_label = []
             for param in params.values():
-                tmp_label.append(round(param,1))
+                tmp_label.append(round(param,2))
             tmp_label = torch.tensor(tmp_label).unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
@@ -473,6 +473,10 @@ class graph_statistic():
         clusters_set = set(value for key, value in clusters_dict.items())
         return len(clusters_set)
 
+    def largest_component_size(self, graph):
+        largest_graph = max(nx.connected_components(graph), key=len)
+        return len(largest_graph)
+
     # 未完成
     def giant_component(self,graph):
         print(graph.subgraph(max(nx.connected_components(graph), key=len)))
@@ -588,38 +592,38 @@ class graph_statistic():
             for key in eval_params:
                 #if "id" in key:
                 #    param = index
-                if "power_degree" in key:
+                if "Power-law exponent" in key:
                     try:
                         # param = self.degree_dist(graph)
                         param = self.power_law_alpha(graph)
                     except:
                         param = None
-                if "cluster_coefficient" in key:
+                if "Clustering coefficient" in key:
                     try:
                         param = self.cluster_coeff(graph)
                     except:
                         param = None
-                if "distance" in key:
+                if "Average path length" in key:
                     try:
                         param = self.ave_dist(graph)
                     except:
                         param = None
-                if "average_degree" in key:
+                if "Average degree" in key:
                     try:
                         param = self.ave_degree(graph)
                     except:
                         param = None
-                if "density" in key:
+                if "Edge density" in key:
                     try:
                         param = self.density(graph)
                     except:
                         param = None
-                if "modularity" in key:
+                if "Modularity" in key:
                     try:
                         param = self.modularity(graph)
                     except:
                         param = None
-                if "maximum_distance" in key:
+                if "Diameter" in key:
                     try:
                         param = self.maximum_of_shortest_path_lengths(graph)
                     except:
@@ -637,6 +641,11 @@ class graph_statistic():
                 if "closeness_centrality" in key:
                     try:
                         param = self.closeness_centrality(graph)
+                    except:
+                        param = None
+                if "Largest component size":
+                    try:
+                        param = self.largest_component_size(graph)
                     except:
                         param = None
                 if "size" in key:
@@ -1028,4 +1037,4 @@ if __name__ == "__main__":
     dataset = complex_network.make_twitter_graph()
     # for graph
     gs = graph_statistic()
-    print(gs.degree_dist(dataset[0]))
+    print(gs.largest_component_size(dataset[0]))

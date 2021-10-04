@@ -10,7 +10,7 @@
 /dataset/*
 /data/twitter_*
 ._*.*
-log
+log*
 evallog
 tunelog
 .vscode

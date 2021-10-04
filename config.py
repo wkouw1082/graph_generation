@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 10000
+epochs = 30000
 dropout = 0.5
 word_drop_rate=0
 
@@ -73,7 +73,7 @@ condition_size = 1
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
-eval_params = ["power_degree", "cluster_coefficient", "distance","average_degree","density","modularity","maximum_distance","size"]
+eval_params = ["Power-law exponent", "Clustering coefficient", "Average path length", "Average degree" ,"Edge density", "Modularity", "Diameter","Largest component size"]
 # 評価を行うパラメータの外れ値を除くために値の上限を設定 指定は値を[最小値,最大値]の形で、指定なしはNoneで
 # 仕様変更がめんどくさいので別で定義　いつか誰か一つにして欲しい
 eval_params_limit = {"power_degree":None,"cluster_coefficient":[0,0.5],"distance":[0,8],\
