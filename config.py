@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 30000
+epochs = 1000
 dropout = 0.5
 word_drop_rate=0
 
@@ -60,7 +60,7 @@ opt_epoch=100
 power_degree_label = [0.4,0.5,0.6]
 power_degree_dim = len(power_degree_label)
 # クラスター係数 実際の値は[0.1~0.4]くらい
-cluster_coefficient_label = [0.1,0.2,0.3]
+cluster_coefficient_label = [5.0,10.0,20.0]
 cluster_coefficient_dim = len(cluster_coefficient_label)
 # 最大最小距離　実際の値は[7~20]くらい
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
@@ -69,7 +69,7 @@ maximum_shortest_path_label = [7.0, 14.0, 20.0]
 interpolation_cluster_cofficient = [0.2, 0.3]
 interpolation_maximum_path = [10.0, 16.0]
 
-condition_size = 3
+condition_size = 1
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"

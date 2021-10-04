@@ -15,6 +15,8 @@ import shutil
 
 import torch
 
+from sklearn.manifold import TSNE
+
 def eval(args):
     is_preprocess = args.preprocess
 
@@ -105,9 +107,9 @@ def eval(args):
         for i in range(len(cluster_coefficient_label))]
     conditional_label = torch.tensor(conditional_label)
 
-    result_low = vae.generate(300,torch.tensor([1,0,0]))
-    result_middle = vae.generate(300,torch.tensor([0,1,0]))
-    result_high = vae.generate(300,torch.tensor([0,0,1]))
+    result_low = vae.generate(300,torch.tensor([cluster_coefficient_label[0]]))
+    result_middle = vae.generate(300,torch.tensor([cluster_coefficient_label[1]]))
+    result_high = vae.generate(300,torch.tensor([cluster_coefficient_label[2]]))
 
     result_all = [result_low,result_middle,result_high]
 
@@ -116,11 +118,13 @@ def eval(args):
 
     results = {}
     generated_keys=[]
+    dfs_codes = torch.Tensor().cpu()
 
     for index,(result,correct_graph) in enumerate(zip(result_all,correct_all)):
     # generated graphs
         result = [code.unsqueeze(2) for code in result]
         dfs_code = torch.cat(result, dim=2)
+        # dfs_codes = torch.cat((dfs_codes,dfs_code.cpu()))
         generated_graph = []
         for code in dfs_code:
             graph = gp.dfs_code_to_graph_obj(
@@ -215,7 +219,7 @@ def eval(args):
     #     plt.savefig("eval_result/dist_compare/%s_%s.png"%(key1, key2))
     #     plt.close()
 
-    # # datasetの読み込み
+    # datasetの読み込み
     # train_dataset = joblib.load("dataset/train/onehot")
     # train_conditional = joblib.load("dataset/train/conditional")
     # train_conditional = torch.cat([train_conditional for _  in range(train_dataset.shape[1])],dim=1)
@@ -228,8 +232,8 @@ def eval(args):
     # conditional_vecs=uniqued
     # same_conditional_args=[[j for j in range(len(inverses)) if inverses[j]==i] for i in range(uniqued.shape[0])]
 
-    # # 入力に応じたencode+predict
-    # # 入力に応じたencode+generate
+    # 入力に応じたencode+predict
+    # 入力に応じたencode+generate
     # get_key=lambda vec: str(power_degree_label[torch.argmax(vec[:3])])+" "+\
     #             str(cluster_coefficient_label[torch.argmax(vec[3:])]) # conditional vec->key
     # reconstruct_graphs={}
@@ -324,18 +328,18 @@ def eval(args):
     #             "eval_result/generated_encoded/%s_box_plot.png"%(param_key)
     #             )
 
-    # # t-SNE
-    # # conditional vectorをcatしていない状態での埋め込み
+    # t-SNE
+    # conditional vectorをcatしていない状態での埋め込み
     # result={}
     # for i, args in enumerate(same_conditional_args):
     #     # trait keyの作成
-    #     traitkey=get_key(conditional_vecs[i][0])
+    #     traitkey=conditional_vecs[i]
 
     #     z = vae.encode(train_dataset[args]).cpu().detach().numpy()
     #     result[traitkey]=z
     # result["N(0, I)"]=vae.noise_generator(
     #         model_param["rep_size"], len(args)).cpu().unsqueeze(1).detach().numpy()
-    # utils.tsne(result, "eval_result/tsne/raw_tsne.png")
+    # utils.tsne(result, "./test.png")
 
     # # conditional vectorをcatして埋め込み
     # result={}
