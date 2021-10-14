@@ -1,6 +1,8 @@
 # from data_input import GCNDataset
 from typing_extensions import runtime
 
+from numpy.core.fromnumeric import mean
+
 import utils
 import argparse
 import preprocess as pp
@@ -485,6 +487,7 @@ def train(args):
         print("train:")
         current_train_loss = {key:[] for key in keys+["encoder"]}
         current_train_acc = {key:[] for key in keys}
+        train_acc = []
         train_loss_sum = 0
         for i, (args, datas) in enumerate(train_dl, 1):
             if i%100==0:
@@ -499,41 +502,35 @@ def train(args):
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             loss = encoder_loss
             current_train_loss["encoder"].append(encoder_loss.item())
-            # bce_loss = criterion(outputs, datas)
-            # loss = encoder_loss + bce_loss
-            accuracy = utils.classification_metric(outputs, datas)
-            # train_loss_sum+=loss.item()
+            mask_tensors = torch.Tensor()
+            # 各バッチごとにpaddingされた位置をgetする
+            for i in range(datas.size(0)):
+                masked_index = (datas[i] == ignore_label).nonzero(as_tuple=False).tolist()
+                if len(masked_index) == 0:
+                    masked_index = len(datas[i])
+                else:
+                    masked_index = masked_index[0][0]
 
-                
-            for j, pred in enumerate(result):
-                current_key = keys[j]
-                correct_split = dfs_split_list[j]
-                correct = datas[:,:,correct_split[0]:correct_split[1]]
-                # loss calc
 
-                correct = utils.try_gpu(device,correct)
-                tmp_loss = criterion(pred, correct).sum(axis=0)
-                # tmp_loss = criterion(pred, correct)
-                loss+=tmp_loss
+                no_mask_tensor = torch.ones((1, masked_index, dfs_size))
+                mask_tensor = torch.zeros((1, len(datas[i])-masked_index, dfs_size))
+                mask_tensor = torch.cat((no_mask_tensor, mask_tensor), dim=1)
+                mask_tensors = torch.cat((mask_tensors, mask_tensor), dim=0)
 
-                # save
-                current_train_loss[current_key].append(tmp_loss.item())
+            datas = datas*mask_tensors
+            outputs = outputs*mask_tensors
+            bce_loss = criterion(outputs, datas)
+            loss = encoder_loss + bce_loss
+            train_acc.append(utils.classification_metric(outputs, datas))
+            train_loss_sum+=loss.item()
 
-                # acc calc
-                # pred = torch.argmax(pred, dim=2)  # predicted onehot->label
-                # pred = pred.view(-1)
-                # correct = correct.reshape(-1)
-                # score = utils.calc_calssification_acc(pred, correct, ignore_label)
-
-                # # save
-                # current_train_acc[current_key].append(score)
             loss.backward()
             opt.step()
 
         # loss, acc save
         print("----------------------------")
         print('loss    : {}'.format(loss))
-        print('accracy : {}'.format(accuracy))
+        print('accracy : {}'.format(mean(train_acc)))
         print("----------------------------")
 
         # memory free
@@ -554,14 +551,32 @@ def train(args):
             mu, sigma, outputs, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             current_valid_loss["encoder"].append(encoder_loss.item())
+            mask_tensors = torch.Tensor()
+            # 各バッチごとにpaddingされた位置をgetする
+            for i in range(datas.size(0)):
+                masked_index = (datas[i] == ignore_label).nonzero(as_tuple=False).tolist()
+                if len(masked_index) == 0:
+                    masked_index = len(datas[i])
+                else:
+                    masked_index = masked_index[0][0]
+
+                no_mask_tensor = torch.ones((1, masked_index, dfs_size))
+                mask_tensor = torch.zeros((1, len(datas[i])-masked_index, dfs_size))
+                mask_tensor = torch.cat((no_mask_tensor, mask_tensor), dim=1)
+                mask_tensors = torch.cat((mask_tensors, mask_tensor), dim=0)
+
+            datas = datas*mask_tensors
+            outputs = outputs*mask_tensors
             loss = encoder_loss
             loss += criterion(outputs, datas)
+            accuracy = utils.classification_metric(outputs, datas)
 
             valid_loss_sum+=loss.item()
 
         # loss, acc save
         print("----------------------------")
         print('loss : {}'.format(loss))
+        print('accracy : {}'.format(accuracy))
         print("----------------------------")
 
         # make result_dirs once
@@ -571,7 +586,7 @@ def train(args):
 
         # output loss/acc transition
         utils.time_draw(range(epoch), train_loss, train_dir + "train_loss_transition.png", xlabel="Epoch", ylabel="Loss")
-        utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
+        # utils.time_draw(range(epoch), train_acc, train_dir + "train_acc_transition.png", xlabel="Epoch", ylabel="Accuracy")
         for key in keys+["encoder"]:
             utils.time_draw(range(epoch), {key: train_loss[key]}, train_dir + "train_%sloss_transition.png"%(key), xlabel="Epoch", ylabel="Loss")
         utils.time_draw(range(epoch), valid_loss, train_dir + "valid_loss_transition.png", xlabel="Epoch", ylabel="Loss")

@@ -271,7 +271,7 @@ class complex_networks():
         train_data, valid_data = train_test_split(graph_datas, test_size=0.1)
 
         # condition_params = ["maximum_distance"]
-        condition_params = ["cluster_coefficient"]
+        condition_params = ["Clustering coefficient"]
 
         train_labels = torch.Tensor()
         valid_labels = torch.Tensor()
@@ -643,7 +643,7 @@ class graph_statistic():
                         param = self.closeness_centrality(graph)
                     except:
                         param = None
-                if "Largest component size":
+                if "Largest component size" in key:
                     try:
                         param = self.largest_component_size(graph)
                     except:

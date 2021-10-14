@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 30000
+epochs = 7500
 dropout = 0.5
 word_drop_rate=0
 
@@ -45,12 +45,13 @@ train_generate_detail = {"twitter_train":[None,None,[None]]}
 valid_generate_detail = {"twitter_valid":[None,None,[None]]}
 
 # データ分析時のdetail
-visualize_detail = {"NN": [100, 100, [0.1,0.5,0.9]],
+visualize_detail = {
+    "NN": [100, 100, [0.1,0.5,0.9]],
                     "twitter": [None,None,[None]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"twitter_pickup":'./data/csv/twitter_pickup.csv',\
-    "graphgen":'./data/csv/GG_2000_300.csv',"generate_0":'./data/csv/generated_graph_0.csv',"generate_1":'./data/csv/generated_graph_1.csv',"generate_2":'./data/csv/generated_graph_2.csv'}
+visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"Real_data":'./data/csv/twitter_pickup.csv',\
+    "graphgen":'./data/csv/GG_2000_300.csv',"Cluster_0.1":'./data/csv/generated_graph_0.csv',"Cluster_0.2":'./data/csv/generated_graph_1.csv',"Cluster_0.3":'./data/csv/generated_graph_2.csv'}
 
 ignore_label=1500
 

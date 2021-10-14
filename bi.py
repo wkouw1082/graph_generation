@@ -68,9 +68,7 @@ def histogram_visualize(csv_path, output_path=None):
                     total_param.append(centrality)
             sns.histplot(total_param, kde=False)
         else:
-            if eval_params_limit[param] is not None:
-                plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
-            sns.histplot(df[param],kde=False)
+            sns.kdeplot(df[param])
         if output_path is None:
             plt.savefig('results/'+run_time+'/visualize/histogram/'+dir_name+'/'+ param + '.png')
         else:
@@ -96,20 +94,8 @@ def concat_histogram_visualize(save_dir,csv_paths, output_path=None):
         fig = plt.figure()
         for path,color in zip(csv_paths,color_list):
             df = pd.read_csv(path)
-            label_name = os.path.splitext(os.path.basename(path))[0]
-            if re.search('centrality', param):
-                # 全グラフのノードのパラメータを１つのリストにまとめる
-                # 原因はわからないがなぜかstrで保存されてしまうのでdictに再変換:ast.literal_eval(graph_centrality)
-                total_param = []
-                for graph_centrality in df[param]:
-                    for centrality in ast.literal_eval(graph_centrality).values():
-                        total_param.append(centrality)
-                print('here')
-                sns.histplot(total_param,label=label_name, kde=False, color=color)
-            else:
-                if eval_params_limit[param] is not None:
-                    plt.xlim(eval_params_limit[param][0],eval_params_limit[param][1])
-                sns.histplot(df[param],label=label_name, kde=False, color=color)
+            label_name = [key for key, value in visualize_types.items() if value == path][0]
+            sns.kdeplot(df[param],label=label_name, color=color)
 
         plt.legend(frameon=True)
         if output_path is None:
@@ -168,7 +154,7 @@ def concat_scatter_diagram_visualize(save_dir,csv_paths, output_path=None):
 def pair_plot(csv_paths, do_time=None, output_path=None):
     fig = plt.figure()
     df = utils.concat_csv(csv_paths)
-    sns.pairplot(df,data=df,hue='type')
+    sns.pairplot(df,data=df,hue='type',markers=["o", "s", "D", "X"], plot_kws=dict(alpha=0.25))
     if output_path is not None:
         plt.savefig(output_path + 'pair_plot/pair_plot.pdf')
         plt.savefig(output_path + 'pair_plot/pair_plot.png')

@@ -90,14 +90,8 @@ def calc_calssification_acc(pred_label, correct_label, ignore_label=None):
     return score
 
 def classification_metric(preds, labels):
-    total = 0
-    correct = 0
-    for pred, label in zip(preds, labels):
-        pred = torch.gt(pred, 0)
-        label = torch.gt(label, 0)
-        if torch.equal(pred, label):
-            correct += 1
-        total += 1
+    total = labels.size(0) * labels.size(1) * labels.size(2)
+    correct = (preds == labels).sum().item()
 
     return correct/total
 
@@ -272,11 +266,11 @@ def concat_csv(csv_paths):
         csvファイルを結合してtypeを追加したpandasのデータフレーム
     """
     df_concat = pd.read_csv(csv_paths[0])
-    df_concat['type'] = os.path.splitext(os.path.basename(csv_paths[0]))[0]
+    df_concat['type'] = [key for key, value in visualize_types.items() if value == csv_paths[0]][0]
 
     for path in csv_paths[1:]:
         df_add = pd.read_csv(path)
-        df_add['type'] = os.path.splitext(os.path.basename(path))[0]
+        df_add['type'] = [key for key, value in visualize_types.items() if value == path][0]
         df_concat = pd.concat([df_concat,df_add])
 
     return df_concat

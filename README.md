@@ -59,5 +59,5 @@ python classifier_tune.py [--preprocess]
 - tune, train, eval, visualizeまでまとめて実行
 
 '''
-nohup python -u main.py --condition --train --eval --visualize --type generate_0 generate_1 generate_2 twitter_pickup --preprocess --pair --tune > log &
+nohup python -u main.py --condition --train --eval --visualize --type Cluster_0.1 Cluster_0.2 Cluster_0.3 Real_data --preprocess --pair --tune > log &
 '''

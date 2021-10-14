@@ -148,7 +148,7 @@ def get_onehot_and_list_no_conditional(dfs_code,time_dict,node_dict,max_sequence
         dfs_code_onehot_list.append(\
             np.concatenate([onehot_t_u,onehot_t_v,onehot_n_u,onehot_n_v,onehot_e],1))
     
-    dfs_code_onehot_list = torch.Tensor(utils.padding(dfs_code_onehot_list,max_sequence_length,0))
+    dfs_code_onehot_list = torch.Tensor(utils.padding(dfs_code_onehot_list,max_sequence_length,1500))
     t_u_list = torch.LongTensor(utils.padding(t_u_list,max_sequence_length,ignore_label))
     t_v_list = torch.LongTensor(utils.padding(t_v_list,max_sequence_length,ignore_label))
     n_u_list = torch.LongTensor(utils.padding(n_u_list,max_sequence_length,ignore_label))
