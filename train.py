@@ -970,7 +970,7 @@ def train_with_sequential_conditions(args):
         train_dataset = joblib.load(f)
 
     ## rewrite condition of valid_dataset
-    # valid_dataset = rewrite_dataset_condition(valid_dataset, time_size, dfs_size, rewrited_condition_dump_name=f"valid_conditions", flag_dump=True)
+    # valid_dataset = rewrite_dataset_condition(valid_dataset, time_size, lessdfs_size, rewrited_condition_dump_name=f"valid_conditions", flag_dump=True)
     # joblib.dump(valid_dataset, "./valid_dataset")
     with open("./valid_dataset", "rb") as f:
         valid_dataset = joblib.load(f)
@@ -1028,7 +1028,7 @@ def train_with_sequential_conditions(args):
     ## tu, tv, lu, lv, leの誤差関数
     if args.loss == "BCE" or args.loss == "bce":
         print("loss : BCE")
-        criterion = nn.BCEWithLogitsLoss(reduction='mean')
+        criterion = nn.BCEWithLogitsLoss(reduction='none')
     elif args.loss == "CE" or args.loss == "ce":
         print("loss : Cross Entropy")
         criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
@@ -1068,10 +1068,15 @@ def train_with_sequential_conditions(args):
             ## sigma = [バッチサイズ, 1, rep_size]
             mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
             
+            # print(f"mu ({mu.shape}) = ")
+            # print(f"sigma ({sigma.shape}) = ")
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
+            # print(f"encoder_loss ({encoder_loss.shape}) = {encoder_loss}")
             ## encoder_loss.item() = loss値
-            current_train_loss["encoder"].append(encoder_loss.item())
-            loss = encoder_loss
+            # current_train_loss["encoder"].append(encoder_loss.item())
+            current_train_loss["encoder"].append(encoder_loss.mean().item())
+            # loss = encoder_loss
+            loss = torch.Tensor()
 
             if args.loss == "BCE" or args.loss == "bce":
                 outputs = torch.cat((result[0], result[1], result[2], result[3], result[4]), dim=2)
@@ -1087,7 +1092,12 @@ def train_with_sequential_conditions(args):
                     correct_split = dfs_split_list[j]
                     correct = datas[:,:,correct_split[0]:correct_split[1]]
                     correct = utils.try_gpu(device,correct)
-                    tmp_loss = criterion(pred, correct).sum(axis=0)
+                    # print(f"pred ({pred.shape}) = ")
+                    # print(f"correct ({correct.shape}) = ")
+                    ## pred ([21, 357, 51(34,2)]),  correct ([21, 357, 51(34,2)])
+                    ## tmp_loss ([21, 357, 51(24,2)])
+                    tmp_loss = criterion(pred, correct)
+                    # print(f"tmp_loss ({tmp_loss.shape}) = ")
                 elif args.loss == "CE" or args.loss == "ce":
                     correct = train_label[j]
                     ## correct = [バッチサイズ, ５タプルの最大数], ５タプルの各ラベルのid or ignore_label
@@ -1099,10 +1109,19 @@ def train_with_sequential_conditions(args):
                     print("[ERROR] args.loss を正しく設定してください。")
                     exit()
 
-                loss+=tmp_loss
+                ## cross entropy loss
+                # loss+=tmp_loss
+                ## binary cross entropy loss
+                if j == 0:
+                    loss = tmp_loss
+                else:
+                    loss = torch.cat((loss, tmp_loss), dim=2)
 
                 # save
-                current_train_loss[current_key].append(tmp_loss.item())
+                ## CE
+                # current_train_loss[current_key].append(tmp_loss.item())
+                ## BCE
+                current_train_loss[current_key].append(tmp_loss.sum(axis=2).sum(axis=1).mean().item())
 
                 
                 if args.loss == "CE" or args.loss == "ce":
@@ -1140,6 +1159,13 @@ def train_with_sequential_conditions(args):
 
                 current_train_acc["classifier"].append(score)
 
+            # calc CVAE loss
+            # print(f"loss ({loss.shape}) = ")
+            bce_loss = loss.sum(axis=2).sum(axis=1)
+            # print(f"bce loss ({bce_loss.shape}) = {bce_loss}")
+            loss = (encoder_loss + bce_loss).mean()
+            # print(f"CVAE loss = {loss}")
+            
             # backpropagation
             loss.backward()
             train_loss_sum+=loss.item()
@@ -1185,6 +1211,7 @@ def train_with_sequential_conditions(args):
         elif args.loss == "BCE" or args.loss == "bce":
             for key in keys:
                 loss = np.average(current_train_loss[key])
+                # loss = current_train_loss[key]
                 train_loss[key].append(loss)
 
                 print(" %s:"%(key))
@@ -1238,7 +1265,7 @@ def train_with_sequential_conditions(args):
             # mu,sigma, [tu, tv, lu, lv, le] = vae(datas)
             mu, sigma, *result = vae(datas)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
-            current_valid_loss["encoder"].append(encoder_loss.item())
+            current_valid_loss["encoder"].append(encoder_loss.mean().item())
             loss = encoder_loss
 
             if args.loss == "BCE" or args.loss == "bce":
@@ -1254,7 +1281,8 @@ def train_with_sequential_conditions(args):
                     correct_split = dfs_split_list[j]
                     correct = datas[:,:,correct_split[0]:correct_split[1]]
                     correct = utils.try_gpu(device,correct)
-                    tmp_loss = criterion(pred, correct).sum(axis=0)
+                    # tmp_loss = criterion(pred, correct).sum(axis=0)
+                    tmp_loss = criterion(pred, correct)
                 elif args.loss == "CE" or args.loss == "ce":
                     correct = valid_label[j]
                     ## correct = [バッチサイズ, ５タプルの最大数], ５タプルの各ラベルのid or ignore_label
@@ -1266,10 +1294,19 @@ def train_with_sequential_conditions(args):
                     print("[ERROR] args.loss を正しく設定してください。")
                     exit()
                 
-                loss+=tmp_loss.item()
+                ## cross entropy loss
+                # loss+=tmp_loss.item()
+                ## binary cross entropy loss
+                if j == 0:
+                    loss = tmp_loss
+                else:
+                    loss = torch.cat((loss, tmp_loss), dim=2)
 
                 # save
-                current_valid_loss[current_key].append(tmp_loss.item())
+                ## CE
+                # current_valid_loss[current_key].append(tmp_loss.item())
+                ## BCE
+                current_valid_loss[current_key].append(tmp_loss.sum(axis=2).sum(axis=1).mean().item())
 
                 if args.loss == "CE" or args.loss == "ce":
                     # acc calc
@@ -1304,7 +1341,14 @@ def train_with_sequential_conditions(args):
 
                 current_valid_acc["classifier"].append(score)
 
-            valid_loss_sum+=loss.item()
+            # valid_loss_sum+=loss.item()
+
+            # calc CVAE loss
+            # print(f"loss ({loss.shape}) = ")
+            bce_loss = loss.sum(axis=2).sum(axis=1)
+            # print(f"bce loss ({bce_loss.shape}) = {bce_loss}")
+            loss = (encoder_loss + bce_loss).mean()
+            # print(f"CVAE loss = {loss}")
 
         # loss, acc save
         print("----------------------------")
@@ -1434,7 +1478,7 @@ def train_with_sequential_conditions(args):
                 f.write(f'{epoch},{valid_loss_sums[-1]}\n')
 
         # output weight each 1000 epochs
-        if epoch % 1000 == 0:
+        if epoch % 100 == 0:
             torch.save(vae.state_dict(), "param/weight_"+str(epoch))
             torch.save(vae.state_dict(), train_dir + "weight_" + str(epoch))
 
@@ -1443,6 +1487,7 @@ def train_with_sequential_conditions(args):
             train_min_loss = train_loss_sum
             torch.save(vae.state_dict(), train_dir + "weight")
             best_epoch = epoch
+            print(f"update best_epoch = {best_epoch}")
 
         print("\n")
     print(f"best_weight_epoch = {best_epoch}")
