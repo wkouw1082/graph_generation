@@ -221,6 +221,93 @@ def log_plot():
     # param, cov = curve_fit(self.fitting_function, x, y)
     # return param[0]
 
+def new_log_log():
+    cx = graph_process.complex_networks()
+
+    # result_dir_name = input("resultsディレクトリ直下にあるディレクトリ名を入力してください。")
+    result_dir_name = "log_test"
+    if not os.path.exists("./results/" + result_dir_name):
+        print(f"./results/{result_dir_name} が存在しません。")
+        exit()
+    required_dirs = ['results/'+result_dir_name+"/visualize/power_degree_line"]
+    names = ["twitter"]
+    if os.path.isdir('results/'+result_dir_name+"/visualize/power_degree_line/"):
+        shutil.rmtree('results/'+result_dir_name+"/visualize/power_degree_line")
+    utils.make_dir(required_dirs)
+
+    # get Twitter dataset
+    dataset = cx.make_twitter_graph()
+    # create graph_statistic obj
+    gs = graph_process.graph_statistic()
+
+    # get graph data
+    with open("generated_graph_0", "rb") as f:
+        graphs0 = joblib.load(f)
+    with open("generated_graph_1", "rb") as f:
+        graphs1 = joblib.load(f)
+    with open("generated_graph_2", "rb") as f:
+        graphs2 = joblib.load(f)
+
+    for graph_index in range(0, 300, 1):
+        degree = list(dict(nx.degree(graphs2[graph_index])).values())
+
+        import collections
+        power_degree = dict(collections.Counter(degree))
+        power_degree = sorted(power_degree.items(), key=lambda x:x[0])
+        x = []
+        y = []
+        
+        for i in power_degree:
+            num = i[0]
+            amount = i[1]
+            x.append(num)
+            y.append(amount)
+        y = np.array(y) / sum(y)#次数を確率化
+        sum_prob = 0
+        for index,prob in enumerate(y):
+            sum_prob += prob
+            if sum_prob >= power_degree_border_line:
+                border_index = index + 1
+                break
+
+        x_log = np.log(np.array(x))
+        y_log = np.log(np.array(y))
+        x_split_plot = x_log[border_index:]
+        y_split_plot = y_log[border_index:]
+
+        alpha = gs.power_law_alpha(graphs2[graph_index])
+        import powerlaw
+        A_in = graph_process.graph_obj2mat(graphs2[graph_index])
+        degrees = A_in.sum(axis=0).flatten()
+        fit = powerlaw.Fit(degrees, discrete=True)
+        fit.power_law.plot_ccdf(color='b', label='fitting (CCDF) by powerlaw')
+        fit.plot_ccdf(color='r', linestyle="--", label='Real (CCDF) by powerlaw')
+        plt.scatter(x, y, label="Real (PDF)")
+        plt.xlim(0.01, 1)
+        plt.xlim(1, 100)
+        plt.legend()
+        plt.xlabel('Log Degree', fontsize=14)
+        plt.ylabel('Log Probability', fontsize=14)
+        plt.savefig('results/'+result_dir_name+"/visualize/power_degree_line/graphs2_" + str(graph_index) + "_powerlaw.png")
+        plt.clf()
+        plt.close()
+
+        # plt.figure(dpi=50, figsize=(10, 10))
+        # plt.scatter(np.array(x), np.array(y), marker='o',lw=0)
+        # plt.scatter(x_log, y_log, marker='o',lw=0)
+        # plt.plot(x_log, np.poly1d(np.polyfit(x_log, y_log, 1))(x_log), label='poly1d')
+        # plt.plot(x_log, np.poly1d(np.array([-alpha, np.polyfit(x_log, y_log, 1)[1]]))(x_log), label='powerlaw + poly1d')
+        # plt.plot(x_split_plot, np.poly1d(np.polyfit(x_split_plot, y_split_plot, 1))(x_split_plot), label='split')
+        # plt.yscale('log')
+        # plt.xscale('log')
+        # plt.yticks(fontsize=20)
+        # plt.xlabel('log degree', fontsize=24)
+        # plt.ylabel('log normalized count', fontsize=24)
+        # plt.legend(fontsize=12)
+        # plt.savefig('results/'+result_dir_name+"/visualize/power_degree_line/graph_" + str(graph_index) + ".png")
+        # plt.clf()
+        # plt.close()
+
 def log_log():
     cx = graph_process.complex_networks()
     result_dir_name = input("resultsディレクトリ直下にあるディレクトリ名を入力してください。")
@@ -294,7 +381,8 @@ def generate_result2csv(result_path=None):
         cn.graph2csv(result, 'generated_graph_'+str(index))
 
 if __name__ == '__main__':
-    graphs = joblib.load('results/2021-01-01_00-00/eval/generated_graph_0')
-    for graph in graphs:
-        print(graph.number_of_nodes())
-    print(len(graphs))
+    # graphs = joblib.load('results/2021-01-01_00-00/eval/generated_graph_0')
+    # for graph in graphs:
+    #     print(graph.number_of_nodes())
+    # print(len(graphs))
+    new_log_log()
