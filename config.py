@@ -1,5 +1,5 @@
 # basic hyper parameters
-epochs = 7500
+epochs = 10000
 dropout = 0.5
 word_drop_rate=0
 
@@ -62,9 +62,15 @@ power_degree_label = [0.4,0.5,0.6]
 power_degree_dim = len(power_degree_label)
 # クラスター係数 実際の値は[0.1~0.4]くらい
 cluster_coefficient_label = [0.1,0.2,0.3]
+modularity_label = [0.5, 0.6, 0.7]
 cluster_coefficient_dim = len(cluster_coefficient_label)
 # 最大最小距離　実際の値は[7~20]くらい
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
+
+# conditionとして与えるparameter
+condition_params = ["Modularity"]
+# conditionの値の丸める桁数
+condition_round = 1
 
 #　補完する値
 interpolation_cluster_cofficient = [0.2, 0.3]

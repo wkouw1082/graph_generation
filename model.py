@@ -127,6 +127,9 @@ class Decoder(nn.Module):
         self.softmax = nn.Softmax(dim=2)
         self.dropout = nn.Dropout(0.5)
 
+        self.f_h = nn.Linear(hidden_size, hidden_size)
+        self.f_c = nn.Linear(hidden_size, hidden_size)
+
         self.time_size = time_size
         self.node_label_size = node_label_size
         self.edge_label_size = edge_label_size
