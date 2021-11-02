@@ -415,7 +415,8 @@ class graph_statistic():
         """
         A_in = graph_obj2mat(graph)
         degrees = A_in.sum(axis=0).flatten()
-        return powerlaw.Fit(degrees, xmin=max(np.min(degrees),1)).power_law.alpha
+        fit = powerlaw.Fit(degrees, discrete=True)
+        return fit.power_law.alpha
 
     def cluster_coeff(self, graph):
         #graph = np.array(graph)
@@ -1034,4 +1035,8 @@ if __name__ == "__main__":
     dataset = complex_network.make_twitter_graph()
     # for graph
     gs = graph_statistic()
-    print(gs.largest_component_size(dataset[0]))
+    # print(gs.largest_component_size(dataset[0]))
+    power_exponents = []
+    for i in range(0, 3, 1):
+        power_exponents.append(gs.power_law_alpha(dataset[i]))
+    print(power_exponents)    
