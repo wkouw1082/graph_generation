@@ -284,7 +284,10 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
-            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            if len(tmp_label):
+                tmp_label = torch.tensor(tmp_label).unsqueeze(0).float()
+            else:
+                tmp_label = torch.tensor(np.array(np.prod(tmp_label))).unsqueeze(0).float()
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
 
@@ -296,7 +299,10 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
-            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            if len(tmp_label):
+                tmp_label = torch.tensor(tmp_label).unsqueeze(0).float()
+            else:
+                tmp_label = torch.tensor(np.array(np.prod(tmp_label))).unsqueeze(0).float()
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
 

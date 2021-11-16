@@ -50,8 +50,8 @@ visualize_detail = {
                     "twitter": [None,None,[None]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"Real_data":'./data/csv/twitter_pickup.csv',\
-    "graphgen":'./data/csv/GG_2000_300.csv',"Cluster_0.1":'./data/csv/generated_graph_0.csv',"Cluster_0.2":'./data/csv/generated_graph_1.csv',"Cluster_0.3":'./data/csv/generated_graph_2.csv'}
+visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"Real_data":'./data/csv/Real_data.csv',\
+    "graphgen":'./data/csv/GG_2000_300.csv',"Power-law_0.1":'./data/csv/generated_graph_0.csv',"Power-law_0.2":'./data/csv/generated_graph_1.csv',"Power-law_0.3":'./data/csv/generated_graph_2.csv'}
 
 ignore_label=1500
 
@@ -67,8 +67,18 @@ cluster_coefficient_dim = len(cluster_coefficient_label)
 # 最大最小距離　実際の値は[7~20]くらい
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
 
+condition_values = {
+    "Power-law exponent": [1.8, 2.0, 2.2], 
+    "Clustering coefficient":[0.1,0.2,0.3], 
+    "Average path length":[3,4,5], 
+    "Average degree":[3,4,5], 
+    "Edge density":[0.05,0.075,0.10], 
+    "Modularity":[0.5, 0.6, 0.7], 
+    "Diameter":[10,20,30], 
+    "Largest component size":[7.0, 14.0, 20.0],
+}
 # conditionとして与えるparameter
-condition_params = ["Modularity"]
+condition_params = ["Power-law exponent", "Clustering coefficient"]
 # conditionの値の丸める桁数
 condition_round = 1
 

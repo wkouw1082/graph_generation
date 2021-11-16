@@ -344,6 +344,16 @@ def get_gpu_info(nvidia_smi_path='nvidia-smi', no_units=True):
     else:
         return 'cpu'
 
+def get_condition_values(label_nums=3):
+    labels = [[] for i in range(label_nums)]
+    keys = condition_params
+    for key in keys:
+        values = condition_values[key]
+        for i in range(label_nums):
+            labels[i].append(values[i])
+
+    return labels
+
 if __name__=='__main__':
-    print(get_gpu_info())
+    print(get_condition_values())
 
