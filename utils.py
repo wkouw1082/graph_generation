@@ -340,7 +340,7 @@ def get_gpu_info(nvidia_smi_path='nvidia-smi', no_units=True):
                 min_gpu_memory_used = gpu_memory
                 min_gpu_index = gpu_index
 
-        return int(min_gpu_index)
+        return 'cuda:'+str(int(min_gpu_index))
     else:
         return 'cpu'
 
@@ -351,6 +351,8 @@ def get_condition_values(label_nums=3):
         values = condition_values[key]
         for i in range(label_nums):
             labels[i].append(values[i])
+
+    labels = [np.prod(i) for i in labels]
 
     return labels
 

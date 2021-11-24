@@ -17,10 +17,10 @@ import torch
 
 from sklearn.manifold import TSNE
 
-def eval(args):
+def eval(args, device):
     is_preprocess = args.preprocess
 
-    device = utils.get_gpu_info()
+    device = device
 
     # recreate directory
     if utils.is_dir_existed("eval_result"):
@@ -109,9 +109,9 @@ def eval(args):
 
     conditional_label = utils.get_condition_values()
 
-    result_low = vae.generate(300,torch.tensor(conditional_label[0]))
-    result_middle = vae.generate(300,torch.tensor(conditional_label[1]))
-    result_high = vae.generate(300,torch.tensor(conditional_label[2]))
+    result_low = vae.generate(300,torch.tensor([conditional_label[0]]).float())
+    result_middle = vae.generate(300,torch.tensor([conditional_label[1]]).float())
+    result_high = vae.generate(300,torch.tensor([conditional_label[2]]).float())
 
     result_all = [result_low,result_middle,result_high]
 

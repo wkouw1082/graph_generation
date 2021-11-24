@@ -29,13 +29,13 @@ import dgl
 from dgl.dataloading import GraphDataLoader
 
 
-def conditional_train(args):
+def conditional_train(args, device):
     writer = SummaryWriter(log_dir="./logs")
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
-    device = utils.get_gpu_info()
+    device = device
 
     # recreate directory
     if utils.is_dir_existed("train_result"):
@@ -110,7 +110,7 @@ def conditional_train(args):
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    print(train_dataset[1,:,-1*condition_size:])
+    # print(train_dataset[1,:,-1*condition_size:])
 
     print("--------------")
     print("time size: %d"%(time_size))

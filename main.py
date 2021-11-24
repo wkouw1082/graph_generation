@@ -18,8 +18,10 @@ def main(args):
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ
     """
 
-    device = utils.get_gpu_info()
+    device = 'cpu'
     print('using device is {}.'.format(device))
+    print('---------------------')
+    print('tuning parameter is {}'.format(condition_params))
 
     # preprocess が必要か、既に終了したかを意味するフラグを作成
     if args.preprocess is False:
@@ -57,7 +59,7 @@ def main(args):
     # train
     if args.train:
         if args.condition:
-            train.conditional_train(args)
+            train.conditional_train(args, device)
         elif args.seq_condition:
             train.train_with_sequential_conditions(args)
         else:
@@ -72,7 +74,7 @@ def main(args):
     # eval
     if args.eval:
         if args.condition:
-            eval.eval(args)
+            eval.eval(args, device)
         else:
             eval.non_conditional_eval(args)
 
