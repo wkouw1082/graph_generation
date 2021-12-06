@@ -1,6 +1,7 @@
 import argparse
 import yaml
 import os
+import random
 
 import utils
 import tune
@@ -8,6 +9,8 @@ import train
 import eval
 import visualize
 import config
+import graph_process
+import bi
 from config import *
 
 def main(args):
@@ -18,7 +21,7 @@ def main(args):
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ
     """
 
-    device = 'cpu'
+    device = 'cuda:0'
     print('using device is {}.'.format(device))
     print('---------------------')
     print('tuning parameter is {}'.format(condition_params))
@@ -83,6 +86,11 @@ def main(args):
         visualize.main(args)
         # ここのpreprocessは動作は他のpreprocessとは動作が違うので常に行うこと
 
+    # if args.graph_visualize:
+    #     text_datas = utils.get_directory_paths(twitter_path)
+    #     graph_datas = graph_process.text2graph(text_datas)
+    #     bi.graph_visualize(random.choice(graph_datas))
+
 
 
 if __name__ == "__main__":
@@ -94,7 +102,9 @@ if __name__ == "__main__":
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
+    # 生成したグラフのパラメータごとの可視化
     parser.add_argument('--visualize', action='store_true')
+    
 
     parser.add_argument('--model_param',action='store', help="ハイパーパラメータのパス")
     parser.add_argument('--eval_model',action='store', help="eval時に読み込むweightのパス")
@@ -106,6 +116,7 @@ if __name__ == "__main__":
     parser.add_argument('--concat_scatter',action='store_true')
     parser.add_argument('--pair',      action='store_true')
     parser.add_argument('--type',      nargs='*')
+    parser.add_argument('--graph_struct', action='store_true')
 
     args = parser.parse_args()
 

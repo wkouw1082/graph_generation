@@ -286,9 +286,9 @@ class complex_networks():
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
             if len(tmp_label) == 1:
-                tmp_label = torch.tensor(tmp_label).unsqueeze(0).float()
+                tmp_label = torch.tensor(tmp_label).float().unsqueeze(0)
             else:
-                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).unsqueeze(0).float()
+                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).float().unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
 
@@ -301,9 +301,9 @@ class complex_networks():
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
             if len(tmp_label) == 1:
-                tmp_label = torch.tensor(tmp_label).unsqueeze(0).float()
+                tmp_label = torch.tensor(tmp_label).float().unsqueeze(0)
             else:
-                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).unsqueeze(0).float()
+                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).float().unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
 
@@ -440,7 +440,8 @@ class graph_statistic():
         """
         A_in = graph_obj2mat(graph)
         degrees = A_in.sum(axis=0).flatten()
-        return powerlaw.Fit(degrees, xmin=max(np.min(degrees),1)).power_law.alpha
+        fit = powerlaw.Fit(degrees, discrete=True)
+        return fit.power_law.alpha
 
     def cluster_coeff(self, graph):
         #graph = np.array(graph)

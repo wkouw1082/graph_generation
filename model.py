@@ -44,12 +44,17 @@ class Classifier(nn.Module):
 
 # 2層 LSTM
 class Encoder(nn.Module):
-    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=2):
+    def __init__(self, input_size, emb_size, hidden_size, rep_size, device, num_layer=2):
         super(Encoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.mu = nn.Linear(hidden_size, rep_size)
         self.sigma = nn.Linear(hidden_size, rep_size)
+
+        self.device = device
+        self.num_layer = num_layer
+        self.hidden_size = hidden_size
+        print('encoder layer_num: {}'.format(self.num_layer))
 
     def forward(self, x):
         x = self.emb(x)
@@ -135,6 +140,7 @@ class Decoder(nn.Module):
         self.edge_label_size = edge_label_size
 
         self.device = device
+        print('decoder layer_num: {}'.format(self.num_layer))
 
     def forward(self, rep, x, word_drop=0):
         """
@@ -556,7 +562,7 @@ class VAE(nn.Module):
         rep_size = model_param["rep_size"]
         self.rep_size = rep_size
         self.device = device
-        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
+        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size, self.device)
         self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
 
     def noise_generator(self, rep_size, batch_num):

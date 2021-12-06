@@ -50,7 +50,7 @@ visualize_detail = {
                     # "twitter": [None,None,[None]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"Real_data":'./data/csv/Real data.csv',\
+visualize_types = {"Real_data":'./data/csv/Real_data.csv',\
     "Cluster_0.1":'./data/csv/generated_graph_0.csv',"Cluster_0.2":'./data/csv/generated_graph_1.csv',"Cluster_0.3":'./data/csv/generated_graph_2.csv'}
 
 ignore_label=1500
@@ -68,9 +68,9 @@ cluster_coefficient_dim = len(cluster_coefficient_label)
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
 
 condition_values = {
-    "Power-law exponent": [1.8, 2.0, 2.2], 
+    "Power-law exponent": [1.7, 2.0, 2.3], 
     "Clustering coefficient":[0.1,0.2,0.3], 
-    "Average path length":[3,4,5], 
+    "Average path length":[3.0,4.0,5.0], 
     "Average degree":[3,4,5], 
     "Edge density":[0.05,0.075,0.10], 
     "Modularity":[0.5, 0.6, 0.7], 
@@ -87,6 +87,8 @@ interpolation_cluster_cofficient = [0.2, 0.3]
 interpolation_maximum_path = [10.0, 16.0]
 
 condition_size = 1
+
+beta_value = 3
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"

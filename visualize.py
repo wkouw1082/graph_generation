@@ -6,6 +6,7 @@ import os
 import argparse
 import joblib
 import shutil
+import random
 
 from config import *
 
@@ -140,6 +141,14 @@ def main(args):
         utils.make_dir(required_dirs)
 
         bi.pair_plot(csv_paths, output_path=visualize_dir)
+
+    if args.graph_struct:
+        if os.path.isdir(visualize_dir + "graph_structure/"):
+            shutil.rmtree(visualize_dir + "graph_structure")
+        required_dirs = [visualize_dir + "graph_structure"]
+        utils.make_dir(required_dirs)
+
+        bi.generate_result2img(result_path=result_dir_name, output_path=visualize_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='グラフのデータを可視化するプログラム')

@@ -182,7 +182,7 @@ def conditional_train(args, device):
             mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             current_train_loss["encoder"].append(encoder_loss.item())
-            loss = encoder_loss
+            reconstruction_loss = 0
             for j, pred in enumerate(result):
                 current_key = keys[j]
                 # loss calc
@@ -190,7 +190,7 @@ def conditional_train(args, device):
                 correct = correct[args]
                 correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
-                loss+=tmp_loss
+                reconstruction_loss+=tmp_loss
 
                 # save
                 current_train_loss[current_key].append(tmp_loss.item())
@@ -228,6 +228,8 @@ def conditional_train(args, device):
                 score=(degreescore+clusterscore)/2
 
                 current_train_acc["classifier"].append(score)
+
+            loss = encoder_loss + beta_value * reconstruction_loss 
 
             loss.backward()
             train_loss_sum+=loss.item()
