@@ -6,6 +6,7 @@ import os
 import argparse
 import joblib
 import shutil
+import random
 
 from config import *
 
@@ -69,8 +70,17 @@ def main(args):
 
     # args type が何も指定されていない場合は全てのtypeが指定され、指定がある場合はそのtypeのcsv pathが持ってこられる
     # csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths(visualize_dir + 'csv/*')
-    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else utils.get_directory_paths('./data/csv/*')
+    csv_paths = [visualize_types[key] for key in args.type] if args.type is not None else visualize_types.values()
     csv_paths = sorted(csv_paths)
+
+    # 各パラメータごとの平均値を取得
+    if os.path.isdir(visualize_dir + "average_param/"):
+        shutil.rmtree(visualize_dir + "average_param")
+    required_dirs = [visualize_dir + "average_param"]
+    utils.make_dir(required_dirs)
+    cn = graph_process.complex_networks()
+    for path in csv_paths:
+        cn.get_average_params(path, required_dirs[0])
 
     if args.scatter:
         if os.path.isdir(visualize_dir + "scatter_diagram/"):
@@ -131,6 +141,14 @@ def main(args):
         utils.make_dir(required_dirs)
 
         bi.pair_plot(csv_paths, output_path=visualize_dir)
+
+    if args.graph_struct:
+        if os.path.isdir(visualize_dir + "graph_structure/"):
+            shutil.rmtree(visualize_dir + "graph_structure")
+        required_dirs = [visualize_dir + "graph_structure"]
+        utils.make_dir(required_dirs)
+
+        bi.generate_result2img(result_path=result_dir_name, output_path=visualize_dir)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='グラフのデータを可視化するプログラム')

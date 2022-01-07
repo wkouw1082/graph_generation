@@ -1,6 +1,7 @@
 import argparse
 import yaml
 import os
+import random
 
 import utils
 import tune
@@ -8,6 +9,8 @@ import train
 import eval
 import visualize
 import config
+import graph_process
+import bi
 from config import *
 
 def main(args):
@@ -18,8 +21,10 @@ def main(args):
         args        (argparse.ArgumentParser().parse_args()): 実行するプログラムとpreprocessなどのプロパティ
     """
 
-    device = utils.get_gpu_info()
+    device = 'cuda:0'
     print('using device is {}.'.format(device))
+    print('---------------------')
+    print('tuning parameter is {}'.format(condition_params))
 
     # preprocess が必要か、既に終了したかを意味するフラグを作成
     if args.preprocess is False:
@@ -57,7 +62,7 @@ def main(args):
     # train
     if args.train:
         if args.condition:
-            train.conditional_train(args)
+            train.conditional_train(args, device)
         elif args.seq_condition:
             train.train_with_sequential_conditions(args)
         else:
@@ -72,7 +77,7 @@ def main(args):
     # eval
     if args.eval:
         if args.condition:
-            eval.eval(args)
+            eval.eval(args, device)
         else:
             eval.non_conditional_eval(args)
 
@@ -80,6 +85,11 @@ def main(args):
     if args.visualize:
         visualize.main(args)
         # ここのpreprocessは動作は他のpreprocessとは動作が違うので常に行うこと
+
+    # if args.graph_visualize:
+    #     text_datas = utils.get_directory_paths(twitter_path)
+    #     graph_datas = graph_process.text2graph(text_datas)
+    #     bi.graph_visualize(random.choice(graph_datas))
 
 
 
@@ -92,7 +102,9 @@ if __name__ == "__main__":
     parser.add_argument('--tune',      action='store_true')
     parser.add_argument('--train',     action='store_true')
     parser.add_argument('--eval',      action='store_true')
+    # 生成したグラフのパラメータごとの可視化
     parser.add_argument('--visualize', action='store_true')
+    
 
     parser.add_argument('--model_param',action='store', help="ハイパーパラメータのパス")
     parser.add_argument('--eval_model',action='store', help="eval時に読み込むweightのパス")
@@ -104,6 +116,7 @@ if __name__ == "__main__":
     parser.add_argument('--concat_scatter',action='store_true')
     parser.add_argument('--pair',      action='store_true')
     parser.add_argument('--type',      nargs='*')
+    parser.add_argument('--graph_struct', action='store_true')
 
     args = parser.parse_args()
 

@@ -29,6 +29,7 @@ import os
 from sklearn.model_selection import train_test_split
 from config import *
 import powerlaw
+import pandas as pd
 
 # 複雑ネットワークを返すクラス
 # datasetはnetworkxのobjのlist
@@ -268,7 +269,7 @@ class complex_networks():
     def make_twitter_graph_with_label(self):
         text_datas = utils.get_directory_paths(twitter_path)
         graph_datas = text2graph(text_datas)
-        train_data, valid_data = train_test_split(graph_datas, test_size=0.1)
+        train_data, valid_data = train_test_split(graph_datas, test_size=0.1, random_state=0)
 
         train_labels = torch.Tensor()
         valid_labels = torch.Tensor()
@@ -284,7 +285,10 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
-            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            if len(tmp_label) == 1:
+                tmp_label = torch.tensor(tmp_label).float().unsqueeze(0)
+            else:
+                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).float().unsqueeze(0)
             train_labels = torch.cat((train_labels, tmp_label),dim=0)
         train_labels.unsqueeze(1)
 
@@ -296,7 +300,10 @@ class complex_networks():
             tmp_label = []
             for param in params.values():
                 tmp_label.append(round(param,condition_round))
-            tmp_label = torch.tensor(tmp_label).unsqueeze(0)
+            if len(tmp_label) == 1:
+                tmp_label = torch.tensor(tmp_label).float().unsqueeze(0)
+            else:
+                tmp_label = torch.tensor(np.array([np.prod(tmp_label)])).float().unsqueeze(0)
             valid_labels = torch.cat((valid_labels, tmp_label),dim=0)
         valid_labels.unsqueeze(1)
 
@@ -350,6 +357,24 @@ class complex_networks():
                 writer = csv.DictWriter(f, fieldnames=eval_params)
                 writer.writeheader()
                 writer.writerows(trait_dict)
+
+    def get_average_params(self, csv_path, save_dir):
+        """生成したグラフの各パラメータごとの平均値を返すプログラム
+
+        Parameters
+        ----------
+        csv_path : str
+            グラフごとのパラメータをもつcsvファイルのpath
+        save_dir : str
+            保存先のpath
+        """
+
+        file_name = os.path.splitext(os.path.basename(csv_path))[0]
+
+        df = pd.read_csv(csv_path)
+        average_df = df.mean()
+
+        average_df.to_csv(save_dir + '/'+ file_name + '.csv')
 
     def graph_data_compress(datas,file_name):
         joblib.dump(datas,'./data/graph_datas/'+file_name+'.pkl.cmp',compress=True)

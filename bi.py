@@ -6,6 +6,7 @@ import csv
 import re
 import os
 import ast
+import random
 import shutil
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,14 +16,16 @@ import networkx as nx
 from config import *
 import utils
 
-
-def graph_visualize(graph):
+def graph_visualize(graph, file_name, output_path=None):
     plt.figure(figsize=(15, 15))
     pos = nx.spring_layout(graph)
     nx.draw_networkx(graph,pos)
 
     plt.axis("off")
-    plt.savefig("default.png")
+    if output_path is not None:
+        plt.savefig(output_path + 'graph_structure/'+ file_name +'.png')
+    else:
+        plt.savefig('results/'+run_time+'/visualize/graph_structure/'+ file_name +'.png')
 
 def convert_csv2image(csv_path, output_path=None):
     '''
@@ -379,6 +382,31 @@ def generate_result2csv(result_path=None):
 
     for index,result in enumerate(gene_result):
         cn.graph2csv(result, 'generated_graph_'+str(index))
+
+def generate_result2img(result_path=None, output_path=None):
+    gene_result = []
+    if len(condition_params) == 1:
+        for index in range(len(condition_values[condition_params[0]])):
+            if result_path is None:
+                gene_result.append(joblib.load('results/'+run_time+'/eval/generated_graph_'+str(index)))
+            else:
+                gene_result.append(joblib.load('results/'+result_path+'/eval/generated_graph_'+str(index)))
+
+        tuning_param = condition_params[0]
+        for index, graphs in enumerate(gene_result):
+            condition_value = condition_values[tuning_param][index]
+            # 生成されたグラフの中からランダムに一つ選ぶ
+            graph = random.sample(graphs, 10)
+            for i, g in enumerate(graph):
+                save_file_name = 'graph_struct_' + str(tuning_param) + '_' + str(condition_value) + '_' +str(i)
+                graph_visualize(graph, save_file_name, output_path)
+
+    else:
+        # 2種類以上指定できるようになったら追加する
+        pass
+
+    
+
 
 if __name__ == '__main__':
     # graphs = joblib.load('results/2021-01-01_00-00/eval/generated_graph_0')

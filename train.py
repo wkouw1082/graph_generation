@@ -29,13 +29,13 @@ import dgl
 from dgl.dataloading import GraphDataLoader
 
 
-def conditional_train(args):
+def conditional_train(args, device):
     writer = SummaryWriter(log_dir="./logs")
 
     is_preprocess = args.preprocess
     is_classifier = args.classifier
 
-    device = utils.get_gpu_info()
+    device = device
 
     # recreate directory
     if utils.is_dir_existed("train_result"):
@@ -126,6 +126,7 @@ def conditional_train(args):
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
 
+    # opt = optim.Adam(vae.parameters(), lr=model_param['lr'], weight_decay=model_param['weight_decay'])
     opt = optim.Adam(vae.parameters(), lr=0.001)
 
 
@@ -154,7 +155,8 @@ def conditional_train(args):
     valid_acc = {key:[] for key in keys}
     train_min_loss = 1e10
     
-    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="mean")
+    # TODO reduoctionはsumの方がいいらしいので試してみる
+    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
     best_epoch = 0
@@ -182,7 +184,7 @@ def conditional_train(args):
             mu, sigma, *result = vae(datas, word_drop=word_drop_rate)
             encoder_loss = encoder_criterion(mu, sigma)*encoder_bias
             current_train_loss["encoder"].append(encoder_loss.item())
-            loss = encoder_loss
+            reconstruction_loss = 0
             for j, pred in enumerate(result):
                 current_key = keys[j]
                 # loss calc
@@ -190,7 +192,7 @@ def conditional_train(args):
                 correct = correct[args]
                 correct = utils.try_gpu(device,correct)
                 tmp_loss = criterion(pred.transpose(2, 1), correct)
-                loss+=tmp_loss
+                reconstruction_loss+=tmp_loss
 
                 # save
                 current_train_loss[current_key].append(tmp_loss.item())
@@ -228,6 +230,8 @@ def conditional_train(args):
                 score=(degreescore+clusterscore)/2
 
                 current_train_acc["classifier"].append(score)
+
+            loss =  beta_val *encoder_loss + alpha_val * reconstruction_loss 
 
             loss.backward()
             train_loss_sum+=loss.item()

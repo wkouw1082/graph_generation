@@ -44,12 +44,17 @@ class Classifier(nn.Module):
 
 # 2層 LSTM
 class Encoder(nn.Module):
-    def __init__(self, input_size, emb_size, hidden_size, rep_size, num_layer=2):
+    def __init__(self, input_size, emb_size, hidden_size, rep_size, device, num_layer=2):
         super(Encoder, self).__init__()
         self.emb = nn.Linear(input_size, emb_size)
         self.lstm = nn.LSTM(emb_size, hidden_size, num_layers=num_layer, batch_first=True)
         self.mu = nn.Linear(hidden_size, rep_size)
         self.sigma = nn.Linear(hidden_size, rep_size)
+
+        self.device = device
+        self.num_layer = num_layer
+        self.hidden_size = hidden_size
+        print('encoder layer_num: {}'.format(self.num_layer))
 
     def forward(self, x):
         x = self.emb(x)
@@ -135,6 +140,7 @@ class Decoder(nn.Module):
         self.edge_label_size = edge_label_size
 
         self.device = device
+        print('decoder layer_num: {}'.format(self.num_layer))
 
     def forward(self, rep, x, word_drop=0):
         """
@@ -177,10 +183,18 @@ class Decoder(nn.Module):
         rep = torch.cat([origin_rep for _ in range(x.shape[1])],dim=1)
         x = torch.cat((x,rep),dim=2)
 
+        # h_0 = self.f_h(h_0)
+        # h_0 = F.relu(h_0)
+        # c_0 = self.f_c(c_0)
+        # c_0 = F.relu(c_0)
+
         # h_0 = try_gpu(self.device, torch.Tensor(self.num_layer, batch_size, self.hidden_size).fill_(conditional_value))
         # c_0 = try_gpu(self.device, torch.Tensor(self.num_layer, batch_size, self.hidden_size).fill_(conditional_value))
 
-        x, (h, c) = self.lstm(x, (h_0, c_0))
+        # h_0 = try_gpu(self.device, torch.zeros((self.num_layer, batch_size, self.hidden_size)))
+        # c_0 = try_gpu(self.device, torch.zeros((self.num_layer, batch_size, self.hidden_size)))
+
+        x, (h, c) = self.lstm(x, (h_0,c_0))
         x = self.dropout(x)
         
         tu = self.softmax(self.f_tu(x))
@@ -234,9 +248,17 @@ class Decoder(nn.Module):
         h_0 = try_gpu(self.device, torch.Tensor(self.num_layer, batch_size, self.hidden_size).fill_(conditional_value))
         c_0 = try_gpu(self.device, torch.Tensor(self.num_layer, batch_size, self.hidden_size).fill_(conditional_value))
 
+        # h_0 = self.f_h(h_0)
+        # h_0 = F.relu(h_0)
+        # c_0 = self.f_c(c_0)
+        # c_0 = F.relu(c_0)
+
+        # h_0 = try_gpu(self.device, torch.zeros((self.num_layer, batch_size, self.hidden_size)))
+        # c_0 = try_gpu(self.device, torch.zeros((self.num_layer, batch_size, self.hidden_size)))
+
         for i in range(max_size):
             if i == 0:
-                x, (h, c) = self.lstm(x, (h_0, c_0))
+                x, (h, c) = self.lstm(x, (h_0,c_0))
                 # x, (h, c) = self.lstm(x)
             else:
                 x = self.emb(x)
@@ -540,7 +562,7 @@ class VAE(nn.Module):
         rep_size = model_param["rep_size"]
         self.rep_size = rep_size
         self.device = device
-        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size)
+        self.encoder = Encoder(dfs_size, emb_size, en_hidden_size, rep_size, self.device)
         self.decoder = Decoder(rep_size, dfs_size, emb_size, de_hidden_size, time_size, node_size, edge_size, self.device)
 
     def noise_generator(self, rep_size, batch_num):

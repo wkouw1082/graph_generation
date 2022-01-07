@@ -17,7 +17,7 @@ model_param = {'batch_size': 30,
 # model_param = {'batch_size': 16, 'lr': 0.012039945025630484, 'weight_decay': 0.08034509665909136, 'clip_th': 0.015421355009867785, 'emb_size': 201, 'en_hidden_size': 102, 'de_hidden_size': 232, 'rep_size': 247}
 # model_param = {'batch_size': 16, 'lr': 0.01082131764731544, 'weight_decay': 0.09174137908657536, 'clip_th': 0.0004241902009358986, 'emb_size': 189, 'en_hidden_size': 30, 'de_hidden_size': 247, 'rep_size': 220}
 # tuneされていない場合に指定されるハイパーパラメータ
-# model_params = {'batch_size': 32, 'clip_th': 0.03, 'emb_size': 150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
+# model_params = {'batch_size': 32, 'clip_th': 0.003, 'emb_size': 150, 'en_hidden_size': 40, 'de_hidden_size': 230, 'rep_size': 175}
 # 以前に頑張ってチューニングしたハイパーパラメータ、半年くらいかかるってやつ
 model_params = {'batch_size': 21, 'clip_th': 0.00018132953639126497, 'emb_size': 233, 'en_hidden_size': 108, 'de_hidden_size': 252, 'rep_size': 65}
 
@@ -46,12 +46,12 @@ valid_generate_detail = {"twitter_valid":[None,None,[None]]}
 
 # データ分析時のdetail
 visualize_detail = {
-    "NN": [100, 100, [0.1,0.5,0.9]],
-                    "twitter": [None,None,[None]],
+    # "NN": [100, 100, [0.1,0.5,0.9]],
+                    # "twitter": [None,None,[None]],
                     "twitter_pickup": [None,None,[None]]}
 # NNのparamのkeyがだぶるので名前だけ別で定義
-visualize_types = {"NN_0.1":'./data/csv/NN_0.1.csv',"NN_0.5":'./data/csv/NN_0.5.csv',"NN_0.9":'./data/csv/NN_0.9.csv',"twitter":'./data/csv/twitter.csv',"Real_data":'./data/csv/twitter_pickup.csv',\
-    "graphgen":'./data/csv/GG_2000_300.csv',"Cluster_0.1":'./data/csv/generated_graph_0.csv',"Cluster_0.2":'./data/csv/generated_graph_1.csv',"Cluster_0.3":'./data/csv/generated_graph_2.csv'}
+visualize_types = {"Real_data":'./data/csv/Real_data.csv',\
+    "Cluster_0.1":'./data/csv/generated_graph_0.csv',"Cluster_0.2":'./data/csv/generated_graph_1.csv',"Cluster_0.3":'./data/csv/generated_graph_2.csv'}
 
 ignore_label=1500
 
@@ -67,8 +67,18 @@ cluster_coefficient_dim = len(cluster_coefficient_label)
 # 最大最小距離　実際の値は[7~20]くらい
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
 
+condition_values = {
+    "Power-law exponent": [2.6, 3.0, 3.4], 
+    "Clustering coefficient":[0.1,0.2,0.3], 
+    "Average path length":[3.0,4.0,5.0], 
+    "Average degree":[3,4,5], 
+    "Edge density":[0.05,0.075,0.10], 
+    "Modularity":[0.5, 0.6, 0.7], 
+    "Diameter":[10,20,30], 
+    "Largest component size":[7.0, 14.0, 20.0],
+}
 # conditionとして与えるparameter
-condition_params = ["Modularity"]
+condition_params = ["Average path length"]
 # conditionの値の丸める桁数
 condition_round = 1
 
@@ -77,6 +87,11 @@ interpolation_cluster_cofficient = [0.2, 0.3]
 interpolation_maximum_path = [10.0, 16.0]
 
 condition_size = 1
+
+# 再構成lossにかける定数
+alpha_val = 1
+# encoderlossにかける定数
+beta_val = 1
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
