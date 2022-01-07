@@ -309,9 +309,10 @@ def generate_result2img(result_path=None, output_path=None):
         for index, graphs in enumerate(gene_result):
             condition_value = condition_values[tuning_param][index]
             # 生成されたグラフの中からランダムに一つ選ぶ
-            graph = random.choice(graphs)
-            save_file_name = 'graph_struct_' + str(tuning_param) + '_' + str(condition_value)
-            graph_visualize(graph, save_file_name, output_path)
+            graph = random.sample(graphs, 10)
+            for i, g in enumerate(graph):
+                save_file_name = 'graph_struct_' + str(tuning_param) + '_' + str(condition_value) + '_' +str(i)
+                graph_visualize(graph, save_file_name, output_path)
 
     else:
         # 2種類以上指定できるようになったら追加する

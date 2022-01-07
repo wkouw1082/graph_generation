@@ -110,7 +110,7 @@ def conditional_train(args, device):
 
     train_dataset = torch.cat((train_dataset,train_conditional),dim=2)
     valid_dataset = torch.cat((valid_dataset,valid_conditional),dim=2)
-    # print(train_dataset[1,:,-1*condition_size:])
+    print(train_dataset[1,:,-1*condition_size:])
 
     print("--------------")
     print("time size: %d"%(time_size))
@@ -126,6 +126,7 @@ def conditional_train(args, device):
     vae = model.VAE(dfs_size, time_size, node_size, edge_size, model_param, device)
     vae = utils.try_gpu(device,vae)
 
+    # opt = optim.Adam(vae.parameters(), lr=model_param['lr'], weight_decay=model_param['weight_decay'])
     opt = optim.Adam(vae.parameters(), lr=0.001)
 
 
@@ -154,7 +155,8 @@ def conditional_train(args, device):
     valid_acc = {key:[] for key in keys}
     train_min_loss = 1e10
     
-    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="mean")
+    # TODO reduoctionはsumの方がいいらしいので試してみる
+    criterion = nn.CrossEntropyLoss(ignore_index=ignore_label, reduction="sum")
     encoder_criterion = self_loss.Encoder_Loss()
     timestep=0
     best_epoch = 0
@@ -229,7 +231,7 @@ def conditional_train(args, device):
 
                 current_train_acc["classifier"].append(score)
 
-            loss = encoder_loss + beta_value * reconstruction_loss 
+            loss =  beta_val *encoder_loss + alpha_val * reconstruction_loss 
 
             loss.backward()
             train_loss_sum+=loss.item()

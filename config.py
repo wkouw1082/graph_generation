@@ -68,7 +68,7 @@ cluster_coefficient_dim = len(cluster_coefficient_label)
 maximum_shortest_path_label = [7.0, 14.0, 20.0]
 
 condition_values = {
-    "Power-law exponent": [1.7, 2.0, 2.3], 
+    "Power-law exponent": [2.6, 3.0, 3.4], 
     "Clustering coefficient":[0.1,0.2,0.3], 
     "Average path length":[3.0,4.0,5.0], 
     "Average degree":[3,4,5], 
@@ -78,7 +78,7 @@ condition_values = {
     "Largest component size":[7.0, 14.0, 20.0],
 }
 # conditionとして与えるparameter
-condition_params = ["Power-law exponent"]
+condition_params = ["Average path length"]
 # conditionの値の丸める桁数
 condition_round = 1
 
@@ -88,7 +88,10 @@ interpolation_maximum_path = [10.0, 16.0]
 
 condition_size = 1
 
-beta_value = 3
+# 再構成lossにかける定数
+alpha_val = 1
+# encoderlossにかける定数
+beta_val = 1
 
 # 評価を行うパラメータら
 # 現状、"power_degree", "cluster_coefficient", "distance", "size"
